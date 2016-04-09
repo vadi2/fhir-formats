@@ -1,7 +1,7 @@
 package = "fhir-formats"
 version = "0.1.0-1"
 source = {
-  url = "https://github.com/vadi2/fhir-formats"
+  url = "git://github.com/vadi2/fhir-formats.git"
 }
 description = {
   summary = "FHIR XML to/from JSON converter in Lua",
