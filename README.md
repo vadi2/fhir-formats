@@ -143,4 +143,5 @@ Only FHIR XML to FHIR JSON conversion is supported at the moment.
 
 * add JSON to XML conversion
 * add command-line utility for Windows, OSX, and Linux
-* add Javascript version
+* add Javascript/any other version via Emscripten
+* add FHIR graph visualisations
