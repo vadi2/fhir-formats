@@ -37,8 +37,11 @@ file_exists = function(name)
 end
 
 read_fhir_data = function(filename)
+  -- credit to http://lua-users.org/lists/lua-l/2010-04/msg00693.html
+  local path = debug.getinfo(1, "S").source:match[[^@?(.*[\/])[^\/]-$]]
+  
   -- prefer the filename, but substitute the nil if not given
-  local locations = {(filename or ""), "fhir-data/fhir-elements.json", "src/fhir-data/fhir-elements.json", "../src/fhir-data/fhir-elements.json"}
+  local locations = {(filename or ""), "fhir-data/fhir-elements.json", "src/fhir-data/fhir-elements.json", "../src/fhir-data/fhir-elements.json", path.."fhir-data/fhir-elements.json"}
   local data
 
   for _, file in ipairs(locations) do
@@ -48,7 +51,7 @@ read_fhir_data = function(filename)
     end
   end
 
-  assert(data, string.format("read_fhir_data: FHIR Schema could not be found, checked the following files:\n  %s", table.concat(locations, " ")))
+  assert(data, string.format("read_fhir_data: FHIR Schema could not be found in these locations:\n  %s", table.concat(locations, " ")))
   return data
 end
 
@@ -317,7 +320,7 @@ convert_to_json = function(data, options)
   assert(next(fhir_data), "convert_to_json: FHIR Schema could not be parsed in.")
 
   local xml_data
-  if not options or options.file then
+  if options and options.file then
     xml_data = read_xml_file(data)
   else
     xml_data = read_xml(data)
