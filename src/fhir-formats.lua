@@ -23,7 +23,7 @@ local ipairs, pairs, type, print, tonumber, gmatch
 = ipairs, pairs, type, print, tonumber, string.gmatch
 
 local get_fhir_definition, read_fhir_data, getindex, map_fhir_data, fhir_typed
-local get_json_datatype, print_data_for_node, convert_to_lua, handle_div
+local get_json_datatype, print_data_for_node, convert_to_lua_from_xml, handle_div
 local convert_to_json, file_exists, read_xml, read_xml_file, make_json_datatype
 
 local _M = {}
@@ -294,7 +294,7 @@ handle_div = function(output_levels, node, level)
   output_levels[level][#output_levels[level]][node.xml] = xml.dump(node)
 end
 
-convert_to_lua = function(xml_data, level, output, output_levels, output_stack)
+convert_to_lua_from_xml = function(xml_data, level, output, output_levels, output_stack)
   -- level is the nesting level inside raw xml_data from our xml parser
   level = (level and (level+1) or 1)
 
@@ -306,7 +306,7 @@ convert_to_lua = function(xml_data, level, output, output_levels, output_stack)
       handle_div(output_levels, value, level)
     else
       assert(type(value) == "table", string.format("unexpected type value encountered: %s (%s), expecting table", tostring(value), type(value)))
-      convert_to_lua(value, level, output, output_levels, output_stack)
+      convert_to_lua_from_xml(value, level, output, output_levels, output_stack)
     end
   end
   table.remove(output_stack)
@@ -330,7 +330,7 @@ convert_to_json = function(data, options)
   local output_levels = {[1] = {output}}
   local output_stack = {}
 
-  local data_in_lua = convert_to_lua(xml_data, nil, output, output_levels, output_stack)
+  local data_in_lua = convert_to_lua_from_xml(xml_data, nil, output, output_levels, output_stack)
 
   return (options and options.pretty) and prettyjson(data_in_lua)
   or cjson.encode(data_in_lua)
