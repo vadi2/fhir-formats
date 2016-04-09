@@ -1,0 +1,174 @@
+<Patient xmlns='http://hl7.org/fhir'>
+  <active value='true'/>
+  <id value='example'/>
+  <deceasedBoolean value='false'/>
+  <managingOrganization>
+    <reference value='Organization/1'/>
+  </managingOrganization>
+  <text>
+    <status value='generated'/>
+    <div value='&lt;div xmlns="http://www.w3.org/1999/xhtml"&gt;
+      
+      &lt;table&gt;
+        
+        &lt;tbody&gt;
+          
+          &lt;tr&gt;
+            
+            &lt;td&gt;Name&lt;/td&gt;
+            
+            &lt;td&gt;Peter James 
+              &lt;b&gt;Chalmers&lt;/b&gt; (&amp;quot;Jim&amp;quot;)
+            &lt;/td&gt;
+          
+          &lt;/tr&gt;
+          
+          &lt;tr&gt;
+            
+            &lt;td&gt;Address&lt;/td&gt;
+            
+            &lt;td&gt;534 Erewhon, Pleasantville, Vic, 3999&lt;/td&gt;
+          
+          &lt;/tr&gt;
+          
+          &lt;tr&gt;
+            
+            &lt;td&gt;Contacts&lt;/td&gt;
+            
+            &lt;td&gt;Home: unknown. Work: (03) 5555 6473&lt;/td&gt;
+          
+          &lt;/tr&gt;
+          
+          &lt;tr&gt;
+            
+            &lt;td&gt;Id&lt;/td&gt;
+            
+            &lt;td&gt;MRN: 12345 (Acme Healthcare)&lt;/td&gt;
+          
+          &lt;/tr&gt;
+        
+        &lt;/tbody&gt;
+      
+      &lt;/table&gt;    
+    
+    &lt;/div&gt;'/>
+  </text>
+  <_birthDate>
+    <extension>
+      <1>
+        <url value='http://hl7.org/fhir/StructureDefinition/patient-birthTime'/>
+        <valueDateTime value='1974-12-25T14:35:45-05:00'/>
+      </1>
+    </extension>
+  </_birthDate>
+  <contact>
+    <1>
+      <gender value='female'/>
+      <telecom>
+        <1>
+          <value value='+33 (237) 998327'/>
+          <system value='phone'/>
+        </1>
+      </telecom>
+      <period>
+        <start value='2012'/>
+      </period>
+      <name>
+        <given>
+          <1 value='Bénédicte'/>
+        </given>
+        <_family>
+          <1>
+            <extension>
+              <1>
+                <url value='http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier'/>
+                <valueCode value='VV'/>
+              </1>
+            </extension>
+          </1>
+        </_family>
+        <family>
+          <1 value='du'/>
+          <2 value='Marché'/>
+        </family>
+      </name>
+      <relationship>
+        <1>
+          <coding>
+            <1>
+              <code value='partner'/>
+              <system value='http://hl7.org/fhir/patient-contact-relationship'/>
+            </1>
+          </coding>
+        </1>
+      </relationship>
+    </1>
+  </contact>
+  <gender value='male'/>
+  <telecom>
+    <1>
+      <use value='home'/>
+    </1>
+    <2>
+      <use value='work'/>
+      <system value='phone'/>
+      <value value='(03) 5555 6473'/>
+    </2>
+  </telecom>
+  <address>
+    <1>
+      <line>
+        <1 value='534 Erewhon St'/>
+      </line>
+      <use value='home'/>
+      <city value='PleasantVille'/>
+      <period>
+        <start value='1974-12-25'/>
+      </period>
+      <type value='both'/>
+      <state value='Vic'/>
+      <district value='Rainbow'/>
+      <postalCode value='3999'/>
+    </1>
+  </address>
+  <birthDate value='1974-12-25'/>
+  <name>
+    <1>
+      <given>
+        <1 value='Peter'/>
+        <2 value='James'/>
+      </given>
+      <use value='official'/>
+      <family>
+        <1 value='Chalmers'/>
+      </family>
+    </1>
+    <2>
+      <given>
+        <1 value='Jim'/>
+      </given>
+      <use value='usual'/>
+    </2>
+  </name>
+  <identifier>
+    <1>
+      <use value='usual'/>
+      <assigner>
+        <display value='Acme Healthcare'/>
+      </assigner>
+      <value value='12345'/>
+      <type>
+        <coding>
+          <1>
+            <code value='MR'/>
+            <system value='http://hl7.org/fhir/v2/0203'/>
+          </1>
+        </coding>
+      </type>
+      <period>
+        <start value='2001-05-06'/>
+      </period>
+      <system value='urn:oid:1.2.36.146.595.217.0.1'/>
+    </1>
+  </identifier>
+</Patient>

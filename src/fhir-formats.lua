@@ -24,7 +24,7 @@ local ipairs, pairs, type, print, tonumber, gmatch
 
 local get_fhir_definition, read_fhir_data, getindex, map_fhir_data, fhir_typed
 local get_json_datatype, print_data_for_node, convert_to_lua_from_xml, handle_div
-local convert_to_json, file_exists, read_xml, read_xml_file, make_json_datatype
+local convert_to_json, file_exists, read_filecontent, read_file, make_json_datatype
 
 local _M = {}
 
@@ -39,7 +39,7 @@ end
 read_fhir_data = function(filename)
   -- credit to http://lua-users.org/lists/lua-l/2010-04/msg00693.html
   local path = debug.getinfo(1, "S").source:match[[^@?(.*[\/])[^\/]-$]]
-  
+
   -- prefer the filename, but substitute the nil if not given
   local locations = {(filename or ""), "fhir-data/fhir-elements.json", "src/fhir-data/fhir-elements.json", "../src/fhir-data/fhir-elements.json", path.."fhir-data/fhir-elements.json"}
   local data
@@ -96,16 +96,16 @@ map_fhir_data = function(raw_fhir_data)
   return fhir_data
 end
 
-read_xml = function(filecontent)
-  return xml.load(filecontent)
+read_filecontent = function(filecontent, f)
+  return f(filecontent)
 end
 
-read_xml_file = function(filename)
+read_file = function(filename, f)
   io.input(filename)
   local filecontent = io.read("*a")
   io.input():close()
 
-  return xml.load(filecontent)
+  return f(filecontent)
 end
 
 -- returns FHIR JSON-typed version of the input
@@ -321,9 +321,9 @@ convert_to_json = function(data, options)
 
   local xml_data
   if options and options.file then
-    xml_data = read_xml_file(data)
+    xml_data = read_file(data, xml.load)
   else
-    xml_data = read_xml(data)
+    xml_data = read_filecontent(data, xml.load)
   end
 
   local output = {}
@@ -335,6 +335,57 @@ convert_to_json = function(data, options)
   return (options and options.pretty) and prettyjson(data_in_lua)
   or cjson.encode(data_in_lua)
 end
+
+convert_to_lua_from_json = function(json_data, level, output, xml_output_levels)
+  level = (level and (level+1) or 1)
+
+  if level == 1 and json_data.resourceType then
+    output.xmlns = "http://hl7.org/fhir"
+    output.xml = json_data.resourceType
+    json_data.resourceType = nil
+  end
+
+  for element, data in pairs(json_data) do    
+    if type(data) == "table" then
+      local current_output_table = xml_output_levels[#xml_output_levels]
+      current_output_table[#current_output_table+1] = {xml = element}
+      xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
+      output = convert_to_lua_from_json(data, level, output, xml_output_levels)
+      table.remove(xml_output_levels)
+    elseif type(data) ~= "userdata" then
+      local current_output_table = xml_output_levels[#xml_output_levels]
+      current_output_table[#current_output_table+1] = {xml = element, value = data}
+    end
+  end
+
+  return output
+end
+
+convert_to_xml = function(data, options)
+  fhir_data = fhir_data or map_fhir_data(read_fhir_data())
+
+  assert(next(fhir_data), "convert_to_xml: FHIR Schema could not be parsed in.")
+
+  local json_data
+  if options and options.file then
+    json_data = read_file(data, cjson.decode)
+  else
+    json_data = read_filecontent(data, cjson.decode)
+  end
+
+  local output = {}
+  local xml_output_levels = {output}
+
+  local data_in_lua = convert_to_lua_from_json(json_data, nil, output, xml_output_levels)
+
+
+  local data = xml.dump(data_in_lua)
+  return data
+end
+
+local result = convert_to_xml("spec/patient-example-good.json", {file = true})
+io.output("result.xml")
+io.write(result)
 
 _M.to_json = convert_to_json
 return _M
