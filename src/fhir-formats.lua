@@ -354,7 +354,12 @@ convert_to_lua_from_json = function(json_data, level, output, xml_output_levels)
       table.remove(xml_output_levels)
     elseif type(data) ~= "userdata" then
       local current_output_table = xml_output_levels[#xml_output_levels]
-      current_output_table[#current_output_table+1] = {xml = element, value = data}
+
+      if element == "div" then
+        current_output_table[#current_output_table+1] = xml.load(data)
+      else
+        current_output_table[#current_output_table+1] = {xml = element, value = data}
+      end
     end
   end
 

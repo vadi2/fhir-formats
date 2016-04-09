@@ -7,51 +7,30 @@
   </managingOrganization>
   <text>
     <status value='generated'/>
-    <div value='&lt;div xmlns="http://www.w3.org/1999/xhtml"&gt;
-      
-      &lt;table&gt;
-        
-        &lt;tbody&gt;
-          
-          &lt;tr&gt;
-            
-            &lt;td&gt;Name&lt;/td&gt;
-            
-            &lt;td&gt;Peter James 
-              &lt;b&gt;Chalmers&lt;/b&gt; (&amp;quot;Jim&amp;quot;)
-            &lt;/td&gt;
-          
-          &lt;/tr&gt;
-          
-          &lt;tr&gt;
-            
-            &lt;td&gt;Address&lt;/td&gt;
-            
-            &lt;td&gt;534 Erewhon, Pleasantville, Vic, 3999&lt;/td&gt;
-          
-          &lt;/tr&gt;
-          
-          &lt;tr&gt;
-            
-            &lt;td&gt;Contacts&lt;/td&gt;
-            
-            &lt;td&gt;Home: unknown. Work: (03) 5555 6473&lt;/td&gt;
-          
-          &lt;/tr&gt;
-          
-          &lt;tr&gt;
-            
-            &lt;td&gt;Id&lt;/td&gt;
-            
-            &lt;td&gt;MRN: 12345 (Acme Healthcare)&lt;/td&gt;
-          
-          &lt;/tr&gt;
-        
-        &lt;/tbody&gt;
-      
-      &lt;/table&gt;    
-    
-    &lt;/div&gt;'/>
+    <div xmlns='http://www.w3.org/1999/xhtml'>
+      <table>
+        <tbody>
+          <tr>
+            <td>Name</td>
+            <td>Peter James 
+              <b>Chalmers</b> ("Jim")
+            </td>
+          </tr>
+          <tr>
+            <td>Address</td>
+            <td>534 Erewhon, Pleasantville, Vic, 3999</td>
+          </tr>
+          <tr>
+            <td>Contacts</td>
+            <td>Home: unknown. Work: (03) 5555 6473</td>
+          </tr>
+          <tr>
+            <td>Id</td>
+            <td>MRN: 12345 (Acme Healthcare)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </text>
   <_birthDate>
     <extension>
