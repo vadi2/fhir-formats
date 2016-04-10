@@ -1,0 +1,110 @@
+<Patient xmlns='http://hl7.org/fhir'>
+  <active value='true'/>
+  <id value='example'/>
+  <deceasedBoolean value='false'/>
+  <managingOrganization>
+    <reference value='Organization/1'/>
+  </managingOrganization>
+  <text>
+    <status value='generated'/>
+    <div xmlns='http://www.w3.org/1999/xhtml'>
+      <table>
+        <tbody>
+          <tr>
+            <td>Name</td>
+            <td>Peter James 
+              <b>Chalmers</b> ("Jim")
+            </td>
+          </tr>
+          <tr>
+            <td>Address</td>
+            <td>534 Erewhon, Pleasantville, Vic, 3999</td>
+          </tr>
+          <tr>
+            <td>Contacts</td>
+            <td>Home: unknown. Work: (03) 5555 6473</td>
+          </tr>
+          <tr>
+            <td>Id</td>
+            <td>MRN: 12345 (Acme Healthcare)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </text>
+  <contact>
+    <gender value='female'/>
+    <telecom>
+      <value value='+33 (237) 998327'/>
+      <system value='phone'/>
+    </telecom>
+    <period>
+      <start value='2012'/>
+    </period>
+    <name>
+      <given value='Bénédicte'/>
+      <family value='du'/>
+      <family value='Marché'/>
+    </name>
+    <relationship>
+      <coding>
+        <code value='partner'/>
+        <system value='http://hl7.org/fhir/patient-contact-relationship'/>
+      </coding>
+    </relationship>
+  </contact>
+  <gender value='male'/>
+  <telecom>
+    <use value='home'/>
+  </telecom>
+  <telecom>
+    <use value='work'/>
+    <system value='phone'/>
+    <value value='(03) 5555 6473'/>
+  </telecom>
+  <address>
+    <line value='534 Erewhon St'/>
+    <use value='home'/>
+    <city value='PleasantVille'/>
+    <period>
+      <start value='1974-12-25'/>
+    </period>
+    <type value='both'/>
+    <state value='Vic'/>
+    <district value='Rainbow'/>
+    <postalCode value='3999'/>
+  </address>
+  <birthDate value='1974-12-25'>
+    <extension>
+      <url value='http://hl7.org/fhir/StructureDefinition/patient-birthTime'/>
+      <valueDateTime value='1974-12-25T14:35:45-05:00'/>
+    </extension>
+  </birthDate>
+  <name>
+    <given value='Peter'/>
+    <given value='James'/>
+    <use value='official'/>
+    <family value='Chalmers'/>
+  </name>
+  <name>
+    <given value='Jim'/>
+    <use value='usual'/>
+  </name>
+  <identifier>
+    <use value='usual'/>
+    <assigner>
+      <display value='Acme Healthcare'/>
+    </assigner>
+    <value value='12345'/>
+    <type>
+      <coding>
+        <code value='MR'/>
+        <system value='http://hl7.org/fhir/v2/0203'/>
+      </coding>
+    </type>
+    <period>
+      <start value='2001-05-06'/>
+    </period>
+    <system value='urn:oid:1.2.36.146.595.217.0.1'/>
+  </identifier>
+</Patient>

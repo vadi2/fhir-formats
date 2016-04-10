@@ -19,12 +19,14 @@
 local xml = require("xml")
 local prettyjson = require "resty.prettycjson"
 local cjson = require "cjson"
-local ipairs, pairs, type, print, tonumber, gmatch
-= ipairs, pairs, type, print, tonumber, string.gmatch
+local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat
+= ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format
 
 local get_fhir_definition, read_fhir_data, getindex, map_fhir_data, fhir_typed
 local get_json_datatype, print_data_for_node, convert_to_lua_from_xml, handle_div
-local convert_to_json, file_exists, read_xml, read_xml_file, make_json_datatype
+local convert_to_json, file_exists, read_filecontent, read_file, make_json_datatype
+local handle_json_recursively, print_simple_datatype, convert_to_lua_from_json
+local convert_to_xml
 
 local _M = {}
 
@@ -39,7 +41,7 @@ end
 read_fhir_data = function(filename)
   -- credit to http://lua-users.org/lists/lua-l/2010-04/msg00693.html
   local path = debug.getinfo(1, "S").source:match[[^@?(.*[\/])[^\/]-$]]
-  
+
   -- prefer the filename, but substitute the nil if not given
   local locations = {(filename or ""), "fhir-data/fhir-elements.json", "src/fhir-data/fhir-elements.json", "../src/fhir-data/fhir-elements.json", path.."fhir-data/fhir-elements.json"}
   local data
@@ -96,16 +98,16 @@ map_fhir_data = function(raw_fhir_data)
   return fhir_data
 end
 
-read_xml = function(filecontent)
-  return xml.load(filecontent)
+read_filecontent = function(filecontent, f)
+  return f(filecontent)
 end
 
-read_xml_file = function(filename)
+read_file = function(filename, f)
   io.input(filename)
   local filecontent = io.read("*a")
   io.input():close()
 
-  return xml.load(filecontent)
+  return f(filecontent)
 end
 
 -- returns FHIR JSON-typed version of the input
@@ -309,7 +311,7 @@ convert_to_lua_from_xml = function(xml_data, level, output, output_levels, outpu
       convert_to_lua_from_xml(value, level, output, output_levels, output_stack)
     end
   end
-  table.remove(output_stack)
+  tremove(output_stack)
 
   return output
 end
@@ -321,9 +323,9 @@ convert_to_json = function(data, options)
 
   local xml_data
   if options and options.file then
-    xml_data = read_xml_file(data)
+    xml_data = read_file(data, xml.load)
   else
-    xml_data = read_xml(data)
+    xml_data = read_filecontent(data, xml.load)
   end
 
   local output = {}
@@ -336,5 +338,117 @@ convert_to_json = function(data, options)
   or cjson.encode(data_in_lua)
 end
 
-_M.to_json = convert_to_json
-return _M
+-- prints a simple datatype to the right place in the output table,
+-- as indicated by the last pointer in the xml_output_level stack
+print_simple_datatype = function(element, simple_type, xml_output_levels, extra_data)  
+  -- obtain pointer to the output table we're currently writing to
+  local current_output_table = xml_output_levels[#xml_output_levels]
+
+  -- divs are a special case - load the XML from JSON and place it inline
+  if element == "div" then
+    current_output_table[#current_output_table+1] = xml.load(simple_type)
+  else
+    current_output_table[#current_output_table+1] = {xml = element, value = simple_type}
+  end
+
+  if extra_data then
+    xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
+    handle_json_recursively(extra_data, xml_output_levels)
+    tremove(xml_output_levels)
+  end
+end
+
+-- prints a complex datatype to the right place in the output table,
+-- as indicated by the last pointer in the xml_output_level stack,
+-- and recurses down to handle more available values
+print_complex_datatype = function(element, complex_type, xml_output_levels)
+  -- ignore if this is a _value, as those will be handled when handling their
+  -- respective 'value' element
+  if element:find("_", 1, true) then return end
+
+  -- obtain pointer to the output table we're currently writing to
+  local current_output_table = xml_output_levels[#xml_output_levels]
+
+  -- add new table within the said output table
+  current_output_table[#current_output_table+1] = {xml = element}
+
+  -- update our pointer to point to the newly-created table that we'll now be writing data to
+  xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
+
+  -- recurse down to write any more complex or primitive values
+  output = handle_json_recursively(complex_type, xml_output_levels)
+
+  -- stepping back out, remove pointer from stack
+  tremove(xml_output_levels)
+end
+
+handle_json_recursively = function(json_data, xml_output_levels)
+  -- pairs since this is a JSON object with key-value pairs
+  for element, data in pairs(json_data) do
+    if type(data) == "table" then -- handle arrays with in-place expansion (one array is many xml pbjects)
+      if type(data[1]) == "table" then -- array of resources/complex types
+        for _, array_complex_element in ipairs(data) do
+          if type(array_complex_element) ~= "userdata" then
+            print_complex_datatype(element, array_complex_element, xml_output_levels)
+          end
+        end
+
+      elseif data[1] and type(data[1]) ~= "table" then -- array of simple datatypes
+        for _, array_primitive_element in ipairs(data) do          
+          print_simple_datatype(element, array_primitive_element, xml_output_levels)
+        end
+      elseif type(data) ~= "userdata" then   
+        if element == 1 then
+          print()
+        end
+        print_complex_datatype(element, data, xml_output_levels)
+      end
+    elseif type(data) ~= "userdata" then -- not an array, handle object property
+      print_simple_datatype(element, data, xml_output_levels, json_data[sformat("_%s", element)])
+    end
+  end
+end
+
+-- entry point for converting from JSON to XML
+convert_to_lua_from_json = function(json_data, output, xml_output_levels)
+  -- strip out the resourceType
+  if json_data.resourceType then
+    output.xmlns = "http://hl7.org/fhir"
+    output.xml = json_data.resourceType
+    json_data.resourceType = nil
+  end
+
+  -- continue processing rest of resource
+  return handle_json_recursively(json_data, xml_output_levels)
+end
+
+convert_to_xml = function(data, options)
+  fhir_data = fhir_data or map_fhir_data(read_fhir_data())
+
+  assert(next(fhir_data), "convert_to_xml: FHIR Schema could not be parsed in.")
+
+  local json_data
+  if options and options.file then
+    json_data = read_file(data, cjson.decode)
+  else
+    json_data = read_filecontent(data, cjson.decode)
+  end
+
+  local output = {}
+  local xml_output_levels = {output}
+
+  convert_to_lua_from_json(json_data, output, xml_output_levels)
+
+
+  local data = xml.dump(output)
+  return data
+end
+
+--local result = convert_to_xml("spec/patient-example-good.json", {file = true})
+--io.output("result.xml")
+--io.write(result)
+
+return {
+  to_json = convert_to_json,
+  to_xml = convert_to_xml
+}
