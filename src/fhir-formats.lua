@@ -348,7 +348,7 @@ print_simple_datatype = function(element, simple_type, xml_output_levels, extra_
   if element == "div" then
     current_output_table[#current_output_table+1] = xml.load(simple_type)
   else
-    current_output_table[#current_output_table+1] = {xml = element, value = simple_type}
+    current_output_table[#current_output_table+1] = {xml = element, value = tostring(simple_type)}
   end
 
   if extra_data then
