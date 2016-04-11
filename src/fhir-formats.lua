@@ -394,8 +394,17 @@ handle_json_recursively = function(json_data, xml_output_levels)
         end
 
       elseif data[1] and type(data[1]) ~= "table" then -- array of simple datatypes
-        for _, array_primitive_element in ipairs(data) do          
-          print_simple_datatype(element, array_primitive_element, xml_output_levels)
+        for i, array_primitive_element in ipairs(data) do          
+
+          local _value
+          -- pull out the corresponding data from _element
+          local _array = json_data[sformat("_%s", element)]
+          if _array then
+            _value = _array[i]
+            -- don't process if it's JSON null
+            if _value == cjson.null then _value = nil end
+          end
+          print_simple_datatype(element, array_primitive_element, xml_output_levels, _value)
         end
       elseif type(data) ~= "userdata" then   
         if element == 1 then
@@ -444,9 +453,9 @@ convert_to_xml = function(data, options)
   return data
 end
 
---local result = convert_to_xml("spec/patient-example-good.json", {file = true})
---io.output("result.xml")
---io.write(result)
+local result = convert_to_xml("spec/patient-example-good.json", {file = true})
+io.output("result.xml")
+io.write(result)
 
 return {
   to_json = convert_to_json,

@@ -43,7 +43,12 @@
     </period>
     <name>
       <given value='Bénédicte'/>
-      <family value='du'/>
+      <family value='du'>
+        <extension>
+          <url value='http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier'/>
+          <valueCode value='VV'/>
+        </extension>
+      </family>
       <family value='Marché'/>
     </name>
     <relationship>
