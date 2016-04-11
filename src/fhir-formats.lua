@@ -26,9 +26,7 @@ local get_fhir_definition, read_fhir_data, getindex, map_fhir_data, fhir_typed
 local get_json_datatype, print_data_for_node, convert_to_lua_from_xml, handle_div
 local convert_to_json, file_exists, read_filecontent, read_file, make_json_datatype
 local handle_json_recursively, print_simple_datatype, convert_to_lua_from_json
-local convert_to_xml
-
-local _M = {}
+local convert_to_xml, print_complex_datatype
 
 local fhir_data
 
@@ -66,7 +64,7 @@ end
 
 -- return a map with the path (as string) and an array or list for the JSON element to create
 map_fhir_data = function(raw_fhir_data)
-  local fhir_data = {}
+  fhir_data = {}
 
   local function parse_element(element)
     local previouselement = fhir_data
@@ -230,7 +228,7 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
         _value[#_value+1] = cjson.null
       end
     end
-  elseif node.xmlns then
+    -- elseif node.xmlns then
     -- no namespaces in JSON, for now just eat the value
   end
 
@@ -340,7 +338,7 @@ end
 
 -- prints a simple datatype to the right place in the output table,
 -- as indicated by the last pointer in the xml_output_level stack
-print_simple_datatype = function(element, simple_type, xml_output_levels, extra_data)  
+print_simple_datatype = function(element, simple_type, xml_output_levels, extra_data)
   -- obtain pointer to the output table we're currently writing to
   local current_output_table = xml_output_levels[#xml_output_levels]
 
@@ -376,7 +374,7 @@ print_complex_datatype = function(element, complex_type, xml_output_levels)
   xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
 
   -- recurse down to write any more complex or primitive values
-  output = handle_json_recursively(complex_type, xml_output_levels)
+  handle_json_recursively(complex_type, xml_output_levels)
 
   -- stepping back out, remove pointer from stack
   tremove(xml_output_levels)
@@ -394,10 +392,12 @@ handle_json_recursively = function(json_data, xml_output_levels)
         end
 
       elseif data[1] and type(data[1]) ~= "table" then -- array of simple datatypes
-        for i, array_primitive_element in ipairs(data) do          
+        for i, array_primitive_element in ipairs(data) do
 
+          -- handle extra values (id and extension) stored in _element by looking up
+          -- the appropriate array, and if it exists, pass the correct value within
+          -- said array to print function
           local _value
-          -- pull out the corresponding data from _element
           local _array = json_data[sformat("_%s", element)]
           if _array then
             _value = _array[i]
@@ -406,10 +406,7 @@ handle_json_recursively = function(json_data, xml_output_levels)
           end
           print_simple_datatype(element, array_primitive_element, xml_output_levels, _value)
         end
-      elseif type(data) ~= "userdata" then   
-        if element == 1 then
-          print()
-        end
+      elseif type(data) ~= "userdata" then
         print_complex_datatype(element, data, xml_output_levels)
       end
     elseif type(data) ~= "userdata" then -- not an array, handle object property
@@ -449,8 +446,7 @@ convert_to_xml = function(data, options)
   convert_to_lua_from_json(json_data, output, xml_output_levels)
 
 
-  local data = xml.dump(output)
-  return data
+  return xml.dump(output)
 end
 
 local result = convert_to_xml("spec/patient-example-good.json", {file = true})
