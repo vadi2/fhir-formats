@@ -449,10 +449,6 @@ convert_to_xml = function(data, options)
   return xml.dump(output)
 end
 
-local result = convert_to_xml("spec/patient-example-good.json", {file = true})
-io.output("result.xml")
-io.write(result)
-
 return {
   to_json = convert_to_json,
   to_xml = convert_to_xml
