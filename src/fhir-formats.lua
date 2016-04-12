@@ -17,8 +17,9 @@
 ]]
 
 local xml = require("xml")
-local prettyjson = require "resty.prettycjson"
-local cjson = require "cjson"
+local prettyjson = require("resty.prettycjson")
+local cjson = require("cjson")
+local datafile = require("datafile")
 local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat
 = ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format
 
@@ -37,11 +38,8 @@ file_exists = function(name)
 end
 
 read_fhir_data = function(filename)
-  -- credit to http://lua-users.org/lists/lua-l/2010-04/msg00693.html
-  local path = debug.getinfo(1, "S").source:match[[^@?(.*[\/])[^\/]-$]]
-
   -- prefer the filename, but substitute the nil if not given
-  local locations = {(filename or ""), "fhir-data/fhir-elements.json", "src/fhir-data/fhir-elements.json", "../src/fhir-data/fhir-elements.json", path.."fhir-data/fhir-elements.json"}
+  local locations = {(filename or ""), "fhir-data/fhir-elements.json", "src/fhir-data/fhir-elements.json", "../src/fhir-data/fhir-elements.json", "fhir-data/fhir-elements.json"}
   local data
 
   for _, file in ipairs(locations) do
@@ -51,7 +49,13 @@ read_fhir_data = function(filename)
     end
   end
 
-  assert(data, string.format("read_fhir_data: FHIR Schema could not be found in these locations:\n  %s", table.concat(locations, " ")))
+  -- if installed as a LuaRock, try the data directory
+  if not data then
+    local file, err = datafile.open("src/fhir-data/fhir-elements.json", "r")
+    data = cjson.decode(file:read("*a"))
+  end
+
+  assert(data, string.format("read_fhir_data: FHIR Schema could not be found in these locations nor as a LuaRock data file:\n  %s", table.concat(locations, " ")))
   return data
 end
 

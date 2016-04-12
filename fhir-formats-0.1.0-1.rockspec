@@ -16,14 +16,15 @@ dependencies = {
   "lua ~> 5.1",
   "xml",
   "lua-cjson",
-  "lua-resty-prettycjson"
+  "lua-resty-prettycjson",
+  "datafile"
 }
 build = {
   type = "builtin",
-  
+
   modules = {
     ["fhir-formats"] = "src/fhir-formats.lua"
   },
-  
+
   copy_directories = {"src/fhir-data"}
 }
