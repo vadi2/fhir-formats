@@ -10995,9 +10995,9 @@
 	},
 	{
 		"min": "0",
-		"path": "Condition.notes",
-		"max": "1",
-		"type": "string"
+		"path": "Condition.note",
+		"max": "*",
+		"type": "Annotation"
 	},
 	{
 		"min": "1",
@@ -15636,6 +15636,132 @@
 	},
 	{
 		"min": "0",
+		"path": "Endpoint",
+		"max": "*",
+		"type": "DomainResource"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.id",
+		"max": "1",
+		"type": "id"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.meta",
+		"max": "1",
+		"type": "Meta"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.implicitRules",
+		"max": "1",
+		"type": "uri"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.language",
+		"max": "1",
+		"type": "code"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.text",
+		"max": "1",
+		"type": "Narrative"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.contained",
+		"max": "*",
+		"type": "Resource"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.extension",
+		"max": "*",
+		"type": "Extension"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.modifierExtension",
+		"max": "*",
+		"type": "Extension"
+	},
+	{
+		"min": "1",
+		"path": "Endpoint.status",
+		"max": "1",
+		"type": "code"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.managingOrganization",
+		"max": "1",
+		"type": "Reference"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.contact",
+		"max": "*",
+		"type": "ContactPoint"
+	},
+	{
+		"min": "1",
+		"path": "Endpoint.connectionType",
+		"max": "1",
+		"type": "code"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.method",
+		"max": "*",
+		"type": "Coding"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.period",
+		"max": "1",
+		"type": "Period"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.addressUri",
+		"max": "1",
+		"type": "uri"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.addressString",
+		"max": "1",
+		"type": "string"
+	},
+	{
+		"min": "1",
+		"path": "Endpoint.payloadFormat",
+		"max": "1",
+		"type": "string"
+	},
+	{
+		"min": "1",
+		"path": "Endpoint.payloadType",
+		"max": "*",
+		"type": "CodeableConcept"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.header",
+		"max": "*",
+		"type": "string"
+	},
+	{
+		"min": "0",
+		"path": "Endpoint.publicKey",
+		"max": "1",
+		"type": "string"
+	},
+	{
+		"min": "0",
 		"path": "EnrollmentRequest",
 		"max": "*",
 		"type": "DomainResource"
@@ -18462,7 +18588,7 @@
 	},
 	{
 		"min": "0",
-		"path": "Goal.author",
+		"path": "Goal.expressedBy",
 		"max": "1",
 		"type": "Reference"
 	},
@@ -23590,6 +23716,18 @@
 	},
 	{
 		"min": "0",
+		"path": "MedicationOrder.dosageInstruction.maxDosePerPeriod",
+		"max": "1",
+		"type": "Ratio"
+	},
+	{
+		"min": "0",
+		"path": "MedicationOrder.dosageInstruction.maxDosePerAdministration",
+		"max": "1",
+		"type": "Quantity"
+	},
+	{
+		"min": "0",
 		"path": "MedicationOrder.dosageInstruction.rateRatio",
 		"max": "1",
 		"type": "Ratio"
@@ -23605,12 +23743,6 @@
 		"path": "MedicationOrder.dosageInstruction.rateQuantity",
 		"max": "1",
 		"type": "Quantity"
-	},
-	{
-		"min": "0",
-		"path": "MedicationOrder.dosageInstruction.maxDosePerPeriod",
-		"max": "1",
-		"type": "Ratio"
 	},
 	{
 		"min": "0",
@@ -23842,14 +23974,14 @@
 	},
 	{
 		"min": "0",
-		"path": "MedicationStatement.reasonForUseCodeableConcept",
-		"max": "1",
+		"path": "MedicationStatement.reasonForUseCode",
+		"max": "*",
 		"type": "CodeableConcept"
 	},
 	{
 		"min": "0",
 		"path": "MedicationStatement.reasonForUseReference",
-		"max": "1",
+		"max": "*",
 		"type": "Reference"
 	},
 	{
@@ -29558,7 +29690,7 @@
 	},
 	{
 		"min": "0",
-		"path": "Questionnaire.item.enableWhen.answered",
+		"path": "Questionnaire.item.enableWhen.hasAnswer",
 		"max": "1",
 		"type": "boolean"
 	},
