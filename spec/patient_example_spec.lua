@@ -20,6 +20,7 @@ local in_fhir_json = require("fhir-formats").to_json
 local in_fhir_xml = require("fhir-formats").to_xml
 local cjson = require("cjson")
 local xml = require("xml")
+local inspect = require("inspect")
 
 describe("xml to json", function()
     local positive_example, negative_example, patient_example,
@@ -49,6 +50,8 @@ describe("xml to json", function()
     it("should have xml-comparable div data", function()
         local positive_example_div = xml.load(positive_example.text.div)
         local patient_example_div = xml.load(patient_example.text.div)
+        --print(inspect(positive_example_div))
+        --print(inspect(patient_example_div))
         assert.same(positive_example_div, patient_example_div)
       end)
   end)
@@ -66,20 +69,8 @@ describe("json to xml", function()
         assert:set_parameter("TableFormatLevel", -1)
       end)
 
-    before_each(function()
-        positive_example = xml.load(positive_example_data)
-        patient_example = xml.load(patient_example_data)
-      end)
-
-    it("should have the same non-div data", function()
-        -- cut out the div's, since the whitespace doesn't matter as much in xml
-
---        positive_example.text.div = nil
---        patient_example.text.div = nil
-        assert.same(positive_example, patient_example)
-      end)
-
-    it("should have xml-comparable div data", function()
-        assert.same(positive_example.text.div, patient_example.text.div)
+    it("should have the same data", function()
+        -- convert it down to JSON since order of elements doesn't matter in JSON, while it does in XML
+        assert.same(cjson.decode(in_fhir_json(positive_example_data)), cjson.decode(in_fhir_json(patient_example_data)))
       end)
   end)
