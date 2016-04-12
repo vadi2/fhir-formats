@@ -119,6 +119,12 @@ fhir_typed = function(output_stack, node)
   local value = node.value
 
   local fhir_definition = get_fhir_definition(output_stack, node.xml)
+
+  if not fhir_definition then
+    print(string.format("Warning: %s is not a known FHIR element; couldn't check its FHIR type to decide the JSON type.", table.concat(output_stack, ".")))
+    return value
+  end
+
   local json_type = fhir_definition._type or fhir_definition._type_json
 
   if json_type == "boolean" then
