@@ -38,7 +38,7 @@ local function handle_choice(output, element)
   for _, type in ipairs(element.type) do
     output[#output+1] = {path = element.path:gsub("%[x%]", type.code:title()), type = type.code, min = tostring(element.min), max = tostring(element.max)}
   end
-  
+
   return output
 end
 
@@ -65,25 +65,31 @@ local function handle_simple(output, element)
   local min = tostring(element.min)
   local max = element.max
   output[#output+1] = {path = element.path, type = type, min = min, max = max, type_xml = type_xml, type_json = type_json}
-  
+
   return output
 end
 
-local function parse_data(data, output)
+local function parse_data(data, output, resources_map)
+
   for _, datatype_root in ipairs(data.entry) do
     if datatype_root.resource.resourceType == "StructureDefinition" then
-      for _, element in ipairs(datatype_root.resource.snapshot.element) do
+      for i, element in ipairs(datatype_root.resource.snapshot.element) do
         -- if this is a choice, expand all the possibilities in place
         if element.path:find("[x]", -3, true) then
           output = handle_choice(output, element)
         else
           output = handle_simple(output, element)
         end
+
+        if i == 1 then
+          local latest_element = output[#output]
+          resources_map[latest_element.path] = latest_element
+        end
       end
     end
   end
 
-  return output
+  return output, resources_map
 end
 
 local function save(output)
@@ -92,8 +98,23 @@ local function save(output)
   io.close()
 end
 
-local output = {}
-output = parse_data(read_json("profiles-types.json"), output)
-output = parse_data(read_json("profiles-resources.json"), output)
+-- create links from resources to their parents, so we can handle
+-- Element.contained.Element, where Element is something that
+-- derives from Resource
+local function update_backlinks(resources_map)
+  for resource_name, resource in pairs(resources_map) do
+    local parent = resources_map[resource.type]
+    if parent then -- Element has no parent
+      parent.derivations = parent.derivations or {}
+      parent.derivations[#parent.derivations+1] = resource_name
+    end
+  end
+end
+
+local output, resources_map = {}, {}
+output, resources_map = parse_data(read_json("profiles-types.json"), output, resources_map)
+output, resources_map = parse_data(read_json("profiles-resources.json"), output, resources_map)
+
+update_backlinks(resources_map)
 
 save(output)
