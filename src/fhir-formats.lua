@@ -61,9 +61,33 @@ end
 
 -- returns the index of the value in a list
 getindex = function(list, value)
+  if not list then return nil end
+
   for i = 1, #list do
     if list[i] == value then return i end
   end
+end
+
+-- returns a list as a key-value map, value can be a value
+-- to assign or a function to evaluate before assignment.
+-- Function will have the processed list value as first argument
+list_to_map = function(list, value)
+  if not list then return nil end
+
+  local map = {}
+
+  if type(value) == "function" then
+    for i = 1, #list do
+      local element = list[i]
+      map[element] = value(element)
+    end
+  else
+    for i = 1, #list do
+      map[list[i]] = value
+    end
+  end
+
+  return map
 end
 
 -- return a map with the path (as string) and an array or list for the JSON element to create
@@ -79,6 +103,7 @@ map_fhir_data = function(raw_fhir_data)
     previouselement._max = element.max
     previouselement._type = element.type
     previouselement._type_json = element.type_json
+    previouselement._derivations = list_to_map(element.derivations, function(value) return fhir_data[value] end)
 
     if type(fhir_data[element.type]) == "table" then
       previouselement[1] = fhir_data[element.type]
@@ -143,6 +168,10 @@ end
 get_fhir_definition = function (output_stack, element_to_check)
   local fhir_data_pointer
 
+  if element_to_check == "id" and output_stack[#output_stack] == "Organization" then
+    print()
+  end
+
   -- +1 since element_to_checkk; isn't on the stack
   for i = 1, #output_stack+1 do
     local element = (output_stack[i] or element_to_check)
@@ -152,7 +181,7 @@ get_fhir_definition = function (output_stack, element_to_check)
     elseif fhir_data_pointer[element] then
       fhir_data_pointer = fhir_data_pointer[element]
     elseif fhir_data_pointer[1] then
-      fhir_data_pointer = fhir_data_pointer[1][element]
+      fhir_data_pointer = fhir_data_pointer[1][element] or fhir_data_pointer[1]._derivations[element]
     else
       fhir_data_pointer = nil
       break -- bail out of the for loop if we didn't find the element we're looking for
