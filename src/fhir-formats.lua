@@ -93,8 +93,9 @@ end
 -- return a map with the path (as string) and an array or list for the JSON element to create
 map_fhir_data = function(raw_fhir_data)
   fhir_data = {}
+  local flatten_derivations, parse_element
 
-  local function parse_element(element)
+  parse_element = function(element)
     local previouselement = fhir_data
     for word in gmatch(element.path, "([^%.]+)") do
       previouselement[word] = previouselement[word] or {}
@@ -104,9 +105,28 @@ map_fhir_data = function(raw_fhir_data)
     previouselement._type = element.type
     previouselement._type_json = element.type_json
     previouselement._derivations = list_to_map(element.derivations, function(value) return fhir_data[value] end)
+    flatten_derivations(previouselement)
 
     if type(fhir_data[element.type]) == "table" then
       previouselement[1] = fhir_data[element.type]
+    end
+  end
+
+  flatten_derivations = function(root_element, nested_element)
+    if not (root_element and root_element._derivations) then return end
+
+    local derivations = nested_element and nested_element._derivations or root_element._derivations
+    for derivation, data in pairs(derivations) do
+      if data._derivations then
+        for nested_derivation, nested_data in pairs(data._derivations) do
+          print(string.format("flattening %s", nested_derivation))
+          if root_element ~= nested_derivation then
+--            root_element._derivations[nested_derivation] = nested_data
+
+            flatten_derivations(root_element, nested_data)
+          end
+        end
+      end
     end
   end
 
