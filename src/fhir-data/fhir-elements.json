@@ -56,25 +56,6 @@
 		"max": "*"
 	},
 	{
-		"path": "string.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "string.value",
-		"type_json": "string",
-		"type_xml": "xs:token",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "string",
-		"type": "Element",
-		"min": "0",
-		"max": "*"
-	},
-	{
 		"path": "string.id",
 		"type": "id",
 		"min": "0",
@@ -125,25 +106,6 @@
 		"max": "*"
 	},
 	{
-		"path": "uri.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "uri.value",
-		"type_json": "string",
-		"type_xml": "xs:anyURI+",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "uri",
-		"type": "Element",
-		"min": "0",
-		"max": "*"
-	},
-	{
 		"path": "uri.id",
 		"type": "id",
 		"min": "0",
@@ -159,25 +121,6 @@
 		"path": "uri.value",
 		"type_json": "string",
 		"type_xml": "anyURI",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "uri",
-		"type": "Element",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "uri.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "uri.value",
-		"type_json": "string",
-		"type_xml": "xs:anyURI+",
 		"min": "0",
 		"max": "1"
 	},
@@ -257,44 +200,6 @@
 		"max": "1"
 	},
 	{
-		"path": "integer",
-		"type": "Element",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "integer.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "integer.value",
-		"type_json": "number",
-		"type_xml": "xs:nonNegativeInteger",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "string",
-		"type": "Element",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "string.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "string.value",
-		"type_json": "string",
-		"type_xml": "xs:string",
-		"min": "0",
-		"max": "1"
-	},
-	{
 		"path": "time",
 		"type": "Element",
 		"min": "0",
@@ -316,44 +221,6 @@
 		"path": "time.value",
 		"type_json": "string",
 		"type_xml": "time",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "string",
-		"type": "Element",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "string.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "string.value",
-		"type_json": "string",
-		"type_xml": "xs:string+",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "integer",
-		"type": "Element",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "integer.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "integer.value",
-		"type_json": "number",
-		"type_xml": "xs:positiveInteger",
 		"min": "0",
 		"max": "1"
 	},
@@ -1219,41 +1086,42 @@
 	{
 		"path": "Element",
 		"derivations": [
-			"Period",
-			"Narrative",
-			"BackboneElement",
-			"base64Binary",
-			"Timing",
-			"Signature",
-			"Annotation",
-			"SampledData",
-			"TriggerDefinition",
-			"Address",
-			"HumanName",
-			"Meta",
-			"Reference",
 			"ActionDefinition",
-			"Ratio",
-			"instant",
-			"DataRequirement",
-			"ContactPoint",
-			"time",
-			"dateTime",
-			"uri",
-			"ElementDefinition",
-			"ModuleMetadata",
-			"integer",
-			"ParameterDefinition",
-			"decimal",
-			"string",
-			"Identifier",
-			"boolean",
-			"Range",
-			"date",
-			"CodeableConcept",
-			"Extension",
+			"Address",
+			"Annotation",
 			"Attachment",
-			"Coding"
+			"BackboneElement",
+			"CodeableConcept",
+			"Coding",
+			"ContactPoint",
+			"DataRequirement",
+			"ElementDefinition",
+			"Extension",
+			"HumanName",
+			"Identifier",
+			"Meta",
+			"ModuleMetadata",
+			"Narrative",
+			"ParameterDefinition",
+			"Period",
+			"Quantity",
+			"Range",
+			"Ratio",
+			"Reference",
+			"SampledData",
+			"Signature",
+			"Timing",
+			"TriggerDefinition",
+			"base64Binary",
+			"boolean",
+			"date",
+			"dateTime",
+			"decimal",
+			"instant",
+			"integer",
+			"string",
+			"time",
+			"uri"
 		],
 		"min": "0",
 		"max": "*"
@@ -3935,297 +3803,6 @@
 		"max": "1"
 	},
 	{
-		"path": "Quantity",
-		"type": "Quantity",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.id",
-		"type": "id",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.value",
-		"type": "decimal",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.comparator",
-		"type": "code",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.unit",
-		"type": "string",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.system",
-		"type": "uri",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.code",
-		"type": "code",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity",
-		"type": "Quantity",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.id",
-		"type": "id",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.value",
-		"type": "decimal",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.comparator",
-		"type": "code",
-		"min": "0",
-		"max": "0"
-	},
-	{
-		"path": "Quantity.unit",
-		"type": "string",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.system",
-		"type": "uri",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.code",
-		"type": "code",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity",
-		"type": "Quantity",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.id",
-		"type": "id",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.value",
-		"type": "decimal",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.comparator",
-		"type": "code",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.unit",
-		"type": "string",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.system",
-		"type": "uri",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.code",
-		"type": "code",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity",
-		"type": "Quantity",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.id",
-		"type": "id",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.value",
-		"type": "decimal",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.comparator",
-		"type": "code",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.unit",
-		"type": "string",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.system",
-		"type": "uri",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.code",
-		"type": "code",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity",
-		"type": "Quantity",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.id",
-		"type": "id",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.value",
-		"type": "decimal",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.comparator",
-		"type": "code",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.unit",
-		"type": "string",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.system",
-		"type": "uri",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.code",
-		"type": "code",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity",
-		"derivations": [
-			"Quantity"
-		],
-		"type": "Quantity",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.id",
-		"type": "id",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.extension",
-		"type": "Extension",
-		"min": "0",
-		"max": "*"
-	},
-	{
-		"path": "Quantity.value",
-		"type": "decimal",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.comparator",
-		"type": "code",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.unit",
-		"type": "string",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.system",
-		"type": "uri",
-		"min": "0",
-		"max": "1"
-	},
-	{
-		"path": "Quantity.code",
-		"type": "code",
-		"min": "0",
-		"max": "1"
-	},
-	{
 		"path": "CodeSystem",
 		"type": "DomainResource",
 		"min": "0",
@@ -5215,117 +4792,117 @@
 	{
 		"path": "DomainResource",
 		"derivations": [
-			"PaymentNotice",
-			"DiagnosticReport",
-			"ValueSet",
-			"PractitionerRole",
-			"QuestionnaireResponse",
-			"Medication",
-			"BodySite",
-			"CareTeam",
-			"OrderResponse",
-			"ImplementationGuide",
-			"DecisionSupportServiceModule",
-			"Practitioner",
-			"Protocol",
-			"EligibilityResponse",
-			"ImagingObjectSelection",
-			"Basic",
-			"ModuleDefinition",
-			"DocumentManifest",
-			"DataElement",
-			"RelatedPerson",
-			"ClaimResponse",
-			"VisionPrescription",
-			"DeviceUseRequest",
-			"ProcedureRequest",
-			"Contract",
-			"Person",
-			"Media",
-			"List",
-			"OperationDefinition",
-			"ReferralRequest",
-			"CompartmentDefinition",
-			"Linkage",
-			"DeviceMetric",
-			"DecisionSupportRule",
-			"TestScript",
-			"ProcessResponse",
-			"StructureDefinition",
-			"SupplyRequest",
-			"Communication",
-			"DiagnosticOrder",
-			"Questionnaire",
-			"ClinicalImpression",
-			"CarePlan",
-			"EnrollmentResponse",
-			"StructureMap",
-			"MeasureReport",
-			"Observation",
-			"MessageHeader",
-			"AuditEvent",
-			"Device",
-			"Immunization",
-			"OrderSet",
-			"Goal",
-			"Organization",
-			"NutritionOrder",
-			"Flag",
-			"Group",
-			"FamilyMemberHistory",
+			"Account",
 			"AllergyIntolerance",
 			"Appointment",
-			"Claim",
-			"ExpansionProfile",
-			"Coverage",
-			"Task",
-			"OperationOutcome",
-			"Subscription",
-			"SupplyDelivery",
-			"Substance",
-			"Specimen",
-			"Account",
-			"Sequence",
-			"SearchParameter",
-			"EligibilityRequest",
-			"Measure",
-			"RiskAssessment",
-			"MedicationDispense",
-			"Location",
-			"NamingSystem",
-			"Endpoint",
-			"Provenance",
-			"Procedure",
 			"AppointmentResponse",
-			"MedicationAdministration",
-			"Conformance",
-			"Library",
-			"Patient",
-			"Encounter",
+			"AuditEvent",
+			"Basic",
+			"BodySite",
+			"CarePlan",
+			"CareTeam",
+			"Claim",
+			"ClaimResponse",
+			"ClinicalImpression",
 			"CodeSystem",
-			"Schedule",
-			"MedicationStatement",
-			"GuidanceResponse",
-			"EnrollmentRequest",
-			"EpisodeOfCare",
-			"DocumentReference",
-			"ExplanationOfBenefit",
-			"Composition",
-			"DeviceComponent",
-			"DetectedIssue",
-			"DeviceUseStatement",
-			"MedicationOrder",
-			"ImagingExcerpt",
-			"PaymentReconciliation",
-			"Condition",
-			"HealthcareService",
-			"ImagingStudy",
-			"ProcessRequest",
+			"Communication",
 			"CommunicationRequest",
+			"CompartmentDefinition",
+			"Composition",
 			"ConceptMap",
+			"Condition",
+			"Conformance",
+			"Contract",
+			"Coverage",
+			"DataElement",
+			"DecisionSupportRule",
+			"DecisionSupportServiceModule",
+			"DetectedIssue",
+			"Device",
+			"DeviceComponent",
+			"DeviceMetric",
+			"DeviceUseRequest",
+			"DeviceUseStatement",
+			"DiagnosticOrder",
+			"DiagnosticReport",
+			"DocumentManifest",
+			"DocumentReference",
+			"EligibilityRequest",
+			"EligibilityResponse",
+			"Encounter",
+			"Endpoint",
+			"EnrollmentRequest",
+			"EnrollmentResponse",
+			"EpisodeOfCare",
+			"ExpansionProfile",
+			"ExplanationOfBenefit",
+			"FamilyMemberHistory",
+			"Flag",
+			"Goal",
+			"Group",
+			"GuidanceResponse",
+			"HealthcareService",
+			"ImagingExcerpt",
+			"ImagingObjectSelection",
+			"ImagingStudy",
+			"Immunization",
 			"ImmunizationRecommendation",
+			"ImplementationGuide",
+			"Library",
+			"Linkage",
+			"List",
+			"Location",
+			"Measure",
+			"MeasureReport",
+			"Media",
+			"Medication",
+			"MedicationAdministration",
+			"MedicationDispense",
+			"MedicationOrder",
+			"MedicationStatement",
+			"MessageHeader",
+			"ModuleDefinition",
+			"NamingSystem",
+			"NutritionOrder",
+			"Observation",
+			"OperationDefinition",
+			"OperationOutcome",
+			"Order",
+			"OrderResponse",
+			"OrderSet",
+			"Organization",
+			"Patient",
+			"PaymentNotice",
+			"PaymentReconciliation",
+			"Person",
+			"Practitioner",
+			"PractitionerRole",
+			"Procedure",
+			"ProcedureRequest",
+			"ProcessRequest",
+			"ProcessResponse",
+			"Protocol",
+			"Provenance",
+			"Questionnaire",
+			"QuestionnaireResponse",
+			"ReferralRequest",
+			"RelatedPerson",
+			"RiskAssessment",
+			"Schedule",
+			"SearchParameter",
+			"Sequence",
 			"Slot",
-			"Order"
+			"Specimen",
+			"StructureDefinition",
+			"StructureMap",
+			"Subscription",
+			"Substance",
+			"SupplyDelivery",
+			"SupplyRequest",
+			"Task",
+			"TestScript",
+			"ValueSet",
+			"VisionPrescription"
 		],
 		"type": "Resource",
 		"min": "0",
@@ -5651,10 +5228,10 @@
 	{
 		"path": "Resource",
 		"derivations": [
+			"Binary",
 			"Bundle",
-			"Parameters",
 			"DomainResource",
-			"Binary"
+			"Parameters"
 		],
 		"min": "0",
 		"max": "*"

@@ -73,17 +73,20 @@ local function parse_data(data, output, resources_map)
 
   for _, datatype_root in ipairs(data.entry) do
     if datatype_root.resource.resourceType == "StructureDefinition" then
-      for i, element in ipairs(datatype_root.resource.snapshot.element) do
-        -- if this is a choice, expand all the possibilities in place
-        if element.path:find("[x]", -3, true) then
-          output = handle_choice(output, element)
-        else
-          output = handle_simple(output, element)
-        end
+      -- ignore derivations of a type that only add validation rules, like Money for Quantity
+      if datatype_root.resource.id == datatype_root.resource.snapshot.element[1].path then
+        for i, element in ipairs(datatype_root.resource.snapshot.element) do
+          -- if this is a choice, expand all the possibilities in place
+          if element.path:find("[x]", -3, true) then
+            output = handle_choice(output, element)
+          else
+            output = handle_simple(output, element)
+          end
 
-        if i == 1 then
-          local latest_element = output[#output]
-          resources_map[latest_element.path] = latest_element
+          if i == 1 then
+            local latest_element = output[#output]
+            resources_map[latest_element.path] = latest_element
+          end
         end
       end
     end
@@ -107,6 +110,7 @@ local function update_backlinks(resources_map)
     if parent then -- Element has no parent
       parent.derivations = parent.derivations or {}
       parent.derivations[#parent.derivations+1] = resource_name
+      table.sort(parent.derivations) -- TODO: optimise this outside of the loop
     end
   end
 end
