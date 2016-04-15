@@ -119,11 +119,11 @@ map_fhir_data = function(raw_fhir_data)
     for derivation, data in pairs(derivations) do
       if data._derivations then
         for nested_derivation, nested_data in pairs(data._derivations) do
-          print(string.format("flattening %s", nested_derivation))
-          if root_element ~= nested_derivation then
---            root_element._derivations[nested_derivation] = nested_data
+          if root_element ~= nested_data then
+            root_element._derivations[nested_derivation] = nested_data
 
-            flatten_derivations(root_element, nested_data)
+-- TODO: fix me to be recursive and not just one level down
+--            flatten_derivations(root_element, nested_data)
           end
         end
       end
@@ -233,23 +233,7 @@ end
 
 
 get_json_datatype = function(output_stack, element_to_check)
-  local fhir_data_pointer
-
-  -- +1 since nodexml isn't on the stack
-  for i = 1, #output_stack+1 do
-    local element = (output_stack[i] or element_to_check)
-
-    if not fhir_data_pointer then
-      fhir_data_pointer = fhir_data[element]
-    elseif fhir_data_pointer[element] then
-      fhir_data_pointer = fhir_data_pointer[element]
-    elseif fhir_data_pointer[1] then
-      fhir_data_pointer = fhir_data_pointer[1][element]
-    else
-      fhir_data_pointer = nil
-      break -- bail out of the for loop if we didn't find the element we're looking for
-    end
-  end
+  local fhir_data_pointer = get_fhir_definition(output_stack, element_to_check)
 
   if fhir_data_pointer == nil then
     print(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.", table.concat(output_stack, "."), element_to_check))
