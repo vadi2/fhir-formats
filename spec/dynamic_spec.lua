@@ -34,29 +34,27 @@ for _, testcase in ipairs(data) do
   local case_name = json_file:gsub("%.json", '')
 
   describe(case_name.." xml to json", function()
+      -- do the setup outside of setup(), as setup() can't handle creating it()'s within it
       local t = {}
+      io.input("spec/"..json_file)
+      t.json_data = io.read("*a")
+      t.xml_data = in_fhir_json("spec/"..xml_file, {file = true})
 
-      setup(function()
-          io.input("spec/"..json_file)
-          t.json_data = io.read("*a")
-          t.xml_data = in_fhir_json("spec/"..xml_file, {file = true})
+      t.json_example = cjson.decode(t.json_data)
+      t.xml_example = cjson.decode(t.xml_data)
 
-          t.json_example = cjson.decode(t.json_data)
-          t.xml_example = cjson.decode(t.xml_data)
+      t.keys_in_both_tables = tablex.keys(tablex.merge(t.json_example, t.xml_example))
+      -- for same div data test
+      assert:set_parameter("TableFormatLevel", -1)
 
-          t.keys_in_both_tables = tablex.keys(tablex.merge(t.json_example, t.xml_example))
-          -- for same div data test
-          assert:set_parameter("TableFormatLevel", -1)
-
-          for _, key in ipairs(t.keys_in_both_tables) do
-            it("should have the same "..key.." objects", function()
-                -- cut out the div's, since the whitespace doesn't matter as much in xml
-                t.json_example.text.div = nil
-                t.xml_example.text.div = nil
-                assert.same(t.json_example[key], t.xml_example[key])
-              end)
-          end
-        end)
+      for _, key in ipairs(t.keys_in_both_tables) do
+        it("should have the same "..key.." objects", function()
+            -- cut out the div's, since the whitespace doesn't matter as much in xml
+            t.json_example.text.div = nil
+            t.xml_example.text.div = nil
+            assert.same(t.json_example[key], t.xml_example[key])
+          end)
+      end
 
       before_each(function()
           t.json_example = cjson.decode(t.json_data)
