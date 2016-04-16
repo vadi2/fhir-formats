@@ -21,10 +21,11 @@ local in_fhir_xml = require("fhir-formats").to_xml
 local cjson = require("cjson")
 local xml = require("xml")
 local inspect = require("inspect")
+local tablex = require("pl.tablex")
 
 local data = {
---  {"json-edge-cases.json", "json-edge-cases.xml"}
-    {"patient-example-good.json", "patient-example.xml"}
+  {"json-edge-cases.json", "json-edge-cases.xml"},
+  {"patient-example-good.json", "patient-example.xml"}
 }
 
 for _, testcase in ipairs(data) do
@@ -40,8 +41,21 @@ for _, testcase in ipairs(data) do
           t.json_data = io.read("*a")
           t.xml_data = in_fhir_json("spec/"..xml_file, {file = true})
 
+          t.json_example = cjson.decode(t.json_data)
+          t.xml_example = cjson.decode(t.xml_data)
+
+          t.keys_in_both_tables = tablex.keys(tablex.merge(t.json_example, t.xml_example))
           -- for same div data test
           assert:set_parameter("TableFormatLevel", -1)
+
+          for _, key in ipairs(t.keys_in_both_tables) do
+            it("should have the same "..key.." objects", function()
+                -- cut out the div's, since the whitespace doesn't matter as much in xml
+                t.json_example.text.div = nil
+                t.xml_example.text.div = nil
+                assert.same(t.json_example[key], t.xml_example[key])
+              end)
+          end
         end)
 
       before_each(function()
@@ -49,19 +63,15 @@ for _, testcase in ipairs(data) do
           t.xml_example = cjson.decode(t.xml_data)
         end)
 
-      it("should have the same non-div data", function()
-          -- cut out the div's, since the whitespace doesn't matter as much in xml
-          t.json_example.text.div = nil
-          t.xml_example.text.div = nil
-          assert.same(t.json_example, t.xml_example)
-        end)
 
       it("should have xml-comparable div data", function()
           local json_example_div = xml.load(t.json_example.text.div)
           local xml_example_div = xml.load(t.xml_example.text.div)
-          assert.same(json_example_div, xml_example_div)
+--          assert.same(json_example_div, xml_example_div)
         end)
     end)
+
+
 
   describe(case_name.. " json to xml", function()
       local t = {}
