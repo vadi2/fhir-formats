@@ -1,4 +1,4 @@
-package = "fhir-formats"
+package = "fhirformats"
 version = "0.1.0-1"
 source = {
   url = "git://github.com/vadi2/fhir-formats.git"
@@ -23,7 +23,7 @@ build = {
   type = "builtin",
 
   modules = {
-    ["fhir-formats"] = "src/fhir-formats.lua"
+    ["fhirformats"] = "src/fhirformats.lua"
   },
 
   copy_directories = {"src/fhir-data"}
