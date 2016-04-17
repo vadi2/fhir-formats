@@ -33,8 +33,8 @@ local fhir_data
 
 -- credit: http://stackoverflow.com/a/4991602/72944
 file_exists = function(name)
-  local f=io.open(name,"r")
-  if f~=nil then io.close(f) return true else return false end
+  local f = io.open(name,"r")
+  if f ~= nil then io.close(f) return true else return false end
 end
 
 read_fhir_data = function(filename)
@@ -382,12 +382,20 @@ end
 -- prints a simple datatype to the right place in the output table,
 -- as indicated by the last pointer in the xml_output_level stack
 print_simple_datatype = function(element, simple_type, xml_output_levels, extra_data)
+  -- ignore if this is a _value, as those will be handled when handling their
+  -- respective 'value' element
+  if element:find("_", 1, true) then return end
+
   -- obtain pointer to the output table we're currently writing to
   local current_output_table = xml_output_levels[#xml_output_levels]
 
   -- divs are a special case - load the XML from JSON and place it inline
   if element == "div" then
     current_output_table[#current_output_table+1] = xml.load(simple_type)
+  elseif element == "url" then -- some things are attributes: https://hl7-fhir.github.io/xml.html#1.17.1
+    current_output_table.url = simple_type
+  elseif type(simple_type) == "userdata" then -- only userdata possible is cjson.null, so don't show anything
+    current_output_table[#current_output_table+1] = {xml = element}
   else
     current_output_table[#current_output_table+1] = {xml = element, value = tostring(simple_type)}
   end
@@ -423,9 +431,24 @@ print_complex_datatype = function(element, complex_type, xml_output_levels)
   tremove(xml_output_levels)
 end
 
+print_contained_resource = function(json_data, xml_output_levels)
+  local current_output_table = xml_output_levels[#xml_output_levels]
+  current_output_table[#current_output_table+1] = {xml = json_data.resourceType, xmlns = "http://hl7.org/fhir"}
+  xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
+  json_data.resourceType = nil
+end
+
 handle_json_recursively = function(json_data, xml_output_levels)
-  -- pairs since this is a JSON object with key-value pairs
+  -- handle contained resources
+  local had_contained_resource
+  if json_data.resourceType then
+    print_contained_resource(json_data, xml_output_levels)
+    had_contained_resource = true
+  end
+
+  -- use pairs since this is a JSON object with key-value pairs
   for element, data in pairs(json_data) do
+    -- TODO: change type(data) to lua_data_type
     if type(data) == "table" then -- handle arrays with in-place expansion (one array is many xml pbjects)
       if type(data[1]) == "table" then -- array of resources/complex types
         for _, array_complex_element in ipairs(data) do
@@ -436,12 +459,10 @@ handle_json_recursively = function(json_data, xml_output_levels)
 
       elseif data[1] and type(data[1]) ~= "table" then -- array of simple datatypes
         for i, array_primitive_element in ipairs(data) do
-
           -- handle extra values (id and extension) stored in _element by looking up
           -- the appropriate array, and if it exists, pass the correct value within
-          -- said array to print function
-          local _value
-          local _array = json_data[sformat("_%s", element)]
+          -- the said array to print function
+          local _array, _value = json_data[sformat("_%s", element)]
           if _array then
             _value = _array[i]
             -- don't process if it's JSON null
@@ -455,12 +476,21 @@ handle_json_recursively = function(json_data, xml_output_levels)
     elseif type(data) ~= "userdata" then -- not an array, handle object property
       print_simple_datatype(element, data, xml_output_levels, json_data[sformat("_%s", element)])
     end
+
+    -- handle a special case: there is an '_element' in JSON but no corresponding 'element'
+    if element:sub(1,1) == '_' and not json_data[element:sub(2)] then
+      print_complex_datatype(element:sub(2), data, xml_output_levels)
+    end
+  end
+
+  if had_contained_resource then
+    tremove(xml_output_levels)
   end
 end
 
 -- entry point for converting from JSON to XML
 convert_to_lua_from_json = function(json_data, output, xml_output_levels)
-  -- strip out the resourceType
+  -- strip out the root resourceType
   if json_data.resourceType then
     output.xmlns = "http://hl7.org/fhir"
     output.xml = json_data.resourceType
@@ -487,7 +517,6 @@ convert_to_xml = function(data, options)
   local xml_output_levels = {output}
 
   convert_to_lua_from_json(json_data, output, xml_output_levels)
-
 
   return xml.dump(output)
 end
