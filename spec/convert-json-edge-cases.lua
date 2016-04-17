@@ -1,6 +1,6 @@
 package.path = "src/?.lua;"..package.path
-local to_json = require("fhir-formats").to_json
-local to_xml = require("fhir-formats").to_xml
+local to_json = require("fhirformats").to_json
+local to_xml = require("fhirformats").to_xml
 local inspect = require("inspect")
 
 io.output("spec/json-edge-cases (fhir-formats).xml")

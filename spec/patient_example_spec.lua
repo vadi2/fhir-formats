@@ -16,6 +16,7 @@
   limitations under the License.
 ]]
 
+package.path = "src/?.lua;"..package.path
 local in_fhir_json = require("fhirformats").to_json
 local in_fhir_xml = require("fhirformats").to_xml
 local cjson = require("cjson")
