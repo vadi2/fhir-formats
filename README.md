@@ -4,13 +4,13 @@ FHIR XML to/from JSON converter in Lua.
 ## Installation
 To install FHIR-Formats, run:
 ```sh
-$ luarocks install fhir-formats
+$ luarocks install fhirformats
 ```
 
 ## API
 ```lua
-local to_json = require("fhir-formats").to_json
-local to_xml = require("fhir-formats").to_xml
+local to_json = require("fhirformats").to_json
+local to_xml = require("fhirformats").to_xml
 
 -- convert given XML content as a string to JSON
 to_json("xml content")
