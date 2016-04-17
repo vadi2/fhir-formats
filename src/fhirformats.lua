@@ -31,6 +31,8 @@ local convert_to_xml, print_complex_datatype
 
 local fhir_data
 
+local null_value = cjson.null
+
 -- credit: http://stackoverflow.com/a/4991602/72944
 file_exists = function(name)
   local f = io.open(name,"r")
@@ -268,7 +270,7 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
       -- add a null to the corresponding _ prefix if it's there
       local _value = output_levels[previouslevel][#output_levels[previouslevel]]["_"..node.xml]
       if _value then
-        _value[#_value+1] = cjson.null
+        _value[#_value+1] = null_value
       end
     end
     -- elseif node.xmlns then
@@ -311,7 +313,7 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
       if pos and pos > 1 then
         newtable[1] = nil -- remove the first {} that json_object_or_array added, as we need to pre-pad
         for _ = 1, pos-1 do
-          newtable[#newtable+1] = cjson.null
+          newtable[#newtable+1] = null_value
         end
         newtable[#newtable+1] = {} -- re-insert the first {} deleted earlier
         pointer_inside_table = newtable[#newtable]
@@ -394,7 +396,7 @@ print_simple_datatype = function(element, simple_type, xml_output_levels, extra_
     current_output_table[#current_output_table+1] = xml.load(simple_type)
   elseif element == "url" then -- some things are attributes: https://hl7-fhir.github.io/xml.html#1.17.1
     current_output_table.url = simple_type
-  elseif type(simple_type) == "userdata" then -- only userdata possible is cjson.null, so don't show anything
+  elseif type(simple_type) == "userdata" then -- only userdata possible is null_value, so don't show anything
     current_output_table[#current_output_table+1] = {xml = element}
   else
     current_output_table[#current_output_table+1] = {xml = element, value = tostring(simple_type)}
@@ -466,7 +468,7 @@ handle_json_recursively = function(json_data, xml_output_levels)
           if _array then
             _value = _array[i]
             -- don't process if it's JSON null
-            if _value == cjson.null then _value = nil end
+            if _value == null_value then _value = nil end
           end
           print_simple_datatype(element, array_primitive_element, xml_output_levels, _value)
         end
