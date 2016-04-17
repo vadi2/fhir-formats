@@ -10,6 +10,7 @@ $ luarocks install fhir-formats
 ## API
 ```lua
 local to_json = require("fhir-formats").to_json
+local to_xml = require("fhir-formats").to_xml
 
 -- convert given XML content as a string to JSON
 to_json("xml content")
@@ -19,6 +20,11 @@ to_json("/path/to/file", {file = true})
 to_json("xml content", {pretty = true})
 -- convert an XML file given as a location to JSON and prettyprint it
 to_json("/path/to/file", {file = true, pretty = true})
+
+-- convert given JSON content as a string to XML
+to_xml("json content")
+-- convert an JSON file given as a location to XML
+to_xml("/path/to/file", {file = true})
 ```
 
 ### Examples
@@ -137,11 +143,10 @@ to_json("/path/to/file", {file = true, pretty = true})
 
 ## Note
 
-Only FHIR XML to FHIR JSON conversion is supported at the moment.
+Decimal precision is up to 14 significant digits.
 
 ## TODO
 
-* add JSON to XML conversion
 * add command-line utility for Windows, OSX, and Linux
 * add Javascript/any other version via Emscripten
 * add FHIR graph visualisations
