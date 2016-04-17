@@ -16,8 +16,8 @@
   limitations under the License.
 ]]
 
-local in_fhir_json = require("fhir-formats").to_json
-local in_fhir_xml = require("fhir-formats").to_xml
+local in_fhir_json = require("fhirformats").to_json
+local in_fhir_xml = require("fhirformats").to_xml
 local cjson = require("cjson")
 local xml = require("xml")
 local inspect = require("inspect")
