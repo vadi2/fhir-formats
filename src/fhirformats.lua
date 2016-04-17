@@ -19,6 +19,7 @@
 local xml = require("xml")
 local prettyjson = require("resty.prettycjson")
 local cjson = require("cjson")
+local lunajson = require("lunajson")
 local datafile = require("datafile")
 local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat
 = ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format
@@ -31,7 +32,23 @@ local convert_to_xml, print_complex_datatype
 
 local fhir_data
 
-local null_value = cjson.null
+local null_value
+local json_decode, json_encode
+
+if cjson then
+  null_value = cjson.null
+  json_decode, json_encode = cjson.decode, cjson.encode
+elseif lunajson then
+  null_value = newproxy()
+  json_decode = function(data)
+    return lunajson.decode(data, nil, null_value)
+  end
+  json_encode = function(data)
+    return lunajson.encode(data, null_value)
+  end
+else
+  error("neither cjson nor luajson libraries found for JSON parsing")
+end
 
 -- credit: http://stackoverflow.com/a/4991602/72944
 file_exists = function(name)
@@ -47,14 +64,14 @@ read_fhir_data = function(filename)
   for _, file in ipairs(locations) do
     if file_exists(file) then
       io.input(file)
-      data = cjson.decode(io.read("*a"))
+      data = json_decode(io.read("*a"))
     end
   end
 
   -- if installed as a LuaRock, try the data directory
   if not data then
     local file, err = datafile.open("src/fhir-data/fhir-elements.json", "r")
-    data = cjson.decode(file:read("*a"))
+    data = json_decode(file:read("*a"))
   end
 
   assert(data, string.format("read_fhir_data: FHIR Schema could not be found in these locations nor as a LuaRock data file:\n  %s", table.concat(locations, " ")))
@@ -378,7 +395,7 @@ convert_to_json = function(data, options)
   local data_in_lua = convert_to_lua_from_xml(xml_data, nil, output, output_levels, output_stack)
 
   return (options and options.pretty) and prettyjson(data_in_lua)
-  or cjson.encode(data_in_lua)
+  or json_encode(data_in_lua)
 end
 
 -- prints a simple datatype to the right place in the output table,
@@ -510,9 +527,9 @@ convert_to_xml = function(data, options)
 
   local json_data
   if options and options.file then
-    json_data = read_file(data, cjson.decode)
+    json_data = read_file(data, json_decode)
   else
-    json_data = read_filecontent(data, cjson.decode)
+    json_data = read_filecontent(data, json_decode)
   end
 
   local output = {}
