@@ -17,10 +17,14 @@
 ]]
 
 local xml = require("xml")
-local prettyjson = require("resty.prettycjson")
-local cjson = require("cjson")
+local status, cjson = pcall(require, "cjson")
+if not status then cjson = nil end
+local status, prettyjson = pcall(require, "resty.prettycjson")
+if not status then prettyjson = nil end
+local status, datafile = pcall(require, "datafile")
+if not status then datafile = nil end
 local lunajson = require("lunajson")
-local datafile = require("datafile")
+
 local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat
 = ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format
 
@@ -39,7 +43,7 @@ if cjson then
   null_value = cjson.null
   json_decode, json_encode = cjson.decode, cjson.encode
 elseif lunajson then
-  null_value = newproxy()
+  null_value = math.huge * 0
   json_decode = function(data)
     return lunajson.decode(data, nil, null_value)
   end
@@ -65,16 +69,21 @@ read_fhir_data = function(filename)
     if file_exists(file) then
       io.input(file)
       data = json_decode(io.read("*a"))
+      break
     end
   end
 
   -- if installed as a LuaRock, try the data directory
-  if not data then
+  if not data and datafile then
     local file, err = datafile.open("src/fhir-data/fhir-elements.json", "r")
     data = json_decode(file:read("*a"))
   end
 
-  assert(data, string.format("read_fhir_data: FHIR Schema could not be found in these locations nor as a LuaRock data file:\n  %s", table.concat(locations, " ")))
+  if not data and require_resource then
+    data = json_decode(require_resource("fhir-data/fhir-elements.json"))
+  end
+
+  assert(data, string.format("read_fhir_data: FHIR Schema could not be found in these locations:\n  %s.\n%s%s", table.concat(locations, " "), datafile and "Datafile could not find LuaRocks installation as well." or '', require_resource and "Embedded JSON data could not be found as well." or ''))
   return data
 end
 
