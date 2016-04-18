@@ -1,11 +1,9 @@
 <Patient xmlns="http://hl7.org/fhir">
     <modifierExtension url="http://example.org/fhir/StructureDefinition/pi">
-        <valueDecimal value="3.141592653589793"/>
-
+        <valueDecimal value="3.141592653589793"/>   
     </modifierExtension>
     <modifierExtension url="http://example.org/fhir/StructureDefinition/avogadro">
-        <valueDecimal value="602214162464240000000000"/>
-
+        <valueDecimal value="602214162464240000000000"/>   
     </modifierExtension>
     <multipleBirthInteger value="3"/>
     <extension url="http://example.org/fhir/StructureDefinition/patientAvatar">
@@ -29,7 +27,7 @@
                 <system value="http://demo.org/id/4"/>
             </valueCoding>
         </extension>
-        <extension url="nestedB">
+        <extension id="q4" url="nestedB">
             <extension url="nestedB1">
                 <valueString value="hello"/>
             </extension>
@@ -68,27 +66,27 @@
                 <tbody>
                     <tr>
                         <td>Name</td>
-                        <td>Peter James
-
+                        <td>Peter James 
+                     
                             <b>Chalmers</b> (&quot;Jim&quot;)
-
-                        </td>
-
+                  
+                        </td> 
+               
                     </tr>
                     <tr>
                         <td>Address</td>
-                        <td>534 Erewhon, Pleasantville, Vic, 3999</td>
+                        <td>534 Erewhon, Pleasantville, Vic, 3999</td> 
                     </tr>
                     <tr>
                         <td>Contacts</td>
-                        <td>Home: unknown. Work: (03) 5555 6473</td>
+                        <td>Home: unknown. Work: (03) 5555 6473</td> 
                     </tr>
                     <tr>
                         <td>Id</td>
-                        <td>MRN: 12345 (Acme Healthcare)</td>
-                    </tr>
-                </tbody>
-            </table>
+                        <td>MRN: 12345 (Acme Healthcare)</td> 
+                    </tr> 
+                </tbody> 
+            </table> 
         </div>
     </text>
     <address>
@@ -96,7 +94,7 @@
         <use value="home"/>
         <city value="PleasantVille"/>
         <state value="Vic"/>
-        <postalCode value="3999"/>
+        <postalCode value="3999"/>   
     </address>
     <careProvider>
         <reference value="#org3141"/>
@@ -110,18 +108,33 @@
         </relationship>
         <name>
             <given value="Bénédicte"/>
-            <given value="Denise">
+            <given id="a3" value="Denise">
                 <extension url="http://hl7.org/fhir/StructureDefinition/qualifier">
                     <valueCode value="MID"/>
                 </extension>
             </given>
             <given value="Marie"/>
-            <family value="du">
+            <family>
+                <extension url="http://example.org/fhir/StructureDefinition/nullFlavor">
+                    <valueCode value="ASKU"/>
+                </extension>
+            </family>
+            <family id="a2" value="du">
                 <extension url="http://example.org/fhir/StructureDefinition/qualifier">
                     <valueCode value="VV"/>
                 </extension>
             </family>
+            <family>
+                <extension url="http://hl7.org/fhir/StructureDefinitioniso-21090#nullFlavor">
+                    <valueCode value="ASKU"/>
+                </extension>
+            </family>
             <family value="Marché"/>
+            <family>
+                <extension url="http://hl7.org/fhir/StructureDefinition/nullFlavor">
+                    <valueCode value="ASKU"/>
+                </extension>
+            </family>
         </name>
         <telecom>
             <value value="+33 (237) 998327"/>
