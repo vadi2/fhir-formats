@@ -16,7 +16,12 @@
   limitations under the License.
 ]]
 
-local xml = require("xml")
+local status, xml = pcall(require, "xml")
+if not status then
+  xml = {}
+  xml.dump = require("fhirformats-xml").dump
+end
+
 local status, cjson = pcall(require, "cjson")
 if not status then cjson = nil end
 local status, prettyjson = pcall(require, "resty.prettycjson")

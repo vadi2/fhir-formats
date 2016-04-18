@@ -59,12 +59,11 @@ local function doDump(data, indent, output, last, depth, max_depth)
   end
 end
 
-local function dump(table, max_depth)
+local function dump(data, max_depth)
   local max_depth = max_depth or 3000
   local res = {}
-  doDump(table, '\n', res, 's', 1, max_depth)
-  print(require("inspect")(res))
-  return lub.join(res, '')
+  doDump(data, '\n', res, 's', 1, max_depth)
+  return table.concat(res, '')
 end
 
 return {
