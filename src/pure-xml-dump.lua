@@ -1,7 +1,7 @@
 -- Copyright (C) Marcin Kalicinski 2006, 2009, Gaspard Bucher 2014.
 
 -- This software may be modified and distributed under the terms
--- of the MIT license.  See the LICENSE file for details.
+-- of the MIT license.  See the MIT-LICENSE file for details.
 
 -- this is a cannibalised XML encoding portion of https://github.com/lubyk/xml
 
