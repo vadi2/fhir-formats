@@ -3,7 +3,9 @@ Module "lunajson.decoder"
 Module "lunajson.encoder"
 Module "lunajson.sax"
 Module "lunajson"
-Module "fhirformats-xml"
+Module "slaxml"
+Module "pure-xml-dump"
+Module "pure-xml-load"
 
 Resource "fhir-data/fhir-elements.json" "fhir-data/fhir-elements.json"
 

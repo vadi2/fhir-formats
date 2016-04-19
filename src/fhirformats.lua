@@ -19,7 +19,8 @@
 local status, xml = pcall(require, "xml")
 if not status then
   xml = {}
-  xml.dump = require("fhirformats-xml").dump
+  xml.dump = require("pure-xml-dump")
+  xml.load = require("pure-xml-load")
 end
 
 local status, cjson = pcall(require, "cjson")

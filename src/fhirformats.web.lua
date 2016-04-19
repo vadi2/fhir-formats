@@ -1178,7 +1178,266 @@ return {
 	newfileparser = sax.newfileparser,
 }
  end)
-package.preload['fhirformats-xml'] = (function (...)
+package.preload['slaxml'] = (function (...)
+--[=====================================================================[
+v0.7 Copyright © 2013-2014 Gavin Kistner <!@phrogz.net>; MIT Licensed
+See http://github.com/Phrogz/SLAXML for details.
+--]=====================================================================]
+local SLAXML = {
+	VERSION = "0.7",
+	_call = {
+		pi = function(target,content)
+			print(string.format("<?%s %s?>",target,content))
+		end,
+		comment = function(content)
+			print(string.format("<!-- %s -->",content))
+		end,
+		startElement = function(name,nsURI,nsPrefix)
+			                 io.write("<")
+			if nsPrefix then io.write(nsPrefix,":") end
+			                 io.write(name)
+			if nsURI    then io.write(" (ns='",nsURI,"')") end
+			                 print(">")
+		end,
+		attribute = function(name,value,nsURI,nsPrefix)
+			                 io.write('  ')
+			if nsPrefix then io.write(nsPrefix,":") end
+			                 io.write(name,'=',string.format('%q',value))
+			if nsURI    then io.write(" (ns='",nsURI,"')") end
+			                 io.write("\n")
+		end,
+		text = function(text)
+			print(string.format("  text: %q",text))
+		end,
+		closeElement = function(name,nsURI,nsPrefix)
+			print(string.format("</%s>",name))
+		end,
+	}
+}
+
+function SLAXML:parser(callbacks)
+	return { _call=callbacks or self._call, parse=SLAXML.parse }
+end
+
+function SLAXML:parse(xml,options)
+	if not options then options = { stripWhitespace=false } end
+
+	-- Cache references for maximum speed
+	local find, sub, gsub, char, push, pop, concat = string.find, string.sub, string.gsub, string.char, table.insert, table.remove, table.concat
+	local first, last, match1, match2, match3, pos2, nsURI
+	local unpack = unpack or table.unpack
+	local pos = 1
+	local state = "text"
+	local textStart = 1
+	local currentElement={}
+	local currentAttributes={}
+	local currentAttributeCt -- manually track length since the table is re-used
+	local nsStack = {}
+	local anyElement = false
+
+	local utf8markers = { {0x7FF,192}, {0xFFFF,224}, {0x1FFFFF,240} }
+	local function utf8(decimal) -- convert unicode code point to utf-8 encoded character string
+		if decimal<128 then return char(decimal) end
+		local charbytes = {}
+		for bytes,vals in ipairs(utf8markers) do
+			if decimal<=vals[1] then
+				for b=bytes+1,2,-1 do
+					local mod = decimal%64
+					decimal = (decimal-mod)/64
+					charbytes[b] = char(128+mod)
+				end
+				charbytes[1] = char(vals[2]+decimal)
+				return concat(charbytes)
+			end
+		end
+	end
+	local entityMap  = { ["lt"]="<", ["gt"]=">", ["amp"]="&", ["quot"]='"', ["apos"]="'" }
+	local entitySwap = function(orig,n,s) return entityMap[s] or n=="#" and utf8(tonumber('0'..s)) or orig end  
+	local function unescape(str) return gsub( str, '(&(#?)([%d%a]+);)', entitySwap ) end
+
+	local function finishText()
+		if first>textStart and self._call.text then
+			local text = sub(xml,textStart,first-1)
+			if options.stripWhitespace then
+				text = gsub(text,'^%s+','')
+				text = gsub(text,'%s+$','')
+				if #text==0 then text=nil end
+			end
+			if text then self._call.text(unescape(text)) end
+		end
+	end
+
+	local function findPI()
+		first, last, match1, match2 = find( xml, '^<%?([:%a_][:%w_.-]*) ?(.-)%?>', pos )
+		if first then
+			finishText()
+			if self._call.pi then self._call.pi(match1,match2) end
+			pos = last+1
+			textStart = pos
+			return true
+		end
+	end
+
+	local function findComment()
+		first, last, match1 = find( xml, '^<!%-%-(.-)%-%->', pos )
+		if first then
+			finishText()
+			if self._call.comment then self._call.comment(match1) end
+			pos = last+1
+			textStart = pos
+			return true
+		end
+	end
+
+	local function nsForPrefix(prefix)
+		if prefix=='xml' then return 'http://www.w3.org/XML/1998/namespace' end -- http://www.w3.org/TR/xml-names/#ns-decl
+		for i=#nsStack,1,-1 do if nsStack[i][prefix] then return nsStack[i][prefix] end end
+		error(("Cannot find namespace for prefix %s"):format(prefix))
+	end
+
+	local function startElement()
+		anyElement = true
+		first, last, match1 = find( xml, '^<([%a_][%w_.-]*)', pos )
+		if first then
+			currentElement[2] = nil -- reset the nsURI, since this table is re-used
+			currentElement[3] = nil -- reset the nsPrefix, since this table is re-used
+			finishText()
+			pos = last+1
+			first,last,match2 = find(xml, '^:([%a_][%w_.-]*)', pos )
+			if first then
+				currentElement[1] = match2
+				currentElement[3] = match1 -- Save the prefix for later resolution
+				match1 = match2
+				pos = last+1
+			else
+				currentElement[1] = match1
+				for i=#nsStack,1,-1 do if nsStack[i]['!'] then currentElement[2] = nsStack[i]['!']; break end end
+			end
+			currentAttributeCt = 0
+			push(nsStack,{})
+			return true
+		end
+	end
+
+	local function findAttribute()
+		first, last, match1 = find( xml, '^%s+([:%a_][:%w_.-]*)%s*=%s*', pos )
+		if first then
+			pos2 = last+1
+			first, last, match2 = find( xml, '^"([^<"]*)"', pos2 ) -- FIXME: disallow non-entity ampersands
+			if first then
+				pos = last+1
+				match2 = unescape(match2)
+			else
+				first, last, match2 = find( xml, "^'([^<']*)'", pos2 ) -- FIXME: disallow non-entity ampersands
+				if first then
+					pos = last+1
+					match2 = unescape(match2)
+				end
+			end
+		end
+		if match1 and match2 then
+			local currentAttribute = {match1,match2}
+			local prefix,name = string.match(match1,'^([^:]+):([^:]+)$')
+			if prefix then
+				if prefix=='xmlns' then
+					nsStack[#nsStack][name] = match2
+				else
+					currentAttribute[1] = name
+					currentAttribute[4] = prefix
+				end
+			else
+				if match1=='xmlns' then
+					nsStack[#nsStack]['!'] = match2
+					currentElement[2]      = match2
+				end
+			end
+			currentAttributeCt = currentAttributeCt + 1
+			currentAttributes[currentAttributeCt] = currentAttribute
+			return true
+		end
+	end
+
+	local function findCDATA()
+		first, last, match1 = find( xml, '^<!%[CDATA%[(.-)%]%]>', pos )
+		if first then
+			finishText()
+			if self._call.text then self._call.text(match1) end
+			pos = last+1
+			textStart = pos
+			return true
+		end
+	end
+
+	local function closeElement()
+		first, last, match1 = find( xml, '^%s*(/?)>', pos )
+		if first then
+			state = "text"
+			pos = last+1
+			textStart = pos
+
+			-- Resolve namespace prefixes AFTER all new/redefined prefixes have been parsed
+			if currentElement[3] then currentElement[2] = nsForPrefix(currentElement[3])    end
+			if self._call.startElement then self._call.startElement(unpack(currentElement)) end
+			if self._call.attribute then
+				for i=1,currentAttributeCt do
+					if currentAttributes[i][4] then currentAttributes[i][3] = nsForPrefix(currentAttributes[i][4]) end
+					self._call.attribute(unpack(currentAttributes[i]))
+				end
+			end
+
+			if match1=="/" then
+				pop(nsStack)
+				if self._call.closeElement then self._call.closeElement(unpack(currentElement)) end
+			end
+			return true
+		end
+	end
+
+	local function findElementClose()
+		first, last, match1, match2 = find( xml, '^</([%a_][%w_.-]*)%s*>', pos )
+		if first then
+			nsURI = nil
+			for i=#nsStack,1,-1 do if nsStack[i]['!'] then nsURI = nsStack[i]['!']; break end end
+		else
+			first, last, match2, match1 = find( xml, '^</([%a_][%w_.-]*):([%a_][%w_.-]*)%s*>', pos )
+			if first then nsURI = nsForPrefix(match2) end
+		end
+		if first then
+			finishText()
+			if self._call.closeElement then self._call.closeElement(match1,nsURI) end
+			pos = last+1
+			textStart = pos
+			pop(nsStack)
+			return true
+		end
+	end
+
+	while pos<#xml do
+		if state=="text" then
+			if not (findPI() or findComment() or findCDATA() or findElementClose()) then		
+				if startElement() then
+					state = "attributes"
+				else
+					first, last = find( xml, '^[^<]+', pos )
+					pos = (first and last or pos) + 1
+				end
+			end
+		elseif state=="attributes" then
+			if not findAttribute() then
+				if not closeElement() then
+					error("Was in an element and couldn't find attributes or the close.")
+				end
+			end
+		end
+	end
+
+	if not anyElement then error("Parsing did not discover any elements") end
+	if #nsStack > 0 then error("Parsing ended with unclosed elements") end
+end
+
+return SLAXML
+ end)
+package.preload['pure-xml-dump'] = (function (...)
 -- Copyright (C) Marcin Kalicinski 2006, 2009, Gaspard Bucher 2014.
 
 -- This software may be modified and distributed under the terms
@@ -1247,350 +1506,93 @@ local function dump(data, max_depth)
   return table.concat(res, '')
 end
 
-return {
-  dump = dump
-}
- end)
-package.preload['inspect'] = (function (...)
-local inspect ={
-  _VERSION = 'inspect.lua 3.0.3',
-  _URL     = 'http://github.com/kikito/inspect.lua',
-  _DESCRIPTION = 'human-readable representations of tables',
-  _LICENSE = [[
-    MIT LICENSE
+return dump end)
+package.preload['pure-xml-load'] = (function (...)
+--[[
+  FHIR Formats
 
-    Copyright (c) 2013 Enrique García Cota
+  Copyright (C) 2016 Vadim Peretokin
 
-    Permission is hereby granted, free of charge, to any person obtaining a
-    copy of this software and associated documentation files (the
-    "Software"), to deal in the Software without restriction, including
-    without limitation the rights to use, copy, modify, merge, publish,
-    distribute, sublicense, and/or sell copies of the Software, and to
-    permit persons to whom the Software is furnished to do so, subject to
-    the following conditions:
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-    The above copyright notice and this permission notice shall be included
-    in all copies or substantial portions of the Software.
+       http://www.apache.org/licenses/LICENSE-2.0
 
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-    IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-    CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-    TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-  ]]
-}
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+]]
 
-inspect.KEY       = setmetatable({}, {__tostring = function() return 'inspect.KEY' end})
-inspect.METATABLE = setmetatable({}, {__tostring = function() return 'inspect.METATABLE' end})
+-- pure Lua parser to load XML into Lua data structures compatible with Lubyk XML
 
--- Apostrophizes the string if it has quotes, but not aphostrophes
--- Otherwise, it returns a regular quoted string
-local function smartQuote(str)
-  if str:match('"') and not str:match("'") then
-    return "'" .. str .. "'"
-  end
-  return '"' .. str:gsub('"', '\\"') .. '"'
-end
+local SLAXML = require 'slaxml'
 
-local controlCharsTranslation = {
-  ["\a"] = "\\a",  ["\b"] = "\\b", ["\f"] = "\\f",  ["\n"] = "\\n",
-  ["\r"] = "\\r",  ["\t"] = "\\t", ["\v"] = "\\v"
-}
+-- upvalue to store output
+local output = {}
+-- upvalue to keep track of indenting / where to write to
+local xml_output_levels = {output}
+-- upvalue to keep track of current namespace
+local current_namespace = {}
 
-local function escape(str)
-  local result = str:gsub("\\", "\\\\"):gsub("(%c)", controlCharsTranslation)
-  return result
-end
+local startElement = function(name, nsURI, nsPrefix)
+  -- obtain pointer to the output table we're currently writing to
+  local current_output_table = xml_output_levels[#xml_output_levels]
 
-local function isIdentifier(str)
-  return type(str) == 'string' and str:match( "^[_%a][_%a%d]*$" )
-end
-
-local function isSequenceKey(k, sequenceLength)
-  return type(k) == 'number'
-     and 1 <= k
-     and k <= sequenceLength
-     and math.floor(k) == k
-end
-
-local defaultTypeOrders = {
-  ['number']   = 1, ['boolean']  = 2, ['string'] = 3, ['table'] = 4,
-  ['function'] = 5, ['userdata'] = 6, ['thread'] = 7
-}
-
-local function sortKeys(a, b)
-  local ta, tb = type(a), type(b)
-
-  -- strings and numbers are sorted numerically/alphabetically
-  if ta == tb and (ta == 'string' or ta == 'number') then return a < b end
-
-  local dta, dtb = defaultTypeOrders[ta], defaultTypeOrders[tb]
-  -- Two default types are compared according to the defaultTypeOrders table
-  if dta and dtb then return defaultTypeOrders[ta] < defaultTypeOrders[tb]
-  elseif dta     then return true  -- default types before custom ones
-  elseif dtb     then return false -- custom types after default ones
-  end
-
-  -- custom types are sorted out alphabetically
-  return ta < tb
-end
-
--- For implementation reasons, the behavior of rawlen & # is "undefined" when
--- tables aren't pure sequences. So we implement our own # operator.
-local function getSequenceLength(t)
-  local len = 1
-  local v = rawget(t,len)
-  while v ~= nil do
-    len = len + 1
-    v = rawget(t,len)
-  end
-  return len - 1
-end
-
-local function getNonSequentialKeys(t)
-  local keys = {}
-  local sequenceLength = getSequenceLength(t)
-  for k,_ in pairs(t) do
-    if not isSequenceKey(k, sequenceLength) then table.insert(keys, k) end
-  end
-  table.sort(keys, sortKeys)
-  return keys, sequenceLength
-end
-
-local function getToStringResultSafely(t, mt)
-  local __tostring = type(mt) == 'table' and rawget(mt, '__tostring')
-  local str, ok
-  if type(__tostring) == 'function' then
-    ok, str = pcall(__tostring, t)
-    str = ok and str or 'error: ' .. tostring(str)
-  end
-  if type(str) == 'string' and #str > 0 then return str end
-end
-
-local maxIdsMetaTable = {
-  __index = function(self, typeName)
-    rawset(self, typeName, 0)
-    return 0
-  end
-}
-
-local idsMetaTable = {
-  __index = function (self, typeName)
-    local col = {}
-    rawset(self, typeName, col)
-    return col
-  end
-}
-
-local function countTableAppearances(t, tableAppearances)
-  tableAppearances = tableAppearances or {}
-
-  if type(t) == 'table' then
-    if not tableAppearances[t] then
-      tableAppearances[t] = 1
-      for k,v in pairs(t) do
-        countTableAppearances(k, tableAppearances)
-        countTableAppearances(v, tableAppearances)
-      end
-      countTableAppearances(getmetatable(t), tableAppearances)
-    else
-      tableAppearances[t] = tableAppearances[t] + 1
-    end
-  end
-
-  return tableAppearances
-end
-
-local copySequence = function(s)
-  local copy, len = {}, #s
-  for i=1, len do copy[i] = s[i] end
-  return copy, len
-end
-
-local function makePath(path, ...)
-  local keys = {...}
-  local newPath, len = copySequence(path)
-  for i=1, #keys do
-    newPath[len + i] = keys[i]
-  end
-  return newPath
-end
-
-local function processRecursive(process, item, path)
-  if item == nil then return nil end
-
-  local processed = process(item, path)
-  if type(processed) == 'table' then
-    local processedCopy = {}
-    local processedKey
-
-    for k,v in pairs(processed) do
-      processedKey = processRecursive(process, k, makePath(path, k, inspect.KEY))
-      if processedKey ~= nil then
-        processedCopy[processedKey] = processRecursive(process, v, makePath(path, processedKey))
-      end
-    end
-
-    local mt  = processRecursive(process, getmetatable(processed), makePath(path, inspect.METATABLE))
-    setmetatable(processedCopy, mt)
-    processed = processedCopy
-  end
-  return processed
-end
-
-
--------------------------------------------------------------------
-
-local Inspector = {}
-local Inspector_mt = {__index = Inspector}
-
-function Inspector:puts(...)
-  local args   = {...}
-  local buffer = self.buffer
-  local len    = #buffer
-  for i=1, #args do
-    len = len + 1
-    buffer[len] = tostring(args[i])
-  end
-end
-
-function Inspector:down(f)
-  self.level = self.level + 1
-  f()
-  self.level = self.level - 1
-end
-
-function Inspector:tabify()
-  self:puts(self.newline, string.rep(self.indent, self.level))
-end
-
-function Inspector:alreadyVisited(v)
-  return self.ids[type(v)][v] ~= nil
-end
-
-function Inspector:getId(v)
-  local tv = type(v)
-  local id = self.ids[tv][v]
-  if not id then
-    id              = self.maxIds[tv] + 1
-    self.maxIds[tv] = id
-    self.ids[tv][v] = id
-  end
-  return id
-end
-
-function Inspector:putKey(k)
-  if isIdentifier(k) then return self:puts(k) end
-  self:puts("[")
-  self:putValue(k)
-  self:puts("]")
-end
-
-function Inspector:putTable(t)
-  if t == inspect.KEY or t == inspect.METATABLE then
-    self:puts(tostring(t))
-  elseif self:alreadyVisited(t) then
-    self:puts('<table ', self:getId(t), '>')
-  elseif self.level >= self.depth then
-    self:puts('{...}')
+  -- only repeat namespace on changes - SAXML always passes us the namespace in nsURI
+  if nsURI ~= current_namespace[#current_namespace] then
+    current_namespace[#current_namespace+1] = nsURI
   else
-    if self.tableAppearances[t] > 1 then self:puts('<', self:getId(t), '>') end
+    nsURI = nil
+  end
 
-    local nonSequentialKeys, sequenceLength = getNonSequentialKeys(t)
-    local mt                = getmetatable(t)
-    local toStringResult    = getToStringResultSafely(t, mt)
+  -- add new table within the said output table
+  current_output_table[#current_output_table+1] = {xml = name, xmlns = nsURI}
 
-    self:puts('{')
-    self:down(function()
-      if toStringResult then
-        self:puts(' -- ', escape(toStringResult))
-        if sequenceLength >= 1 then self:tabify() end
-      end
+  -- update our pointer to point to the newly-created table that we'll now be writing data to
+  xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
+end
 
-      local count = 0
-      for i=1, sequenceLength do
-        if count > 0 then self:puts(',') end
-        self:puts(' ')
-        self:putValue(t[i])
-        count = count + 1
-      end
+local attribute = function(name, value)
+  local current_output_table = xml_output_levels[#xml_output_levels]
+  current_output_table[name] = value
+end
 
-      for _,k in ipairs(nonSequentialKeys) do
-        if count > 0 then self:puts(',') end
-        self:tabify()
-        self:putKey(k)
-        self:puts(' = ')
-        self:putValue(t[k])
-        count = count + 1
-      end
+local closeElement = function(name, nsURI)
+  -- stepping back out, remove pointer from stack
+  table.remove(xml_output_levels)
 
-      if mt then
-        if count > 0 then self:puts(',') end
-        self:tabify()
-        self:puts('<metatable> = ')
-        self:putValue(mt)
-      end
-    end)
-
-    if #nonSequentialKeys > 0 or mt then -- result is multi-lined. Justify closing }
-      self:tabify()
-    elseif sequenceLength > 0 then -- array tables have one extra space before closing }
-      self:puts(' ')
-    end
-
-    self:puts('}')
+  -- remove pointer from namespace stack as well
+  if nsURI ~= current_namespace[#current_namespace] then
+    current_namespace[#current_namespace] = nil
   end
 end
 
-function Inspector:putValue(v)
-  local tv = type(v)
-
-  if tv == 'string' then
-    self:puts(smartQuote(escape(v)))
-  elseif tv == 'number' or tv == 'boolean' or tv == 'nil' then
-    self:puts(tostring(v))
-  elseif tv == 'table' then
-    self:putTable(v)
-  else
-    self:puts('<',tv,' ',self:getId(v),'>')
-  end
+local text = function(text)
+  local current_output_table = xml_output_levels[#xml_output_levels]
+  current_output_table[#current_output_table+1] = text
 end
 
--------------------------------------------------------------------
+local parser = SLAXML:parser{
+  startElement = startElement,
+  attribute    = attribute,
+  closeElement = closeElement,
+  text = text
+}
 
-function inspect.inspect(root, options)
-  options       = options or {}
+local function load(myxml)
+  output = {}
+  xml_output_levels = {output}
+  current_namespace = {}
 
-  local depth   = options.depth   or math.huge
-  local newline = options.newline or '\n'
-  local indent  = options.indent  or '  '
-  local process = options.process
+  parser:parse(myxml, {stripWhitespace = true})
 
-  if process then
-    root = processRecursive(process, root, {})
-  end
-
-  local inspector = setmetatable({
-    depth            = depth,
-    buffer           = {},
-    level            = 0,
-    ids              = setmetatable({}, idsMetaTable),
-    maxIds           = setmetatable({}, maxIdsMetaTable),
-    newline          = newline,
-    indent           = indent,
-    tableAppearances = countTableAppearances(root)
-  }, Inspector_mt)
-
-  inspector:putValue(root)
-
-  return table.concat(inspector.buffer)
+  return select(2, next(output))
 end
 
-setmetatable(inspect, { __call = function(_, ...) return inspect.inspect(...) end })
-
-return inspect
+return load
 
  end)
 do local resources = {};
@@ -36636,7 +36638,8 @@ resources["fhir-data/fhir-elements.json"] = "[\
 local status, xml = pcall(require, "xml")
 if not status then
   xml = {}
-  xml.dump = require("fhirformats-xml").dump
+  xml.dump = require("pure-xml-dump")
+  xml.load = require("pure-xml-load")
 end
 
 local status, cjson = pcall(require, "cjson")
