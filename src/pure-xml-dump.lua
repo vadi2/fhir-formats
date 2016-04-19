@@ -66,6 +66,4 @@ local function dump(data, max_depth)
   return table.concat(res, '')
 end
 
-return {
-  dump = dump
-}
+return dump
