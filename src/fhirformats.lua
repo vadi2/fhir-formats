@@ -52,7 +52,7 @@ if cjson then
   null_value = cjson.null
   json_decode, json_encode = cjson.decode, cjson.encode
 elseif lunajson then
-  null_value = math.huge * 0
+  null_value = {}
   json_decode = function(data)
     return lunajson.decode(data, nil, null_value)
   end
