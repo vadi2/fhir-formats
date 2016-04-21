@@ -37107,7 +37107,7 @@ convert_to_json = function(data, options)
 
   local data_in_lua = convert_to_lua_from_xml(xml_data, nil, output, output_levels, output_stack)
 
-  return (options and options.pretty) and prettyjson(data_in_lua, nil, nil, nil, json_encode)
+  return (options and options.pretty) and prettyjson(data_in_lua, nil, '  ', nil, json_encode)
   or json_encode(data_in_lua)
 end
 
