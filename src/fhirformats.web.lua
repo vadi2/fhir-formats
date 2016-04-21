@@ -36714,22 +36714,23 @@ resources["fhir-data/fhir-elements.json"] = "[\
   limitations under the License.
 ]]
 
-local cjson, prettyjson, datafile, lunajson
+local cjson, datafile, lunajson, xml
 
-local status, xml = pcall(require, "xml")
--- if loading via the web, the then not all dependencies are available
--- also the console gets spammed, so only try once with xml
-if not status then
+-- when loading via Web, load the pure-Lua libraries
+if js and js.global then
   xml = {}
   xml.dump = require("pure-xml-dump")
   xml.load = require("pure-xml-load")
 
   lunajson = require("lunajson")
 else
+  -- otherwise load the libraries with native code for perf
+  xml = require("xml")
   cjson = require("cjson")
-  prettyjson = require("prettycjson")
+  -- datafile is used by LuaRocks exclusively
   datafile = require("datafile")
 end
+local prettyjson = require("prettycjson")
 
 local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat
 = ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format
