@@ -36714,20 +36714,22 @@ resources["fhir-data/fhir-elements.json"] = "[\
   limitations under the License.
 ]]
 
+local cjson, prettyjson, datafile, lunajson
+
 local status, xml = pcall(require, "xml")
+-- if loading via the web, the then not all dependencies are available
+-- also the console gets spammed, so only try once with xml
 if not status then
   xml = {}
   xml.dump = require("pure-xml-dump")
   xml.load = require("pure-xml-load")
-end
 
-local status, cjson = pcall(require, "cjson")
-if not status then cjson = nil end
-local status, prettyjson = pcall(require, "prettycjson")
-if not status then prettyjson = nil end
-local status, datafile = pcall(require, "datafile")
-if not status then datafile = nil end
-local lunajson = require("lunajson")
+  lunajson = require("lunajson")
+else
+  cjson = require("cjson")
+  prettyjson = require("prettycjson")
+  datafile = require("datafile")
+end
 
 local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat
 = ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format
