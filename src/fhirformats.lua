@@ -25,7 +25,7 @@ end
 
 local status, cjson = pcall(require, "cjson")
 if not status then cjson = nil end
-local status, prettyjson = pcall(require, "resty.prettycjson")
+local status, prettyjson = pcall(require, "prettycjson")
 if not status then prettyjson = nil end
 local status, datafile = pcall(require, "datafile")
 if not status then datafile = nil end
@@ -38,7 +38,7 @@ local get_fhir_definition, read_fhir_data, getindex, map_fhir_data, fhir_typed
 local get_json_datatype, print_data_for_node, convert_to_lua_from_xml, handle_div
 local convert_to_json, file_exists, read_filecontent, read_file, make_json_datatype
 local handle_json_recursively, print_simple_datatype, convert_to_lua_from_json
-local convert_to_xml, print_complex_datatype
+local convert_to_xml, print_complex_datatype, list_to_map
 
 local fhir_data
 
@@ -409,7 +409,7 @@ convert_to_json = function(data, options)
 
   local data_in_lua = convert_to_lua_from_xml(xml_data, nil, output, output_levels, output_stack)
 
-  return (options and options.pretty) and prettyjson(data_in_lua)
+  return (options and options.pretty) and prettyjson(data_in_lua, nil, nil, nil, json_encode)
   or json_encode(data_in_lua)
 end
 
