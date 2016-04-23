@@ -34,8 +34,8 @@ else
 end
 local prettyjson = require("prettycjson")
 
-local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat
-= ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format
+local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat, tsort
+= ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format, table.sort
 
 local get_fhir_definition, read_fhir_data, getindex, map_fhir_data, fhir_typed
 local get_json_datatype, print_data_for_node, convert_to_lua_from_xml, handle_div
@@ -439,6 +439,12 @@ print_simple_datatype = function(element, simple_type, xml_output_levels, output
     current_output_table[#current_output_table+1] = {xml = element, value = tostring(simple_type)}
   end
 
+  -- only add weights for elements and not attributes (like url)
+  local new_element = current_output_table[#current_output_table]
+  if new_element then
+    new_element._weight = get_fhir_definition(output_stack, element)._weight
+    new_element._count = #current_output_table
+  end
 
   if extra_data then
     xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
@@ -462,12 +468,17 @@ print_complex_datatype = function(element, complex_type, xml_output_levels, outp
 
   -- add new table within the said output table
   current_output_table[#current_output_table+1] = {xml = element}
+  local new_element = current_output_table[#current_output_table]
+
+  -- record the weight for later sorting
+  new_element._weight = get_fhir_definition(output_stack, element)._weight
+  new_element._count = #current_output_table
 
   -- update our pointer to point to the newly-created table that we'll now be writing data to
-  xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
+  xml_output_levels[#xml_output_levels+1] = new_element
 
   -- update our stack of FHIR elements
-  output_stack[#output_stack+1] = current_output_table[#current_output_table].xml
+  output_stack[#output_stack+1] = new_element.xml
 
   -- recurse down to write any more complex or primitive values
   handle_json_recursively(complex_type, xml_output_levels, output_stack)
@@ -529,6 +540,21 @@ handle_json_recursively = function(json_data, xml_output_levels, output_stack)
     if element:sub(1,1) == '_' and not json_data[element:sub(2)] then
       print_complex_datatype(element:sub(2), data, xml_output_levels, output_stack)
     end
+  end
+
+  -- sort XML elements at this level according to the FHIR element sorting
+  local current_output_table = xml_output_levels[#xml_output_levels]
+  tsort(current_output_table, function(a,b)
+      -- if it's many elements repeated, then keep their previous JSON order
+      -- otherwise sort by FHIR schema
+      return (a.xml == b.xml) and (a._count < b._count) or (a._weight < b._weight)
+    end)
+
+  -- remove temporary weight and order data
+  for i = 1, #current_output_table do
+    local element = current_output_table[i]
+    element._weight = nil
+    element._count = nil
   end
 
   if had_contained_resource then
