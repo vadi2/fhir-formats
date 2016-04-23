@@ -62,10 +62,10 @@ for _, testcase in ipairs(data) do
         end)
 
 
-      it("should have xml-comparable div data", function()
+      pending("should have xml-comparable div data", function()
           local json_example_div = xml.load(t.json_example.text.div)
           local xml_example_div = xml.load(t.xml_example.text.div)
---          assert.same(json_example_div, xml_example_div)
+          assert.same(json_example_div, xml_example_div)
         end)
     end)
 
