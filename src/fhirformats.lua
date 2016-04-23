@@ -33,7 +33,7 @@ else
   datafile = require("datafile")
 end
 -- fake out cjson.safe for prettycjson, which insists on loading it
-package.preload["cjson.safe"] = { encode = function() end }
+package.loaded["cjson.safe"] = { encode = function() end }
 local prettyjson = require("resty.prettycjson")
 
 local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat, tsort
