@@ -141,6 +141,7 @@ map_fhir_data = function(raw_fhir_data)
     previouselement._max = element.max
     previouselement._type = element.type
     previouselement._type_json = element.type_json
+    previouselement._weight = element.weight
     previouselement._derivations = list_to_map(element.derivations, function(value) return fhir_data[value] end)
     flatten_derivations(previouselement)
 
@@ -374,6 +375,7 @@ handle_div = function(output_levels, node, level)
   output_levels[level][#output_levels[level]][node.xml] = xml.dump(node)
 end
 
+-- converts from XML to JSON, xml_data is input in Lua tables
 convert_to_lua_from_xml = function(xml_data, level, output, output_levels, output_stack)
   -- level is the nesting level inside raw xml_data from our xml parser
   level = (level and (level+1) or 1)
@@ -469,6 +471,7 @@ print_complex_datatype = function(element, complex_type, xml_output_levels)
 end
 
 print_contained_resource = function(json_data, xml_output_levels)
+  -- same as above
   local current_output_table = xml_output_levels[#xml_output_levels]
   current_output_table[#current_output_table+1] = {xml = json_data.resourceType, xmlns = "http://hl7.org/fhir"}
   xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
