@@ -25,6 +25,9 @@ if js and js.global then
   xml.load = require("pure-xml-load")
 
   lunajson = require("lunajson")
+
+  -- fake out cjson.safe for prettycjson, which insists on loading it
+  package.loaded["cjson.safe"] = { encode = function() end }
 else
   -- otherwise load the libraries with native code for perf
   xml = require("xml")
@@ -32,8 +35,6 @@ else
   -- datafile is used by LuaRocks exclusively
   datafile = require("datafile")
 end
--- fake out cjson.safe for prettycjson, which insists on loading it
-package.loaded["cjson.safe"] = { encode = function() end }
 local prettyjson = require("resty.prettycjson")
 
 local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat, tsort
@@ -227,10 +228,6 @@ end
 -- the FHIR schema
 get_fhir_definition = function (output_stack, element_to_check)
   local fhir_data_pointer
-
-  if element_to_check == "id" and output_stack[#output_stack] == "Organization" then
-    print()
-  end
 
   -- +1 since element_to_checkk; isn't on the stack
   for i = 1, #output_stack+1 do
