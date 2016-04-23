@@ -34,8 +34,8 @@ else
 end
 local prettyjson = require("prettycjson")
 
-local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat
-= ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format
+local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat, tsort
+= ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format, table.sort
 
 local get_fhir_definition, read_fhir_data, getindex, map_fhir_data, fhir_typed
 local get_json_datatype, print_data_for_node, convert_to_lua_from_xml, handle_div
@@ -420,7 +420,7 @@ end
 
 -- prints a simple datatype to the right place in the output table,
 -- as indicated by the last pointer in the xml_output_level stack
-print_simple_datatype = function(element, simple_type, xml_output_levels, extra_data)
+print_simple_datatype = function(element, simple_type, xml_output_levels, output_stack, extra_data)
   -- ignore if this is a _value, as those will be handled when handling their
   -- respective 'value' element
   if element:find("_", 1, true) then return end
@@ -439,17 +439,26 @@ print_simple_datatype = function(element, simple_type, xml_output_levels, extra_
     current_output_table[#current_output_table+1] = {xml = element, value = tostring(simple_type)}
   end
 
+  -- only add weights for elements and not attributes (like url)
+  local new_element = current_output_table[#current_output_table]
+  if new_element then
+    new_element._weight = get_fhir_definition(output_stack, element)._weight
+    new_element._count = #current_output_table
+  end
+
   if extra_data then
     xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
-    handle_json_recursively(extra_data, xml_output_levels)
+    output_stack[#output_stack+1] = current_output_table[#current_output_table].xml
+    handle_json_recursively(extra_data, xml_output_levels, output_stack)
     tremove(xml_output_levels)
+    tremove(output_stack)
   end
 end
 
 -- prints a complex datatype to the right place in the output table,
 -- as indicated by the last pointer in the xml_output_level stack,
 -- and recurses down to handle more available values
-print_complex_datatype = function(element, complex_type, xml_output_levels)
+print_complex_datatype = function(element, complex_type, xml_output_levels, output_stack)
   -- ignore if this is a _value, as those will be handled when handling their
   -- respective 'value' element
   if element:find("_", 1, true) then return end
@@ -459,30 +468,40 @@ print_complex_datatype = function(element, complex_type, xml_output_levels)
 
   -- add new table within the said output table
   current_output_table[#current_output_table+1] = {xml = element}
+  local new_element = current_output_table[#current_output_table]
+
+  -- record the weight for later sorting
+  new_element._weight = get_fhir_definition(output_stack, element)._weight
+  new_element._count = #current_output_table
 
   -- update our pointer to point to the newly-created table that we'll now be writing data to
-  xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
+  xml_output_levels[#xml_output_levels+1] = new_element
+
+  -- update our stack of FHIR elements
+  output_stack[#output_stack+1] = new_element.xml
 
   -- recurse down to write any more complex or primitive values
-  handle_json_recursively(complex_type, xml_output_levels)
+  handle_json_recursively(complex_type, xml_output_levels, output_stack)
 
-  -- stepping back out, remove pointer from stack
+  -- stepping back out, remove pointers from stacks
   tremove(xml_output_levels)
+  tremove(output_stack)
 end
 
-print_contained_resource = function(json_data, xml_output_levels)
+print_contained_resource = function(json_data, xml_output_levels, output_stack)
   -- same as above
   local current_output_table = xml_output_levels[#xml_output_levels]
   current_output_table[#current_output_table+1] = {xml = json_data.resourceType, xmlns = "http://hl7.org/fhir"}
   xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
+  output_stack[#output_stack+1] = current_output_table[#current_output_table].xml
   json_data.resourceType = nil
 end
 
-handle_json_recursively = function(json_data, xml_output_levels)
+handle_json_recursively = function(json_data, xml_output_levels, output_stack)
   -- handle contained resources
   local had_contained_resource
   if json_data.resourceType then
-    print_contained_resource(json_data, xml_output_levels)
+    print_contained_resource(json_data, xml_output_levels, output_stack)
     had_contained_resource = true
   end
 
@@ -493,7 +512,7 @@ handle_json_recursively = function(json_data, xml_output_levels)
       if type(data[1]) == "table" then -- array of resources/complex types
         for _, array_complex_element in ipairs(data) do
           if type(array_complex_element) ~= "userdata" then
-            print_complex_datatype(element, array_complex_element, xml_output_levels)
+            print_complex_datatype(element, array_complex_element, xml_output_levels, output_stack)
           end
         end
 
@@ -508,37 +527,54 @@ handle_json_recursively = function(json_data, xml_output_levels)
             -- don't process if it's JSON null
             if _value == null_value then _value = nil end
           end
-          print_simple_datatype(element, array_primitive_element, xml_output_levels, _value)
+          print_simple_datatype(element, array_primitive_element, xml_output_levels, output_stack, _value)
         end
       elseif type(data) ~= "userdata" then
-        print_complex_datatype(element, data, xml_output_levels)
+        print_complex_datatype(element, data, xml_output_levels, output_stack)
       end
     elseif type(data) ~= "userdata" then -- not an array, handle object property
-      print_simple_datatype(element, data, xml_output_levels, json_data[sformat("_%s", element)])
+      print_simple_datatype(element, data, xml_output_levels, output_stack, json_data[sformat("_%s", element)])
     end
 
     -- handle a special case: there is an '_element' in JSON but no corresponding 'element'
     if element:sub(1,1) == '_' and not json_data[element:sub(2)] then
-      print_complex_datatype(element:sub(2), data, xml_output_levels)
+      print_complex_datatype(element:sub(2), data, xml_output_levels, output_stack)
     end
+  end
+
+  -- sort XML elements at this level according to the FHIR element sorting
+  local current_output_table = xml_output_levels[#xml_output_levels]
+  tsort(current_output_table, function(a,b)
+      -- if it's many elements repeated, then keep their previous JSON order
+      -- otherwise sort by FHIR schema
+      return (a.xml == b.xml) and (a._count < b._count) or (a._weight < b._weight)
+    end)
+
+  -- remove temporary weight and order data
+  for i = 1, #current_output_table do
+    local element = current_output_table[i]
+    element._weight = nil
+    element._count = nil
   end
 
   if had_contained_resource then
     tremove(xml_output_levels)
+    tremove(output_stack)
   end
 end
 
 -- entry point for converting from JSON to XML
-convert_to_lua_from_json = function(json_data, output, xml_output_levels)
+convert_to_lua_from_json = function(json_data, output, xml_output_levels, output_stack)
   -- strip out the root resourceType
   if json_data.resourceType then
     output.xmlns = "http://hl7.org/fhir"
     output.xml = json_data.resourceType
     json_data.resourceType = nil
+    output_stack[#output_stack+1] = output.xml
   end
 
   -- continue processing rest of resource
-  return handle_json_recursively(json_data, xml_output_levels)
+  return handle_json_recursively(json_data, xml_output_levels, output_stack)
 end
 
 convert_to_xml = function(data, options)
@@ -553,10 +589,10 @@ convert_to_xml = function(data, options)
     json_data = read_filecontent(data, json_decode)
   end
 
-  local output = {}
+  local output, output_stack = {}, {}
   local xml_output_levels = {output}
 
-  convert_to_lua_from_json(json_data, output, xml_output_levels)
+  convert_to_lua_from_json(json_data, output, xml_output_levels, output_stack)
 
   return xml.dump(output)
 end
