@@ -148,5 +148,4 @@ Decimal precision is up to 14 significant digits.
 ## TODO
 
 * add command-line utility for Windows, OSX, and Linux
-* add Javascript/any other version via Emscripten
 * add FHIR graph visualisations
