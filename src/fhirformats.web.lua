@@ -42204,6 +42204,7 @@ s=require("xml")
 e=require("cjson")
 t=require("datafile")
 end
+package.preload["cjson.safe"]={encode=function()end}
 local L=require("resty.prettycjson")
 local w,q,o,a,D,R,r,x,H
 =ipairs,pairs,type,print,tonumber,string.gmatch,table.remove,string.format,table.sort
