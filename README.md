@@ -148,4 +148,5 @@ Decimal precision is up to 14 significant digits.
 ## TODO
 
 * add command-line utility for Windows, OSX, and Linux
+* add a stand-alone Postman-like app
 * add FHIR graph visualisations
