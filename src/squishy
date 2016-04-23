@@ -6,7 +6,7 @@ Module "lunajson"
 Module "slaxml"
 Module "pure-xml-dump"
 Module "pure-xml-load"
-Module "prettycjson"
+Module "resty.prettycjson"
 
 Resource "fhir-data/fhir-elements.json" "fhir-data/fhir-elements.json"
 

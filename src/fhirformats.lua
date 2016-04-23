@@ -32,7 +32,7 @@ else
   -- datafile is used by LuaRocks exclusively
   datafile = require("datafile")
 end
-local prettyjson = require("prettycjson")
+local prettyjson = require("resty.prettycjson")
 
 local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat, tsort
 = ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format, table.sort
