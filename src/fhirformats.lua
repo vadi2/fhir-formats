@@ -219,9 +219,12 @@ fhir_typed = function(output_stack, node)
     else
       print(string.format("Warning: %s.%s is of type %s in FHIR JSON - its XML value of %s is invalid.", table.concat(output_stack), node.xml, json_type, node.value))
     end
-  elseif json_type == "number" then return tonumber(node.value)
-  else return value
-  end
+  elseif json_type == "integer" or
+  json_type == "unsignedInt" or
+  json_type == "positiveInt" or
+  json_type == "decimal" then
+    return tonumber(node.value)
+  else return value end
 end
 
 -- given an element and a path to it, returns the FHIR definition from
