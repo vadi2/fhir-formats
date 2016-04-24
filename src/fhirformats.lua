@@ -435,7 +435,7 @@ print_simple_datatype = function(element, simple_type, xml_output_levels, output
     current_output_table[#current_output_table+1] = xml.load(simple_type)
   elseif element == "url" then -- some things are attributes: https://hl7-fhir.github.io/xml.html#1.17.1
     current_output_table.url = simple_type
-  elseif type(simple_type) == "userdata" then -- only userdata possible is null_value, so don't show anything
+  elseif simple_type == null_value then
     current_output_table[#current_output_table+1] = {xml = element}
   else
     current_output_table[#current_output_table+1] = {xml = element, value = tostring(simple_type)}
@@ -513,7 +513,7 @@ handle_json_recursively = function(json_data, xml_output_levels, output_stack)
     if type(data) == "table" then -- handle arrays with in-place expansion (one array is many xml pbjects)
       if type(data[1]) == "table" then -- array of resources/complex types
         for _, array_complex_element in ipairs(data) do
-          if type(array_complex_element) ~= "userdata" then
+          if array_complex_element ~= null_value then
             print_complex_datatype(element, array_complex_element, xml_output_levels, output_stack)
           end
         end
@@ -531,10 +531,10 @@ handle_json_recursively = function(json_data, xml_output_levels, output_stack)
           end
           print_simple_datatype(element, array_primitive_element, xml_output_levels, output_stack, _value)
         end
-      elseif type(data) ~= "userdata" then
+      elseif data ~= null_value then
         print_complex_datatype(element, data, xml_output_levels, output_stack)
       end
-    elseif type(data) ~= "userdata" then -- not an array, handle object property
+    elseif data ~= null_value then -- not an array, handle object property
       print_simple_datatype(element, data, xml_output_levels, output_stack, json_data[sformat("_%s", element)])
     end
 

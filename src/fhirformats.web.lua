@@ -1,6 +1,6 @@
 package.preload['lunajson._str_lib']=(function(...)
 local e=math.huge
-local l,s,u=string.byte,string.char,string.sub
+local l,h,u=string.byte,string.char,string.sub
 local a=setmetatable
 local o=math.floor
 local t=nil
@@ -15,7 +15,7 @@ return e
 end
 a(t,t)
 return function(r)
-local h={
+local s={
 ['"']='"',
 ['\\']='\\',
 ['/']='/',
@@ -25,26 +25,26 @@ local h={
 ['r']='\r',
 ['t']='\t'
 }
-h.__index=function()
+s.__index=function()
 r("invalid escape sequence")
 end
-a(h,h)
+a(s,s)
 local a=0
-local function m(d,n)
+local function c(d,n)
 local i
 if d=='u'then
-local c,d,l,h=l(n,1,4)
-local t=t[c-47]*4096+t[d-47]*256+t[l-47]*16+t[h-47]
+local c,l,d,s=l(n,1,4)
+local t=t[c-47]*4096+t[l-47]*256+t[d-47]*16+t[s-47]
 if t==e then
 r("invalid unicode charcode")
 end
 n=u(n,5)
 if t<128 then
-i=s(t)
+i=h(t)
 elseif t<2048 then
-i=s(192+o(t*.015625),128+t%64)
+i=h(192+o(t*.015625),128+t%64)
 elseif t<55296 or 57344<=t then
-i=s(224+o(t*.000244140625),128+o(t*.015625)%64,128+t%64)
+i=h(224+o(t*.000244140625),128+o(t*.015625)%64,128+t%64)
 elseif 55296<=t and t<56320 then
 if a==0 then
 a=t
@@ -58,27 +58,27 @@ a=1
 else
 t=65536+(a-55296)*1024+(t-56320)
 a=0
-i=s(240+o(t*3814697265625e-18),128+o(t*.000244140625)%64,128+o(t*.015625)%64,128+t%64)
+i=h(240+o(t*3814697265625e-18),128+o(t*.000244140625)%64,128+o(t*.015625)%64,128+t%64)
 end
 end
 end
 if a~=0 then
 r("invalid surrogate pair")
 end
-return(i or h[d])..n
+return(i or s[d])..n
 end
 local function e()
 return a==0
 end
 return{
-subst=m,
+subst=c,
 surrogateok=e
 }
 end
 end)
 package.preload['lunajson.decoder']=(function(...)
-local p=error
-local n,e,h,v,l,u=string.byte,string.char,string.find,string.gsub,string.match,string.sub
+local y=error
+local n,e,h,p,l,u=string.byte,string.char,string.find,string.gsub,string.match,string.sub
 local r=tonumber
 local s,b=tostring,setmetatable
 local m
@@ -89,10 +89,10 @@ m=require'lunajson._str_lib'
 end
 local e=nil
 local function q()
-local a,t,w,f
+local a,t,f,w
 local d,o
 local function i(e)
-p("parse error at "..t..": "..e)
+y("parse error at "..t..": "..e)
 end
 local function e()
 i('invalid value')
@@ -100,7 +100,7 @@ end
 local function q()
 if u(a,t,t+2)=='ull'then
 t=t+3
-return w
+return f
 end
 i('invalid value')
 end
@@ -125,13 +125,13 @@ if h(s,'%W')then
 s='%'..s
 end
 c=function(e)
-return r(v(e,'.',s))
+return r(p(e,'.',s))
 end
 end
 local function s()
 i('invalid number')
 end
-local function y(h)
+local function v(h)
 local o=t
 local e
 local i=n(a,o)
@@ -200,7 +200,7 @@ return r(true)
 end
 else
 if e>47 then
-return y(true)
+return v(true)
 end
 end
 end
@@ -210,10 +210,10 @@ local s=m(i)
 local g=s.surrogateok
 local m=s.subst
 local l=b({},{__mode="v"})
-local function c(d)
+local function c(r)
 local e=t-2
 local o=t
-local r,s
+local d,s
 repeat
 e=h(a,'"',o,true)
 if not e then
@@ -221,8 +221,8 @@ i("unterminated string")
 end
 o=e+1
 while true do
-r,s=n(a,e-2,e-1)
-if s~=92 or r~=92 then
+d,s=n(a,e-2,e-1)
+if s~=92 or d~=92 then
 break
 end
 e=e-2
@@ -230,7 +230,7 @@ end
 until s~=92
 local a=u(a,t,o-2)
 t=o
-if d then
+if r then
 local e=l[a]
 if e then
 return e
@@ -238,12 +238,12 @@ end
 end
 local e=a
 if h(e,'\\',1,true)then
-e=v(e,'\\(.)([^\\]*)',m)
+e=p(e,'\\(.)([^\\]*)',m)
 if not g()then
 i("invalid surrogate pair")
 end
 end
-if d then
+if r then
 l[a]=e
 end
 return e
@@ -269,7 +269,7 @@ end
 t=e
 end
 t=t+1
-if f then
+if w then
 r[0]=s
 end
 return r
@@ -323,7 +323,7 @@ d={
 e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,
 e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,
 e,e,c,e,e,e,e,e,e,e,e,e,e,k,e,e,
-y,r,r,r,r,r,r,r,r,r,e,e,e,e,e,e,
+v,r,r,r,r,r,r,r,r,r,e,e,e,e,e,e,
 e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,
 e,e,e,e,e,e,e,e,e,e,e,l,e,e,e,e,
 e,e,e,e,e,e,x,e,e,e,e,e,e,e,q,e,
@@ -335,7 +335,7 @@ i("unexpected termination")
 end
 b(d,d)
 local function s(e,i,r,s)
-a,t,w,f=e,i,r,s
+a,t,f,w=e,i,r,s
 t=t or 1
 o,t=h(a,'^[ \n\r\t]*',t)
 t=t+1
@@ -347,7 +347,7 @@ return e,t
 else
 o,t=h(a,'^[ \n\r\t]*',t)
 if t~=#a then
-p('json ended')
+y('json ended')
 end
 return e
 end
@@ -357,22 +357,22 @@ end
 return q
 end)
 package.preload['lunajson.encoder']=(function(...)
-local n=error
-local g,l,w,r,i=string.byte,string.find,string.format,string.gsub,string.match
+local s=error
+local g,d,w,r,i=string.byte,string.find,string.format,string.gsub,string.match
 local b=table.concat
 local o=tostring
-local k,d=pairs,type
+local k,l=pairs,type
 local f=setmetatable
 local q,y=1/0,-1/0
-local s
+local n
 if _VERSION=="Lua 5.1"then
-s='[^ -!#-[%]^-\255]'
+n='[^ -!#-[%]^-\255]'
 else
-s='[\0-\31"\\]'
+n='[\0-\31"\\]'
 end
 local e=nil
 local function v()
-local m,c
+local c,m
 local e,t,h
 local function p(a)
 t[e]=o(a)
@@ -386,10 +386,10 @@ end
 local u
 if a or o then
 u=true
-if a and l(a,'%W')then
+if a and d(a,'%W')then
 a='%'..a
 end
-if o and l(o,'%W')then
+if o and d(o,'%W')then
 o='%'..o
 end
 end
@@ -408,7 +408,7 @@ t[e]=i
 e=e+1
 return
 end
-n('invalid number')
+s('invalid number')
 end
 local i
 local o={
@@ -426,20 +426,20 @@ end
 f(o,o)
 local function u(a)
 t[e]='"'
-if l(a,s)then
-a=r(a,s,o)
+if d(a,n)then
+a=r(a,n,o)
 end
 t[e+1]=a
 t[e+2]='"'
 e=e+3
 end
-local function s(a)
+local function r(a)
 if h[a]then
-n("loop detected")
+s("loop detected")
 end
 h[a]=true
 local o=a[0]
-if d(o)=='number'then
+if l(o)=='number'then
 t[e]='['
 e=e+1
 for o=1,o do
@@ -473,8 +473,8 @@ t[e]='{'
 e=e+1
 local o=e
 for a,o in k(a)do
-if d(a)~='string'then
-n("non-string key")
+if l(a)~='string'then
+s("non-string key")
 end
 u(a)
 t[e]=':'
@@ -492,28 +492,28 @@ end
 e=e+1
 h[a]=nil
 end
-local o={
+local a={
 boolean=p,
 number=y,
 string=u,
-table=s,
+table=r,
 __index=function()
-n("invalid type value")
+s("invalid type value")
 end
 }
-f(o,o)
-function i(a)
-if a==c then
+f(a,a)
+function i(o)
+if o==m then
 t[e]='null'
 e=e+1
 return
 end
-return o[d(a)](a)
+return a[l(o)](o)
 end
 local function o(o,a)
-m,c=o,a
+c,m=o,a
 e,t,h=1,{},{}
-i(m)
+i(c)
 return b(t)
 end
 return o
@@ -521,44 +521,44 @@ end
 return v
 end)
 package.preload['lunajson.sax']=(function(...)
-local x=error
-local i,N,l,j,m,u=string.byte,string.char,string.find,string.gsub,string.match,string.sub
-local g=tonumber
+local g=error
+local o,N,l,k,m,u=string.byte,string.char,string.find,string.gsub,string.match,string.sub
+local q=tonumber
 local _,r,T=tostring,type,table.unpack or unpack
-local p
+local b
 if _VERSION=="Lua 5.3"then
-p=require'lunajson._str_lib_lua53'
+b=require'lunajson._str_lib_lua53'
 else
-p=require'lunajson._str_lib'
+b=require'lunajson._str_lib'
 end
 local e=nil
 local function e()end
-local function q(h,n)
+local function j(h,n)
 local a,d
-local o,t,y=0,1,0
+local i,t,y=0,1,0
 local f,s
 if r(h)=='string'then
 a=h
-o=#a
+i=#a
 d=function()
 a=''
-o=0
+i=0
 d=e
 end
 else
 d=function()
-y=y+o
+y=y+i
 t=1
 repeat
 a=h()
 if not a then
 a=''
-o=0
+i=0
 d=e
 return
 end
-o=#a
-until o>0
+i=#a
+until i>0
 end
 d()
 end
@@ -567,32 +567,32 @@ local A=n.key or e
 local I=n.endobject or e
 local z=n.startarray or e
 local E=n.endarray or e
-local q=n.string or e
+local x=n.string or e
 local v=n.number or e
 local r=n.boolean or e
 local w=n.null or e
-local function b()
-local e=i(a,t)
+local function p()
+local e=o(a,t)
 if not e then
 d()
-e=i(a,t)
+e=o(a,t)
 end
 return e
 end
 local function n(e)
-x("parse error at "..y+t..": "..e)
+g("parse error at "..y+t..": "..e)
 end
-local function k()
-return b()or n("unexpected termination")
+local function j()
+return p()or n("unexpected termination")
 end
 local function h()
 while true do
 s,t=l(a,'^[ \n\r\t]*',t)
-if t~=o then
+if t~=i then
 t=t+1
 return
 end
-if o==0 then
+if i==0 then
 n("unexpected termination")
 end
 d()
@@ -601,31 +601,31 @@ end
 local function e()
 n('invalid value')
 end
-local function c(e,a,s,o)
-for a=1,a do
-local o=k()
-if i(e,a)~=o then
+local function c(e,i,a,s)
+for a=1,i do
+local i=j()
+if o(e,a)~=i then
 n("invalid char")
 end
 t=t+1
 end
-return o(s)
+return s(a)
 end
-local function S()
+local function H()
 if u(a,t,t+2)=='ull'then
 t=t+3
 return w(nil)
 end
 return c('ull',3,nil,w)
 end
-local function R()
+local function S()
 if u(a,t,t+3)=='alse'then
 t=t+4
 return r(false)
 end
 return c('alse',4,false,r)
 end
-local function H()
+local function R()
 if u(a,t,t+2)=='rue'then
 t=t+3
 return r(true)
@@ -633,24 +633,24 @@ end
 return c('rue',3,true,r)
 end
 local r=m(_(.5),'[^0-9]')
-local w=g
+local w=q
 if r~='.'then
 if l(r,'%W')then
 r='%'..r
 end
 w=function(e)
-return g(j(e,'.',r))
+return q(k(e,'.',r))
 end
 end
 local function c(h)
 local s={}
-local o=1
-local e=i(a,t)
+local i=1
+local e=o(a,t)
 t=t+1
 local function a()
-s[o]=e
-o=o+1
-e=b()
+s[i]=e
+i=i+1
+e=p()
 t=t+1
 end
 if e==48 then
@@ -683,10 +683,10 @@ e=-e
 end
 return v(e)
 end
-local function g(h)
+local function q(h)
 local n=t
 local e
-local s=i(a,n)
+local s=o(a,n)
 if s==46 then
 e=m(a,'^.[0-9]*',t)
 local e=#e
@@ -695,7 +695,7 @@ t=t-1
 return c(h)
 end
 n=t+e
-s=i(a,n)
+s=o(a,n)
 end
 if s==69 or s==101 then
 local a=m(a,'^[^eE]*[eE][-+]?[0-9]+',t)
@@ -708,7 +708,7 @@ e=a
 end
 n=t+#a
 end
-if n>o then
+if n>i then
 t=t-1
 return c(h)
 end
@@ -723,33 +723,33 @@ e=-e
 end
 return v(e)
 end
-local function r(s)
+local function r(n)
 t=t-1
 local e=m(a,'^.[0-9]*%.?[0-9]*',t)
-if i(e,-1)==46 then
-return c(s)
+if o(e,-1)==46 then
+return c(n)
 end
-local n=t+#e
-local i=i(a,n)
-if i==69 or i==101 then
+local s=t+#e
+local o=o(a,s)
+if o==69 or o==101 then
 e=m(a,'^[^eE]*[eE][-+]?[0-9]+',t)
 if not e then
-return c(s)
+return c(n)
 end
-n=t+#e
+s=t+#e
 end
-if n>o then
-return c(s)
+if s>i then
+return c(n)
 end
-t=n
+t=s
 e=w(e)-0
-if s then
+if n then
 e=-e
 end
 return v(e)
 end
 local function v()
-local e=i(a,t)or k()
+local e=o(a,t)or j()
 if e then
 t=t+1
 if e>48 then
@@ -758,15 +758,15 @@ return r(true)
 end
 else
 if e>47 then
-return g(true)
+return q(true)
 end
 end
 end
 n("invalid number")
 end
-local c=p(n)
-local w=c.surrogateok
-local m=c.subst
+local c=b(n)
+local m=c.surrogateok
+local w=c.subst
 local function c(c)
 local h=t
 local s
@@ -778,15 +778,15 @@ s=l(a,'[\\"]',h)
 if s then
 break
 end
-e=e..u(a,t,o)
-if h==o+2 then
+e=e..u(a,t,i)
+if h==i+2 then
 h=2
 else
 h=1
 end
 d()
 end
-if i(a,s)==34 then
+if o(a,s)==34 then
 break
 end
 h=s+2
@@ -795,23 +795,23 @@ end
 e=e..u(a,t,s-1)
 t=s+1
 if r then
-e=j(e,'\\(.)([^\\]*)',m)
-if not w()then
+e=k(e,'\\(.)([^\\]*)',w)
+if not m()then
 n("invalid surrogate pair")
 end
 end
 if c then
 return A(e)
 end
-return q(e)
+return x(e)
 end
 local function w()
 z()
 h()
-if i(a,t)~=93 then
+if o(a,t)~=93 then
 local e
 while true do
-s=f[i(a,t)]
+s=f[o(a,t)]
 t=t+1
 s()
 s,e=l(a,'^[ \n\r\t]*,[ \n\r\t]*',t)
@@ -822,7 +822,7 @@ t=e
 break
 end
 h()
-local a=i(a,t)
+local a=o(a,t)
 if a==44 then
 t=t+1
 h()
@@ -834,7 +834,7 @@ n("no closing bracket of an array")
 end
 end
 t=e+1
-if t>o then
+if t>i then
 h()
 end
 end
@@ -845,10 +845,10 @@ end
 local function m()
 O()
 h()
-if i(a,t)~=125 then
+if o(a,t)~=125 then
 local e
 while true do
-if i(a,t)~=34 then
+if o(a,t)~=34 then
 n("not key")
 end
 t=t+1
@@ -856,7 +856,7 @@ c(true)
 s,e=l(a,'^[ \n\r\t]*:[ \n\r\t]*',t)
 if not e then
 h()
-if i(a,t)~=58 then
+if o(a,t)~=58 then
 n("no colon after a key")
 end
 t=t+1
@@ -864,10 +864,10 @@ h()
 e=t-1
 end
 t=e+1
-if t>o then
+if t>i then
 h()
 end
-s=f[i(a,t)]
+s=f[o(a,t)]
 t=t+1
 s()
 s,e=l(a,'^[ \n\r\t]*,[ \n\r\t]*',t)
@@ -878,7 +878,7 @@ t=e
 break
 end
 h()
-local a=i(a,t)
+local a=o(a,t)
 if a==44 then
 t=t+1
 h()
@@ -890,7 +890,7 @@ n("no closing bracket of an object")
 end
 end
 t=e+1
-if t>o then
+if t>i then
 h()
 end
 end
@@ -902,46 +902,46 @@ f={
 e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,
 e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,
 e,e,c,e,e,e,e,e,e,e,e,e,e,v,e,e,
-g,r,r,r,r,r,r,r,r,r,e,e,e,e,e,e,
+q,r,r,r,r,r,r,r,r,r,e,e,e,e,e,e,
 e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,e,
 e,e,e,e,e,e,e,e,e,e,e,w,e,e,e,e,
-e,e,e,e,e,e,R,e,e,e,e,e,e,e,S,e,
-e,e,e,e,H,e,e,e,e,e,e,m,e,e,e,e,
+e,e,e,e,e,e,S,e,e,e,e,e,e,e,H,e,
+e,e,e,e,R,e,e,e,e,e,e,m,e,e,e,e,
 }
 f[0]=e
-local function r()
+local function n()
 h()
-s=f[i(a,t)]
+s=f[o(a,t)]
 t=t+1
 s()
 end
-local function n(e)
+local function s(e)
 if e<0 then
-x("the argument must be non-negative")
+g("the argument must be non-negative")
 end
 local e=(t-1)+e
-local i=u(a,t,e)
-while e>o and o~=0 do
+local o=u(a,t,e)
+while e>i and i~=0 do
 d()
-e=e-(o-(t-1))
-i=i..u(a,t,e)
+e=e-(i-(t-1))
+o=o..u(a,t,e)
 end
-if o~=0 then
+if i~=0 then
 t=e+1
 end
-return i
+return o
 end
 local function e()
 return y+t
 end
 return{
-run=r,
-tryc=b,
-read=n,
+run=n,
+tryc=p,
+read=s,
 tellpos=e,
 }
 end
-local function i(e,a)
+local function a(e,a)
 local e=io.open(e)
 local function o()
 local t
@@ -954,26 +954,26 @@ end
 end
 return t
 end
-return q(o,a)
+return j(o,a)
 end
 return{
-newparser=q,
-newfileparser=i
+newparser=j,
+newfileparser=a
 }
 end)
 package.preload['lunajson']=(function(...)
-local t=require'lunajson.decoder'
-local a=require'lunajson.encoder'
+local a=require'lunajson.decoder'
+local t=require'lunajson.encoder'
 local e=require'lunajson.sax'
 return{
-decode=t(),
-encode=a(),
+decode=a(),
+encode=t(),
 newparser=e.newparser,
 newfileparser=e.newfileparser,
 }
 end)
 package.preload['slaxml']=(function(...)
-local m={
+local w={
 VERSION="0.7",
 _call={
 pi=function(e,t)
@@ -1004,27 +1004,27 @@ print(string.format("</%s>",e))
 end,
 }
 }
-function m:parser(e)
-return{_call=e or self._call,parse=m.parse}
+function w:parser(e)
+return{_call=e or self._call,parse=w.parse}
 end
-function m:parse(s,v)
-if not v then v={stripWhitespace=false}end
-local h,q,p,l,z,g,j=string.find,string.sub,string.gsub,string.char,table.insert,table.remove,table.concat
-local e,a,o,i,t,w,m
-local y=unpack or table.unpack
+function w:parse(s,y)
+if not y then y={stripWhitespace=false}end
+local h,j,v,l,q,k,b=string.find,string.sub,string.gsub,string.char,table.insert,table.remove,table.concat
+local e,a,o,i,t,p,f
+local w=unpack or table.unpack
 local t=1
-local f="text"
+local m="text"
 local d=1
 local r={}
 local c={}
 local u
 local n={}
-local k=false
-local x={{2047,192},{65535,224},{2097151,240}}
-local function b(e)
+local g=false
+local z={{2047,192},{65535,224},{2097151,240}}
+local function x(e)
 if e<128 then return l(e)end
 local t={}
-for a,o in ipairs(x)do
+for a,o in ipairs(z)do
 if e<=o[1]then
 for o=a+1,2,-1 do
 local a=e%64
@@ -1032,19 +1032,19 @@ e=(e-a)/64
 t[o]=l(128+a)
 end
 t[1]=l(o[2]+e)
-return j(t)
+return b(t)
 end
 end
 end
 local l={["lt"]="<",["gt"]=">",["amp"]="&",["quot"]='"',["apos"]="'"}
-local l=function(a,t,e)return l[e]or t=="#"and b(tonumber('0'..e))or a end
-local function b(e)return p(e,'(&(#?)([%d%a]+);)',l)end
+local l=function(a,t,e)return l[e]or t=="#"and x(tonumber('0'..e))or a end
+local function b(e)return v(e,'(&(#?)([%d%a]+);)',l)end
 local function l()
 if e>d and self._call.text then
-local e=q(s,d,e-1)
-if v.stripWhitespace then
-e=p(e,'^%s+','')
-e=p(e,'%s+$','')
+local e=j(s,d,e-1)
+if y.stripWhitespace then
+e=v(e,'^%s+','')
+e=v(e,'%s+$','')
 if#e==0 then e=nil end
 end
 if e then self._call.text(b(e))end
@@ -1060,7 +1060,7 @@ d=t
 return true
 end
 end
-local function v()
+local function z()
 e,a,o=h(s,'^<!%-%-(.-)%-%->',t)
 if e then
 l()
@@ -1070,13 +1070,13 @@ d=t
 return true
 end
 end
-local function p(e)
+local function y(e)
 if e=='xml'then return'http://www.w3.org/XML/1998/namespace'end
 for t=#n,1,-1 do if n[t][e]then return n[t][e]end end
 error(("Cannot find namespace for prefix %s"):format(e))
 end
 local function j()
-k=true
+g=true
 e,a,o=h(s,'^<([%a_][%w_.-]*)',t)
 if e then
 r[2]=nil
@@ -1094,20 +1094,20 @@ r[1]=o
 for e=#n,1,-1 do if n[e]['!']then r[2]=n[e]['!'];break end end
 end
 u=0
-z(n,{})
+q(n,{})
 return true
 end
 end
 local function q()
 e,a,o=h(s,'^%s+([:%a_][:%w_.-]*)%s*=%s*',t)
 if e then
-w=a+1
-e,a,i=h(s,'^"([^<"]*)"',w)
+p=a+1
+e,a,i=h(s,'^"([^<"]*)"',p)
 if e then
 t=a+1
 i=b(i)
 else
-e,a,i=h(s,"^'([^<']*)'",w)
+e,a,i=h(s,"^'([^<']*)'",p)
 if e then
 t=a+1
 i=b(i)
@@ -1115,14 +1115,14 @@ end
 end
 end
 if o and i then
-local t={o,i}
-local e,a=string.match(o,'^([^:]+):([^:]+)$')
-if e then
-if e=='xmlns'then
+local e={o,i}
+local t,a=string.match(o,'^([^:]+):([^:]+)$')
+if t then
+if t=='xmlns'then
 n[#n][a]=i
 else
-t[1]=a
-t[4]=e
+e[1]=a
+e[4]=t
 end
 else
 if o=='xmlns'then
@@ -1131,11 +1131,11 @@ r[2]=i
 end
 end
 u=u+1
-c[u]=t
+c[u]=e
 return true
 end
 end
-local function w()
+local function v()
 e,a,o=h(s,'^<!%[CDATA%[(.-)%]%]>',t)
 if e then
 l()
@@ -1145,23 +1145,23 @@ d=t
 return true
 end
 end
-local function b()
+local function p()
 e,a,o=h(s,'^%s*(/?)>',t)
 if e then
-f="text"
+m="text"
 t=a+1
 d=t
-if r[3]then r[2]=p(r[3])end
-if self._call.startElement then self._call.startElement(y(r))end
+if r[3]then r[2]=y(r[3])end
+if self._call.startElement then self._call.startElement(w(r))end
 if self._call.attribute then
 for e=1,u do
-if c[e][4]then c[e][3]=p(c[e][4])end
-self._call.attribute(y(c[e]))
+if c[e][4]then c[e][3]=y(c[e][4])end
+self._call.attribute(w(c[e]))
 end
 end
 if o=="/"then
-g(n)
-if self._call.closeElement then self._call.closeElement(y(r))end
+k(n)
+if self._call.closeElement then self._call.closeElement(w(r))end
 end
 return true
 end
@@ -1169,103 +1169,103 @@ end
 local function r()
 e,a,o,i=h(s,'^</([%a_][%w_.-]*)%s*>',t)
 if e then
-m=nil
-for e=#n,1,-1 do if n[e]['!']then m=n[e]['!'];break end end
+f=nil
+for e=#n,1,-1 do if n[e]['!']then f=n[e]['!'];break end end
 else
 e,a,i,o=h(s,'^</([%a_][%w_.-]*):([%a_][%w_.-]*)%s*>',t)
-if e then m=p(i)end
+if e then f=y(i)end
 end
 if e then
 l()
-if self._call.closeElement then self._call.closeElement(o,m)end
+if self._call.closeElement then self._call.closeElement(o,f)end
 t=a+1
 d=t
-g(n)
+k(n)
 return true
 end
 end
 while t<#s do
-if f=="text"then
-if not(x()or v()or w()or r())then
+if m=="text"then
+if not(x()or z()or v()or r())then
 if j()then
-f="attributes"
+m="attributes"
 else
 e,a=h(s,'^[^<]+',t)
 t=(e and a or t)+1
 end
 end
-elseif f=="attributes"then
+elseif m=="attributes"then
 if not q()then
-if not b()then
+if not p()then
 error("Was in an element and couldn't find attributes or the close.")
 end
 end
 end
 end
-if not k then error("Parsing did not discover any elements")end
+if not g then error("Parsing did not discover any elements")end
 if#n>0 then error("Parsing ended with unclosed elements")end
 end
-return m
+return w
 end)
 package.preload['pure-xml-dump']=(function(...)
-local u,a,o,s,
-e,c=
+local c,o,a,n,
+e,u=
 ipairs,pairs,table.insert,type,
 string.match,tostring
-local function d(e)
-if s(e)=='boolean'then
+local function l(e)
+if n(e)=='boolean'then
 return e and'true'or'false'
 else
 return e:gsub('&','&amp;'):gsub('>','&gt;'):gsub('<','&lt;'):gsub("'",'&apos;')
 end
 end
-local function r(e)
+local function d(e)
 local t=e.xml or'table'
-for e,a in a(e)do
-if e~='xml'and s(e)=='string'then
-t=t..' '..e.."='"..d(a).."'"
+for e,a in o(e)do
+if e~='xml'and n(e)=='string'then
+t=t..' '..e.."='"..l(a).."'"
 end
 end
 return t
 end
-local function h(a,i,t,e,l,n)
-if l>n then
-error(string.format("Could not dump table to XML. Maximal depth of %i reached.",n))
+local function h(o,i,t,e,r,s)
+if r>s then
+error(string.format("Could not dump table to XML. Maximal depth of %i reached.",s))
 end
-if a[1]then
-o(t,(e=='n'and i or'')..'<'..r(a)..'>')
+if o[1]then
+a(t,(e=='n'and i or'')..'<'..d(o)..'>')
 e='n'
-local r=i..'  '
-for i,a in u(a)do
-local i=s(a)
+local d=i..'  '
+for i,o in c(o)do
+local i=n(o)
 if i=='table'then
-h(a,r,t,e,l+1,n)
+h(o,d,t,e,r+1,s)
 e='n'
 elseif i=='number'then
-o(t,c(a))
+a(t,u(o))
 else
-local a=d(a)
-o(t,a)
+local o=l(o)
+a(t,o)
 e='s'
 end
 end
-o(t,(e=='n'and i or'')..'</'..(a.xml or'table')..'>')
+a(t,(e=='n'and i or'')..'</'..(o.xml or'table')..'>')
 e='n'
 else
-o(t,(e=='n'and i or'')..'<'..r(a)..'/>')
+a(t,(e=='n'and i or'')..'<'..d(o)..'/>')
 e='n'
 end
 end
-local function a(a,e)
-local t=e or 3e3
+local function t(t,e)
+local a=e or 3e3
 local e={}
-h(a,'\n',e,'s',1,t)
+h(t,'\n',e,'s',1,a)
 return table.concat(e,'')
 end
-return a
+return t
 end)
 package.preload['pure-xml-load']=(function(...)
-local n=require'slaxml'
+local i=require'slaxml'
 local a={}
 local e={a}
 local t={}
@@ -1279,25 +1279,25 @@ end
 o[#o+1]={xml=i,xmlns=a}
 e[#e+1]=o[#o]
 end
-local i=function(a,t)
+local n=function(t,a)
 local e=e[#e]
-e[a]=t
+e[t]=a
 end
-local h=function(o,a)
+local s=function(o,a)
 table.remove(e)
 if a~=t[#t]then
 t[#t]=nil
 end
 end
-local s=function(t)
+local h=function(t)
 local e=e[#e]
 e[#e+1]=t
 end
-local n=n:parser{
+local n=i:parser{
 startElement=o,
-attribute=i,
-closeElement=h,
-text=s
+attribute=n,
+closeElement=s,
+text=h
 }
 local function i(o)
 a={}
@@ -1309,55 +1309,55 @@ end
 return i
 end)
 package.preload['resty.prettycjson']=(function(...)
-local e=require"cjson.safe".encode
-local n=table.concat
+local t=require"cjson.safe".encode
+local i=table.concat
 local c=string.sub
 local d=string.rep
-return function(t,s,i,l,a)
-local t,e=(a or e)(t)
+return function(e,s,n,l,a)
+local t,e=(a or t)(e)
 if not t then return t,e end
-s,i,l=s or"\n",i or"\t",l or" "
+s,n,l=s or"\n",n or"\t",l or" "
 local e,a,u,m,o,h,r=1,0,0,#t,{},nil,nil
 local f=c(l,-1)=="\n"
 for m=1,m do
 local t=c(t,m,m)
 if not r and(t=="{"or t=="[")then
-o[e]=h==":"and n{t,s}or n{d(i,a),t,s}
+o[e]=h==":"and i{t,s}or i{d(n,a),t,s}
 a=a+1
 elseif not r and(t=="}"or t=="]")then
 a=a-1
 if h=="{"or h=="["then
 e=e-1
-o[e]=n{d(i,a),h,t}
+o[e]=i{d(n,a),h,t}
 else
-o[e]=n{s,d(i,a),t}
+o[e]=i{s,d(n,a),t}
 end
 elseif not r and t==","then
-o[e]=n{t,s}
+o[e]=i{t,s}
 u=-1
 elseif not r and t==":"then
-o[e]=n{t,l}
+o[e]=i{t,l}
 if f then
 e=e+1
-o[e]=d(i,a)
+o[e]=d(n,a)
 end
 else
 if t=='"'and h~="\\"then
 r=not r and true or nil
 end
 if a~=u then
-o[e]=d(i,a)
+o[e]=d(n,a)
 e,u=e+1,a
 end
 o[e]=t
 end
 h,e=t,e+1
 end
-return n(o)
+return i(o)
 end
 end)
-do local e={};
-e["fhir-data/fhir-elements.json"]="[\
+do local t={};
+t["fhir-data/fhir-elements.json"]="[\
 	{\
 		\"path\": \"date\",\
 		\"weight\": 1,\
@@ -42192,94 +42192,94 @@ e["fhir-data/fhir-elements.json"]="[\
 		\"min\": \"0\",\
 		\"max\": \"1\"\
 	}\
-]"function require_resource(t)return e[t]or error("resource '"..tostring(t).."' not found");end end
-local e,t,w,s
+]"function require_resource(e)return t[e]or error("resource '"..tostring(e).."' not found");end end
+local e,a,t,h
 if js and js.global then
-s={}
-s.dump=require("pure-xml-dump")
-s.load=require("pure-xml-load")
-w=require("lunajson")
+h={}
+h.dump=require("pure-xml-dump")
+h.load=require("pure-xml-load")
+t=require("lunajson")
 package.loaded["cjson.safe"]={encode=function()end}
 else
-s=require("xml")
+h=require("xml")
 e=require("cjson")
-t=require("datafile")
+a=require("datafile")
 end
-local L=require("resty.prettycjson")
-local f,y,o,a,D,R,h,A,H
+local D=require("resty.prettycjson")
+local w,p,s,i,L,R,d,S,H
 =ipairs,pairs,type,print,tonumber,string.gmatch,table.remove,string.format,table.sort
-local l,q,z,g,n
-local x,_,b,E
-local T,O,p,v,k
-local u,j,N
-local I,m,S
-local i
-local r
-local d,c
+local l,y,O,j,f
+local T,A,v,I
+local N,E,b,g,k
+local m,q,_
+local z,c,x
+local o
+local n
+local r,u
 if e then
-r=e.null
-d,c=e.decode,e.encode
-elseif w then
-r={}
-d=function(e)
-return w.decode(e,nil,r)
+n=e.null
+r,u=e.decode,e.encode
+elseif t then
+n={}
+r=function(e)
+return t.decode(e,nil,n)
 end
-c=function(e)
-return w.encode(e,r)
+u=function(e)
+return t.encode(e,n)
 end
 else
 error("neither cjson nor luajson libraries found for JSON parsing")
 end
-O=function(e)
+E=function(e)
 local e=io.open(e,"r")
 if e~=nil then io.close(e)return true else return false end
 end
-q=function(e)
-local a={(e or""),"fhir-data/fhir-elements.json","src/fhir-data/fhir-elements.json","../src/fhir-data/fhir-elements.json","fhir-data/fhir-elements.json"}
+y=function(e)
+local t={(e or""),"fhir-data/fhir-elements.json","src/fhir-data/fhir-elements.json","../src/fhir-data/fhir-elements.json","fhir-data/fhir-elements.json"}
 local e
-for a,t in f(a)do
-if O(t)then
+for a,t in w(t)do
+if E(t)then
 io.input(t)
-e=d(io.read("*a"))
+e=r(io.read("*a"))
 break
 end
 end
-if not e and t then
-local t,a=t.open("src/fhir-data/fhir-elements.json","r")
-e=d(t:read("*a"))
+if not e and a then
+local t,a=a.open("src/fhir-data/fhir-elements.json","r")
+e=r(t:read("*a"))
 end
 if not e and require_resource then
-e=d(require_resource("fhir-data/fhir-elements.json"))
+e=r(require_resource("fhir-data/fhir-elements.json"))
 end
-assert(e,string.format("read_fhir_data: FHIR Schema could not be found in these locations:\n  %s.\n%s%s",table.concat(a," "),t and"Datafile could not find LuaRocks installation as well."or'',require_resource and"Embedded JSON data could not be found as well."or''))
+assert(e,string.format("read_fhir_data: FHIR Schema could not be found in these locations:\n  %s.\n%s%s",table.concat(t," "),a and"Datafile could not find LuaRocks installation as well."or'',require_resource and"Embedded JSON data could not be found as well."or''))
 return e
 end
-z=function(e,a)
+O=function(e,a)
 if not e then return nil end
 for t=1,#e do
 if e[t]==a then return t end
 end
 end
-S=function(e,a)
+x=function(e,t)
 if not e then return nil end
-local t={}
-if o(a)=="function"then
+local a={}
+if s(t)=="function"then
 for o=1,#e do
 local e=e[o]
-t[e]=a(e)
+a[e]=t(e)
 end
 else
 for o=1,#e do
-t[e[o]]=a
+a[e[o]]=t
 end
 end
-return t
+return a
 end
-g=function(a)
-i={}
-local s,n
-n=function(t)
-local e=i
+j=function(a)
+o={}
+local n,i
+i=function(t)
+local e=o
 for t in R(t.path,"([^%.]+)")do
 e[t]=e[t]or{}
 e=e[t]
@@ -42288,18 +42288,18 @@ e._max=t.max
 e._type=t.type
 e._type_json=t.type_json
 e._weight=t.weight
-e._derivations=S(t.derivations,function(e)return i[e]end)
-s(e)
-if o(i[t.type])=="table"then
-e[1]=i[t.type]
+e._derivations=x(t.derivations,function(e)return o[e]end)
+n(e)
+if s(o[t.type])=="table"then
+e[1]=o[t.type]
 end
 end
-s=function(e,t)
+n=function(e,t)
 if not(e and e._derivations)then return end
 local t=t and t._derivations or e._derivations
-for a,t in y(t)do
+for a,t in p(t)do
 if t._derivations then
-for a,t in y(t._derivations)do
+for a,t in p(t._derivations)do
 if e~=t then
 e._derivations[a]=t
 end
@@ -42309,50 +42309,50 @@ end
 end
 for e=1,#a do
 local e=a[e]
-n(e)
+i(e)
 end
 for e=1,#a do
 local e=a[e]
-n(e)
+i(e)
 end
-return i
+return o
 end
-p=function(e,t)
+b=function(e,t)
 return t(e)
 end
-v=function(e,t)
+g=function(e,t)
 io.input(e)
 local e=io.read("*a")
 io.input():close()
 return t(e)
 end
-n=function(o,e)
-local i=e.value
-local t=l(o,e.xml)
+f=function(a,e)
+local o=e.value
+local t=l(a,e.xml)
 if not t then
-a(string.format("Warning: %s is not a known FHIR element; couldn't check its FHIR type to decide the JSON type.",table.concat(o,".")))
-return i
+i(string.format("Warning: %s is not a known FHIR element; couldn't check its FHIR type to decide the JSON type.",table.concat(a,".")))
+return o
 end
 local t=t._type or t._type_json
 if t=="boolean"then
 if e.value=="true"then return true
 elseif e.value=="false"then return false
 else
-a(string.format("Warning: %s.%s is of type %s in FHIR JSON - its XML value of %s is invalid.",table.concat(o),e.xml,t,e.value))
+i(string.format("Warning: %s.%s is of type %s in FHIR JSON - its XML value of %s is invalid.",table.concat(a),e.xml,t,e.value))
 end
 elseif t=="integer"or
 t=="unsignedInt"or
 t=="positiveInt"or
 t=="decimal"then
-return D(e.value)
-else return i end
+return L(e.value)
+else return o end
 end
-l=function(t,o)
+l=function(t,i)
 local e
 for a=1,#t+1 do
-local t=(t[a]or o)
+local t=(t[a]or i)
 if not e then
-e=i[t]
+e=o[t]
 elseif e[t]then
 e=e[t]
 elseif e[1]then
@@ -42364,13 +42364,13 @@ end
 end
 return e
 end
-k=function(i,n)
+k=function(o,n)
 local e,t
-local o=l(i,n)
-if not o then
-a(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.",table.concat(i,"."),n))
+local a=l(o,n)
+if not a then
+i(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.",table.concat(o,"."),n))
 end
-if o and o._max=="*"then
+if a and a._max=="*"then
 e={{}}
 t=e[1]
 else
@@ -42379,126 +42379,126 @@ t=e
 end
 return e,t
 end
-x=function(o,t)
-local e=l(o,t)
+T=function(a,t)
+local e=l(a,t)
 if e==nil then
-a(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.",table.concat(o,"."),t))
+i(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.",table.concat(a,"."),t))
 end
 if e and e._max=="*"then
 return"array"
 end
 return"object"
 end
-_=function(e,i,d,t,s)
+A=function(e,o,d,t,h)
 assert(e.xml,"error from parsed xml: node.xml is missing")
-local a=i-1
-if i==1 then
+local a=o-1
+if o==1 then
 d.resourceType=e.xml
 elseif e.value then
 if not t[a][#t[a]][e.xml]then
-t[a][#t[a]][e.xml]=(x(s,e.xml)=="array"and{n(s,e)}or n(s,e))
+t[a][#t[a]][e.xml]=(T(h,e.xml)=="array"and{f(h,e)}or f(h,e))
 else
 local o=t[a][#t[a]][e.xml]
-o[#o+1]=n(s,e)
+o[#o+1]=f(h,e)
 local e=t[a][#t[a]]["_"..e.xml]
 if e then
-e[#e+1]=r
+e[#e+1]=n
 end
 end
 end
-if o(e[1])=="table"
-and i~=1 then
-local n,h
-if o(t[a][#t[a]][e.xml])=="table"
-and not(i~=1 and e[1]and(e[1].xml=="id"or e[1].xml=="extension"))then
+if s(e[1])=="table"
+and o~=1 then
+local i,r
+if s(t[a][#t[a]][e.xml])=="table"
+and not(o~=1 and e[1]and(e[1].xml=="id"or e[1].xml=="extension"))then
 local e=t[a][#t[a]][e.xml]
 e[#e+1]={}
-h=e[#e]
+r=e[#e]
 elseif not t[a][#t[a]][e.xml]then
-n,h=k(s,e.xml)
-t[a][#t[a]][e.xml]=n
+i,r=k(h,e.xml)
+t[a][#t[a]][e.xml]=i
 end
-if i~=1 and e[1]and(e.id or e[1].xml=="extension")then
-n,h=k(s,e.xml)
-t[a][#t[a]]['_'..e.xml]=n
-local e=z(t[a][#t[a]][e.xml],e.value)
+if o~=1 and e[1]and(e.id or e[1].xml=="extension")then
+i,r=k(h,e.xml)
+t[a][#t[a]]['_'..e.xml]=i
+local e=O(t[a][#t[a]][e.xml],e.value)
 if e and e>1 then
-n[1]=nil
+i[1]=nil
 for e=1,e-1 do
-n[#n+1]=r
+i[#i+1]=n
 end
-n[#n+1]={}
-h=n[#n]
+i[#i+1]={}
+r=i[#i]
 end
 end
-t[i]=t[i]or{}
-t[i][#t[i]+1]=h
+t[o]=t[o]or{}
+t[o][#t[o]+1]=r
 end
 if e.url then
-t[i][#t[i]].url=e.url
+t[o][#t[o]].url=e.url
 end
 return d
 end
-E=function(t,a,e)
-t[e][#t[e]][a.xml]=s.dump(a)
+I=function(t,a,e)
+t[e][#t[e]][a.xml]=h.dump(a)
 end
-b=function(e,t,i,n,a)
+v=function(e,t,o,i,a)
 t=(t and(t+1)or 1)
-i=_(e,t,i,n,a)
+o=A(e,t,o,i,a)
 a[#a+1]=e.xml
-for s,e in f(e)do
+for n,e in w(e)do
 if e.xml=="div"and e.xmlns=="http://www.w3.org/1999/xhtml"then
-E(n,e,t)
+I(i,e,t)
 else
-assert(o(e)=="table",string.format("unexpected type value encountered: %s (%s), expecting table",tostring(e),o(e)))
-b(e,t,i,n,a)
+assert(s(e)=="table",string.format("unexpected type value encountered: %s (%s), expecting table",tostring(e),s(e)))
+v(e,t,o,i,a)
 end
 end
-h(a)
-return i
+d(a)
+return o
 end
-T=function(a,e)
-i=i or g(q())
-assert(next(i),"convert_to_json: FHIR Schema could not be parsed in.")
+N=function(a,e)
+o=o or j(y())
+assert(next(o),"convert_to_json: FHIR Schema could not be parsed in.")
 local t
 if e and e.file then
-t=v(a,s.load)
+t=g(a,h.load)
 else
-t=p(a,s.load)
+t=b(a,h.load)
 end
 local a={}
-local o={[1]={a}}
-local i={}
-local t=b(t,nil,a,o,i)
-return(e and e.pretty)and L(t,nil,'  ',nil,c)
-or c(t)
+local i={[1]={a}}
+local o={}
+local t=v(t,nil,a,i,o)
+return(e and e.pretty)and D(t,nil,'  ',nil,u)
+or u(t)
 end
-j=function(t,n,a,i,r)
+q=function(t,i,a,o,s)
 if t:find("_",1,true)then return end
 local e=a[#a]
 if t=="div"then
-e[#e+1]=s.load(n)
+e[#e+1]=h.load(i)
 elseif t=="url"then
-e.url=n
-elseif o(n)=="userdata"then
+e.url=i
+elseif i==n then
 e[#e+1]={xml=t}
 else
-e[#e+1]={xml=t,value=tostring(n)}
+e[#e+1]={xml=t,value=tostring(i)}
 end
-local o=e[#e]
-if o then
-o._weight=l(i,t)._weight
-o._count=#e
+local i=e[#e]
+if i then
+i._weight=l(o,t)._weight
+i._count=#e
 end
-if r then
+if s then
 a[#a+1]=e[#e]
-i[#i+1]=e[#e].xml
-u(r,a,i)
-h(a)
-h(i)
+o[#o+1]=e[#e].xml
+m(s,a,o)
+d(a)
+d(o)
 end
 end
-m=function(i,n,e,a)
+c=function(i,n,e,a)
 if i:find("_",1,true)then return end
 local t=e[#e]
 t[#t+1]={xml=i}
@@ -42507,88 +42507,88 @@ o._weight=l(a,i)._weight
 o._count=#t
 e[#e+1]=o
 a[#a+1]=o.xml
-u(n,e,a)
-h(e)
-h(a)
+m(n,e,a)
+d(e)
+d(a)
 end
-print_contained_resource=function(o,t,a)
+print_contained_resource=function(a,t,o)
 local e=t[#t]
-e[#e+1]={xml=o.resourceType,xmlns="http://hl7.org/fhir"}
+e[#e+1]={xml=a.resourceType,xmlns="http://hl7.org/fhir"}
 t[#t+1]=e[#e]
-a[#a+1]=e[#e].xml
-o.resourceType=nil
+o[#o+1]=e[#e].xml
+a.resourceType=nil
 end
-u=function(n,a,i)
-local s
-if n.resourceType then
-print_contained_resource(n,a,i)
-s=true
+m=function(i,a,o)
+local h
+if i.resourceType then
+print_contained_resource(i,a,o)
+h=true
 end
-for t,e in y(n)do
-if o(e)=="table"then
-if o(e[1])=="table"then
-for n,e in f(e)do
-if o(e)~="userdata"then
-m(t,e,a,i)
-end
-end
-elseif e[1]and o(e[1])~="table"then
-for h,s in f(e)do
-local o,e=n[A("_%s",t)]
-if o then
-e=o[h]
-if e==r then e=nil end
-end
-j(t,s,a,i,e)
-end
-elseif o(e)~="userdata"then
-m(t,e,a,i)
-end
-elseif o(e)~="userdata"then
-j(t,e,a,i,n[A("_%s",t)])
-end
-if t:sub(1,1)=='_'and not n[t:sub(2)]then
-m(t:sub(2),e,a,i)
+for t,e in p(i)do
+if s(e)=="table"then
+if s(e[1])=="table"then
+for i,e in w(e)do
+if e~=n then
+c(t,e,a,o)
 end
 end
-local t=a[#a]
-H(t,function(e,t)
+elseif e[1]and s(e[1])~="table"then
+for s,h in w(e)do
+local i,e=i[S("_%s",t)]
+if i then
+e=i[s]
+if e==n then e=nil end
+end
+q(t,h,a,o,e)
+end
+elseif e~=n then
+c(t,e,a,o)
+end
+elseif e~=n then
+q(t,e,a,o,i[S("_%s",t)])
+end
+if t:sub(1,1)=='_'and not i[t:sub(2)]then
+c(t:sub(2),e,a,o)
+end
+end
+local e=a[#a]
+H(e,function(e,t)
 return(e.xml==t.xml)and(e._count<t._count)or(e._weight<t._weight)
 end)
-for e=1,#t do
-local e=t[e]
+for t=1,#e do
+local e=e[t]
 e._weight=nil
 e._count=nil
 end
-if s then
-h(a)
-h(i)
+if h then
+d(a)
+d(o)
 end
 end
-N=function(e,t,o,a)
+_=function(e,a,o,t)
 if e.resourceType then
-t.xmlns="http://hl7.org/fhir"
-t.xml=e.resourceType
+a.xmlns="http://hl7.org/fhir"
+a.xml=e.resourceType
 e.resourceType=nil
-a[#a+1]=t.xml
+t[#t+1]=a.xml
 end
-return u(e,o,a)
+return m(e,o,t)
 end
-I=function(e,a)
-i=i or g(q())
-assert(next(i),"convert_to_xml: FHIR Schema could not be parsed in.")
+z=function(a,e)
+o=o or j(y())
+assert(next(o),"convert_to_xml: FHIR Schema could not be parsed in.")
 local t
-if a and a.file then
-t=v(e,d)
+if e and e.file then
+t=g(a,r)
 else
-t=p(e,d)
+t=b(a,r)
 end
 local e,o={},{}
 local a={e}
-N(t,e,a,o)
-return s.dump(e)
+_(t,e,a,o)
+return h.dump(e)
 end
 return{
-to_json=T,
-to_xml=I
+to_json=N,
+to_xml=z
 }
