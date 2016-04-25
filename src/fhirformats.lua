@@ -342,7 +342,7 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
   local previouslevel = level - 1
   local need_shadow_element = need_shadow_element(level, node, output_stack)
 
-  if node.url == "nestedA" then
+  if node.id == "q4" then
     print()
   end
 
@@ -424,10 +424,13 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
   end
 
 
-  -- lastly, handle extension URLs by creating them not at the current level, but at the
+  -- lastly, handle extension URLs and id's by creating them not at the current level, but at the
   -- nested level down as FHIR JSON likes it
   if node.url then
     output_levels[level][#output_levels[level]].url = node.url
+  end
+  if node.id then
+    output_levels[level][#output_levels[level]].id = node.id
   end
 
   return output
