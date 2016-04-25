@@ -286,31 +286,60 @@ get_json_datatype = function(output_stack, element_to_check)
   return "object"
 end
 
+print_xml_value = function(node, current_level, output_stack, need_shadow_element)
+  -- if we're processing a primitive value, add it to the right place
+  -- in output{}. Right place is given to us by looking at the last
+  -- place in the 2D stack
+  if not current_level[node.xml] then
+    local fhir_value
+    if get_json_datatype(output_stack, node.xml) == "array" then
+      fhir_value = {}
+      -- if something created the shadow element previously, then pad this out
+      -- with appropriate amount of null's
+      local shadow_element = current_level["_"..node.xml]
+      if shadow_element then
+        for i = 1, #shadow_element do
+          fhir_value[#fhir_value+1] = null_value
+        end
+      end
+      fhir_value[#fhir_value+1] = fhir_typed(output_stack, node)
+    else
+      fhir_value = fhir_typed(output_stack, node)
+    end
+
+    current_level[node.xml] = fhir_value
+  else -- if there's something there already, then that means we have more values for the array
+    local existing_array = current_level[node.xml]
+    existing_array[#existing_array+1] = fhir_typed(output_stack, node)
+
+    -- add a null to the corresponding _ prefix if it's there and we
+    -- don't have data for the shadow element
+    local _value = current_level["_"..node.xml]
+    if _value and not need_shadow_element then
+      _value[#_value+1] = null_value
+    end
+  end
+end
+
+need_shadow_element = function(level, node)
+  -- peek down to see if we need to create a '_value' table.
+  -- node[#node] might not be necessary, but currently having an id creates 2 tables
+  return (level ~= 1 and node[1] and (node.id or node[#node].xml == "extension"))
+end
+
 print_data_for_node = function(node, level, output, output_levels, output_stack)
   assert(node.xml, "error from parsed xml: node.xml is missing")
   local previouslevel = level - 1
+  local need_shadow_element = need_shadow_element(level, node)
 
   -- in JSON, resource type is embedded within the object.resourceType,
   -- unlike at root level in FHIR XML
   if level == 1 then
     output.resourceType = node.xml
   elseif node.value then
-    -- if we're processing a primitive value, add it to the right place
-    -- in output{}. Right place is given to us by looking at the last
-    -- place in the 2D stack
-    if not output_levels[previouslevel][#output_levels[previouslevel]][node.xml] then
-      output_levels[previouslevel][#output_levels[previouslevel]][node.xml] = (get_json_datatype(output_stack, node.xml) == "array" and {fhir_typed(output_stack, node)} or fhir_typed(output_stack, node))
-    else -- if there's something there already, then that means we have more values for the array
-      local existing_array = output_levels[previouslevel][#output_levels[previouslevel]][node.xml]
+    local current_level = output_levels[previouslevel][#output_levels[previouslevel]]
 
-      existing_array[#existing_array+1] = fhir_typed(output_stack, node)
-
-      -- add a null to the corresponding _ prefix if it's there
-      local _value = output_levels[previouslevel][#output_levels[previouslevel]]["_"..node.xml]
-      if _value then
-        _value[#_value+1] = null_value
-      end
-    end
+    print_xml_value(node, current_level, output_stack, need_shadow_element)
     -- elseif node.xmlns then
     -- no namespaces in JSON, for now just eat the value
   end
@@ -318,43 +347,60 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
   -- embedded table - create a table in the output and add it to the right place
   -- in the output_stack, so when we're inserting the primitive values above,
   -- we know which table to add the value to
-  if type(node[1]) == "table"
-  and level ~= 1 then -- don't create another table for level 1, since in FHIR JSON the
-    -- resource name is 'inside' as a resourceType property
-
+  if type(node[1]) == "table" and level ~= 1 then -- don't create another table for level 1
+    -- since in FHIR JSON the resource name is 'inside' as a resourceType property
+    local current_level = output_levels[previouslevel][#output_levels[previouslevel]]
     local newtable, pointer_inside_table
 
+
     -- if this is a recurring XML element, and not an embedded id or extension,
-    -- create another array in an existing array for it (TODO: fix this mess with below)
-    if type(output_levels[previouslevel][#output_levels[previouslevel]][node.xml]) == "table"
-    and not (level ~= 1 and node[1] and (node[1].xml == "id" or node[1].xml == "extension")) then
-      local existing_array = output_levels[previouslevel][#output_levels[previouslevel]][node.xml]
+    -- create another array in an existing array for it
+    if type(current_level[node.xml]) == "table" and not need_shadow_element then
+      local existing_array = current_level[node.xml]
       existing_array[#existing_array+1] = {}
       pointer_inside_table = existing_array[#existing_array]
-    elseif not output_levels[previouslevel][#output_levels[previouslevel]][node.xml] then
+    elseif not current_level[node.xml] and (node[1] or node.value) and not need_shadow_element then
       -- create a new table in output using our stack pointer, if we
       -- haven't created already - could've been created by node.value above
       -- and what we're now looking at is an extension within
       newtable, pointer_inside_table = make_json_datatype(output_stack, node.xml)
-      output_levels[previouslevel][#output_levels[previouslevel]][node.xml] = newtable
+      current_level[node.xml] = newtable
     end
 
 
     -- if it's an id or an extension element of a datatype, create a fix with a _ prefix for it
-    if level ~= 1 and node[1] and (node.id or node[1].xml == "extension") then
+    if need_shadow_element  then
       newtable, pointer_inside_table = make_json_datatype(output_stack, node.xml)
-      output_levels[previouslevel][#output_levels[previouslevel]]['_'..node.xml] = newtable
+      local _node_xml = sformat('_%s', node.xml)
+      local added_shadow_element
+      if not current_level[_node_xml] then
+        current_level[_node_xml] = newtable
+        added_shadow_element = true
+      else
+        current_level[_node_xml][#current_level[_node_xml]+1] = pointer_inside_table
+      end
 
-      -- see if we need to pad the _value table out with null's in case we've got
+      -- see if we need to pad the new '_value' table out with null's in case we've got
       -- multiple values (https://hl7-fhir.github.io/json.html#primitive)
-      local pos = getindex(output_levels[previouslevel][#output_levels[previouslevel]][node.xml], node.value)
-      if pos and pos > 1 then
+      -- only do this if we've created the shadow table for the first time
+      local pos = getindex(current_level[node.xml], node.value)
+      if added_shadow_element and pos and pos > 1 then
         newtable[1] = nil -- remove the first {} that json_object_or_array added, as we need to pre-pad
         for _ = 1, pos-1 do
           newtable[#newtable+1] = null_value
         end
         newtable[#newtable+1] = {} -- re-insert the first {} deleted earlier
         pointer_inside_table = newtable[#newtable]
+      end
+
+      -- and on the other end, see if we need to pad the original 'value' table in case
+      -- we only have an id/extension and no @value
+      if not node.value and current_level[node.xml] then
+        -- wipe the nested {} that gets created, as it's unnecessary
+        if type(current_level[node.xml][#current_level[node.xml]]) == "table" then
+          current_level[node.xml][#current_level[node.xml]] = nil
+        end
+        current_level[node.xml][#current_level[node.xml]+1] = null_value
       end
     end
 
@@ -389,7 +435,7 @@ convert_to_lua_from_xml = function(xml_data, level, output, output_levels, outpu
     if value.xml == "div" and value.xmlns == "http://www.w3.org/1999/xhtml" then
       handle_div(output_levels, value, level)
     else
-      assert(type(value) == "table", string.format("unexpected type value encountered: %s (%s), expecting table", tostring(value), type(value)))
+      assert(type(value) == "table", sformat("unexpected type value encountered: %s (%s), expecting table", tostring(value), type(value)))
       convert_to_lua_from_xml(value, level, output, output_levels, output_stack)
     end
   end

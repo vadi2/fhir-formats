@@ -71,7 +71,7 @@
     "modifierExtension": [
         {
             "url": "http://example.org/fhir/StructureDefinition/pi",
-            "valueDecimal": 3.141592653589793
+            "valueDecimal": 3.1415926535898
         },
         {
             "url": "http://example.org/fhir/StructureDefinition/avogadro",
