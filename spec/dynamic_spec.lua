@@ -16,6 +16,7 @@
   limitations under the License.
 ]]
 
+package.path = "src/?.lua;"..package.path
 local in_fhir_json = require("fhirformats").to_json
 local in_fhir_xml = require("fhirformats").to_xml
 local cjson = require("cjson")
@@ -71,7 +72,7 @@ for _, testcase in ipairs(data) do
 
 
 
-  describe(case_name.. " json to xml", function()
+  pending(case_name.. " json to xml", function()
       -- do the setup outside of setup(), as setup() can't handle creating it()'s within it
       local t = {}
       io.input("spec/"..xml_file)

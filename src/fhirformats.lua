@@ -321,16 +321,30 @@ print_xml_value = function(node, current_level, output_stack, need_shadow_elemen
   end
 end
 
-need_shadow_element = function(level, node)
-  -- peek down to see if we need to create a '_value' table.
-  -- node[#node] might not be necessary, but currently having an id creates 2 tables
-  return (level ~= 1 and node[1] and (node.id or node[#node].xml == "extension"))
+-- peek down to see if we need to create a '_value' table to hold the 'id' or 'extension'
+-- properties.
+-- node[#node] might not be necessary, but currently having an id creates 2 tables
+need_shadow_element = function(level, node, output_stack)
+  if level ~= 1 and node[1]
+  and output_stack[#output_stack] ~= "extension" and node.xml ~= "extension" -- don't create shadow tables if we're inside an extension though
+  then
+    if node.id then return true
+    else
+      for i = 1, #node do
+        if node[i].xml == "extension" then return true end
+      end
+    end
+  end
 end
 
 print_data_for_node = function(node, level, output, output_levels, output_stack)
   assert(node.xml, "error from parsed xml: node.xml is missing")
   local previouslevel = level - 1
-  local need_shadow_element = need_shadow_element(level, node)
+  local need_shadow_element = need_shadow_element(level, node, output_stack)
+
+  if node.url == "nestedA" then
+    print()
+  end
 
   -- in JSON, resource type is embedded within the object.resourceType,
   -- unlike at root level in FHIR XML

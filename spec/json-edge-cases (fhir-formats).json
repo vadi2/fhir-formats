@@ -11,7 +11,50 @@
   ],
   "multipleBirthInteger": 3,
   "extension": [
-    null
+    {
+      "url": "http:\/\/example.org\/fhir\/StructureDefinition\/patientAvatar",
+      "valueReference": {
+        "reference": "#pic1",
+        "display": "Duck image"
+      }
+    },
+    {
+      "url": "http:\/\/example.org\/fhir\/StructureDefinition\/complexExtensionExample",
+      "extension": [
+        {
+          "url": "nestedA",
+          "valueCoding": {
+            "extension": [
+              {
+                "url": "http:\/\/example.org\/fhir\/StructureDefinition\/extraforcodingWithExt",
+                "extension": [
+                  {
+                    "url": "extra1",
+                    "valueString": "extra info"
+                  }
+                ]
+              },
+              {
+                "url": "http:\/\/example.org\/fhir\/StructureDefinition\/extraforcodingWithValue",
+                "valueInteger": 45
+              }
+            ],
+            "code": "AB45",
+            "system": "http:\/\/demo.org\/id\/4"
+          }
+        },
+        {
+          "url": "nestedB",
+          "extension": [
+            {
+              "url": "nestedB1",
+              "valueString": "hello"
+            }
+          ],
+          "id": "q4"
+        }
+      ]
+    }
   ],
   "maritalStatus": {
     "coding": [
@@ -22,22 +65,58 @@
       }
     ]
   },
-  "identifier": [
-    {
-      "use": "usual",
-      "assigner": {
-        "display": "Acme Healthcare"
-      },
-      "period": {
-        "start": "2001-05-06"
-      },
-      "system": "urn:oid:1.2.36.146.595.217.0.1",
-      "value": "12345"
-    }
-  ],
   "birthDate": "1974-12",
   "deceasedBoolean": true,
-  "resourceType": "Patient",
+  "contained": [
+    {
+      "Binary": [
+        {
+          "contentType": "image\/gif",
+          "content": "R0lGODlhEwARAPcAAAAAAAAA\/+9aAO+1AP\/WAP\/eAP\/eCP\/eEP\/eGP\/nAP\/nCP\/nEP\/nIf\/nKf\/nUv\/nWv\/vAP\/vCP\/vEP\/vGP\/vIf\/vKf\/vMf\/vOf\/vWv\/vY\/\/va\/\/vjP\/3c\/\/3lP\/3nP\/\/tf\/\/vf\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/yH5BAEAAAEALAAAAAATABEAAAi+AAMIDDCgYMGBCBMSvMCQ4QCFCQcwDBGCA4cLDyEGECDxAoAQHjxwyKhQAMeGIUOSJJjRpIAGDS5wCDly4AALFlYOgHlBwwOSNydM0AmzwYGjBi8IHWoTgQYORg8QIGDAwAKhESI8HIDgwQaRDI1WXXAhK9MBBzZ8\/XDxQoUFZC9IiCBh6wEHGz6IbNuwQoSpWxEgyLCXL8O\/gAnylNlW6AUEBRIL7Og3KwQIiCXb9HsZQoIEUzUjNEiaNMKAAAA7",
+          "id": "pic1"
+        }
+      ]
+    },
+    {
+      "Organization": [
+        {
+          "name": "Good Health Clinic",
+          "id": "org3141",
+          "identifier": [
+            {
+              "value": "2.16.840.1.113883.19.5",
+              "system": "urn:ietf:rfc:3986"
+            }
+          ],
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns='http:\/\/www.w3.org\/1999\/xhtml'>\n  <p>Good Health Clinic<\/p>\n<\/div>"
+          }
+        }
+      ]
+    }
+  ],
+  "gender": "male",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns='http:\/\/www.w3.org\/1999\/xhtml'>\n  <table>\n    <tbody>\n      <tr>\n        <td>Name<\/td>\n        <td>Peter James <b>Chalmers<\/b> (\"Jim\")<\/td>\n      <\/tr>\n      <tr>\n        <td>Address<\/td>\n        <td>534 Erewhon, Pleasantville, Vic, 3999<\/td>\n      <\/tr>\n      <tr>\n        <td>Contacts<\/td>\n        <td>Home: unknown. Work: (03) 5555 6473<\/td>\n      <\/tr>\n      <tr>\n        <td>Id<\/td>\n        <td>MRN: 12345 (Acme Healthcare)<\/td>\n      <\/tr>\n    <\/tbody>\n  <\/table>\n<\/div>"
+  },
+  "address": [
+    {
+      "line": [
+        "534 Erewhon St"
+      ],
+      "use": "home",
+      "city": "PleasantVille",
+      "state": "Vic",
+      "postalCode": "3999"
+    }
+  ],
+  "careProvider": [
+    {
+      "reference": "#org3141"
+    }
+  ],
   "contact": [
     {
       "name": {
@@ -121,27 +200,6 @@
       ]
     }
   ],
-  "text": {
-    "status": "generated",
-    "div": "<div xmlns='http:\/\/www.w3.org\/1999\/xhtml'>\n  <table>\n    <tbody>\n      <tr>\n        <td>Name<\/td>\n        <td>Peter James <b>Chalmers<\/b> (\"Jim\")<\/td>\n      <\/tr>\n      <tr>\n        <td>Address<\/td>\n        <td>534 Erewhon, Pleasantville, Vic, 3999<\/td>\n      <\/tr>\n      <tr>\n        <td>Contacts<\/td>\n        <td>Home: unknown. Work: (03) 5555 6473<\/td>\n      <\/tr>\n      <tr>\n        <td>Id<\/td>\n        <td>MRN: 12345 (Acme Healthcare)<\/td>\n      <\/tr>\n    <\/tbody>\n  <\/table>\n<\/div>"
-  },
-  "address": [
-    {
-      "line": [
-        "534 Erewhon St"
-      ],
-      "use": "home",
-      "city": "PleasantVille",
-      "state": "Vic",
-      "postalCode": "3999"
-    }
-  ],
-  "careProvider": [
-    {
-      "reference": "#org3141"
-    }
-  ],
-  "gender": "male",
   "telecom": [
     {
       "use": "home"
@@ -152,55 +210,20 @@
       "value": "(03) 5555 6473"
     }
   ],
-  "contained": [
+  "identifier": [
     {
-      "Binary": [
-        {
-          "contentType": "image\/gif",
-          "content": "R0lGODlhEwARAPcAAAAAAAAA\/+9aAO+1AP\/WAP\/eAP\/eCP\/eEP\/eGP\/nAP\/nCP\/nEP\/nIf\/nKf\/nUv\/nWv\/vAP\/vCP\/vEP\/vGP\/vIf\/vKf\/vMf\/vOf\/vWv\/vY\/\/va\/\/vjP\/3c\/\/3lP\/3nP\/\/tf\/\/vf\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/yH5BAEAAAEALAAAAAATABEAAAi+AAMIDDCgYMGBCBMSvMCQ4QCFCQcwDBGCA4cLDyEGECDxAoAQHjxwyKhQAMeGIUOSJJjRpIAGDS5wCDly4AALFlYOgHlBwwOSNydM0AmzwYGjBi8IHWoTgQYORg8QIGDAwAKhESI8HIDgwQaRDI1WXXAhK9MBBzZ8\/XDxQoUFZC9IiCBh6wEHGz6IbNuwQoSpWxEgyLCXL8O\/gAnylNlW6AUEBRIL7Og3KwQIiCXb9HsZQoIEUzUjNEiaNMKAAAA7",
-          "id": "pic1"
-        }
-      ]
-    },
-    {
-      "Organization": [
-        {
-          "name": "Good Health Clinic",
-          "id": "org3141",
-          "identifier": [
-            {
-              "value": "2.16.840.1.113883.19.5",
-              "system": "urn:ietf:rfc:3986"
-            }
-          ],
-          "text": {
-            "status": "generated",
-            "div": "<div xmlns='http:\/\/www.w3.org\/1999\/xhtml'>\n  <p>Good Health Clinic<\/p>\n<\/div>"
-          }
-        }
-      ]
+      "use": "usual",
+      "assigner": {
+        "display": "Acme Healthcare"
+      },
+      "period": {
+        "start": "2001-05-06"
+      },
+      "system": "urn:oid:1.2.36.146.595.217.0.1",
+      "value": "12345"
     }
   ],
-  "_extension": [
-    {
-      "url": "http:\/\/example.org\/fhir\/StructureDefinition\/complexExtensionExample",
-      "extension": [
-        null
-      ],
-      "_extension": [
-        {
-          "url": "nestedB",
-          "extension": [
-            {
-              "url": "nestedB1",
-              "valueString": "hello"
-            }
-          ],
-          "id": "q4"
-        }
-      ]
-    }
-  ],
+  "resourceType": "Patient",
   "name": [
     {
       "given": [
