@@ -291,7 +291,23 @@ print_xml_value = function(node, current_level, output_stack, need_shadow_elemen
   -- in output{}. Right place is given to us by looking at the last
   -- place in the 2D stack
   if not current_level[node.xml] then
-    current_level[node.xml] = (get_json_datatype(output_stack, node.xml) == "array" and {fhir_typed(output_stack, node)} or fhir_typed(output_stack, node))
+    local fhir_value
+    if get_json_datatype(output_stack, node.xml) == "array" then
+      fhir_value = {}
+      -- if something created the shadow element previously, then pad this out
+      -- with appropriate amount of null's
+      local shadow_element = current_level["_"..node.xml]
+      if shadow_element then
+        for i = 1, #shadow_element do
+          fhir_value[#fhir_value+1] = null_value
+        end
+      end
+      fhir_value[#fhir_value+1] = fhir_typed(output_stack, node)
+    else
+      fhir_value = fhir_typed(output_stack, node)
+    end
+
+    current_level[node.xml] = fhir_value
   else -- if there's something there already, then that means we have more values for the array
     local existing_array = current_level[node.xml]
     existing_array[#existing_array+1] = fhir_typed(output_stack, node)
@@ -322,6 +338,7 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
     output.resourceType = node.xml
   elseif node.value then
     local current_level = output_levels[previouslevel][#output_levels[previouslevel]]
+
     print_xml_value(node, current_level, output_stack, need_shadow_element)
     -- elseif node.xmlns then
     -- no namespaces in JSON, for now just eat the value
@@ -342,7 +359,7 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
       local existing_array = current_level[node.xml]
       existing_array[#existing_array+1] = {}
       pointer_inside_table = existing_array[#existing_array]
-    elseif not current_level[node.xml] then
+    elseif not current_level[node.xml] and (node[1] or node.value) and not need_shadow_element then
       -- create a new table in output using our stack pointer, if we
       -- haven't created already - could've been created by node.value above
       -- and what we're now looking at is an extension within
@@ -365,7 +382,7 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
 
       -- see if we need to pad the new '_value' table out with null's in case we've got
       -- multiple values (https://hl7-fhir.github.io/json.html#primitive)
-      -- onlt do this if we've created the shadow table for the first time
+      -- only do this if we've created the shadow table for the first time
       local pos = getindex(current_level[node.xml], node.value)
       if added_shadow_element and pos and pos > 1 then
         newtable[1] = nil -- remove the first {} that json_object_or_array added, as we need to pre-pad
@@ -378,7 +395,7 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
 
       -- and on the other end, see if we need to pad the original 'value' table in case
       -- we only have an id/extension and no @value
-      if not node.value then
+      if not node.value and current_level[node.xml] then
         -- wipe the nested {} that gets created, as it's unnecessary
         if type(current_level[node.xml][#current_level[node.xml]]) == "table" then
           current_level[node.xml][#current_level[node.xml]] = nil
