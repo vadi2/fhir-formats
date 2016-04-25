@@ -1,5 +1,4 @@
 {
-  "active":   {},
   "modifierExtension": [
     {
       "url": "http:\/\/example.org\/fhir\/StructureDefinition\/pi",
@@ -12,13 +11,7 @@
   ],
   "multipleBirthInteger": 3,
   "extension": [
-    {
-      "url": "http:\/\/example.org\/fhir\/StructureDefinition\/patientAvatar",
-      "valueReference": {
-        "reference": "#pic1",
-        "display": "Duck image"
-      }
-    }
+    null
   ],
   "maritalStatus": {
     "coding": [
@@ -29,33 +22,17 @@
       }
     ]
   },
-  "contained": [
+  "identifier": [
     {
-      "Binary": [
-        {
-          "contentType": "image\/gif",
-          "content": "R0lGODlhEwARAPcAAAAAAAAA\/+9aAO+1AP\/WAP\/eAP\/eCP\/eEP\/eGP\/nAP\/nCP\/nEP\/nIf\/nKf\/nUv\/nWv\/vAP\/vCP\/vEP\/vGP\/vIf\/vKf\/vMf\/vOf\/vWv\/vY\/\/va\/\/vjP\/3c\/\/3lP\/3nP\/\/tf\/\/vf\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/yH5BAEAAAEALAAAAAATABEAAAi+AAMIDDCgYMGBCBMSvMCQ4QCFCQcwDBGCA4cLDyEGECDxAoAQHjxwyKhQAMeGIUOSJJjRpIAGDS5wCDly4AALFlYOgHlBwwOSNydM0AmzwYGjBi8IHWoTgQYORg8QIGDAwAKhESI8HIDgwQaRDI1WXXAhK9MBBzZ8\/XDxQoUFZC9IiCBh6wEHGz6IbNuwQoSpWxEgyLCXL8O\/gAnylNlW6AUEBRIL7Og3KwQIiCXb9HsZQoIEUzUjNEiaNMKAAAA7",
-          "id": "pic1"
-        }
-      ]
-    },
-    {
-      "Organization": [
-        {
-          "name": "Good Health Clinic",
-          "id": "org3141",
-          "identifier": [
-            {
-              "value": "2.16.840.1.113883.19.5",
-              "system": "urn:ietf:rfc:3986"
-            }
-          ],
-          "text": {
-            "status": "generated",
-            "div": "<div xmlns='http:\/\/www.w3.org\/1999\/xhtml'>\n  <p>Good Health Clinic<\/p>\n<\/div>"
-          }
-        }
-      ]
+      "use": "usual",
+      "assigner": {
+        "display": "Acme Healthcare"
+      },
+      "period": {
+        "start": "2001-05-06"
+      },
+      "system": "urn:oid:1.2.36.146.595.217.0.1",
+      "value": "12345"
     }
   ],
   "birthDate": "1974-12",
@@ -71,23 +48,59 @@
         ],
         "_family": [
           {
-            "id": "a3",
+            "extension": [
+              {
+                "url": "http:\/\/example.org\/fhir\/StructureDefinition\/nullFlavor",
+                "valueCode": "ASKU"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "http:\/\/example.org\/fhir\/StructureDefinition\/qualifier",
+                "valueCode": "VV"
+              }
+            ],
+            "id": "a2"
+          },
+          {
+            "extension": [
+              {
+                "url": "http:\/\/hl7.org\/fhir\/StructureDefinitioniso-21090#nullFlavor",
+                "valueCode": "ASKU"
+              }
+            ]
+          },
+          null,
+          {
             "extension": [
               {
                 "url": "http:\/\/hl7.org\/fhir\/StructureDefinition\/nullFlavor",
                 "valueCode": "ASKU"
-              },
-              {
-                "url": "http:\/\/hl7.org\/fhir\/StructureDefinition\/qualifier",
-                "valueCode": "MID"
               }
             ]
           }
         ],
         "family": [
-          {},
+          null,
           "du",
-          "Marché"
+          null,
+          "Marché",
+          null
+        ],
+        "_given": [
+          null,
+          {
+            "extension": [
+              {
+                "url": "http:\/\/hl7.org\/fhir\/StructureDefinition\/qualifier",
+                "valueCode": "MID"
+              }
+            ],
+            "id": "a3"
+          },
+          null
         ]
       },
       "relationship": [
@@ -139,47 +152,43 @@
       "value": "(03) 5555 6473"
     }
   ],
-  "identifier": [
+  "contained": [
     {
-      "use": "usual",
-      "assigner": {
-        "display": "Acme Healthcare"
-      },
-      "period": {
-        "start": "2001-05-06"
-      },
-      "system": "urn:oid:1.2.36.146.595.217.0.1",
-      "value": "12345"
+      "Binary": [
+        {
+          "contentType": "image\/gif",
+          "content": "R0lGODlhEwARAPcAAAAAAAAA\/+9aAO+1AP\/WAP\/eAP\/eCP\/eEP\/eGP\/nAP\/nCP\/nEP\/nIf\/nKf\/nUv\/nWv\/vAP\/vCP\/vEP\/vGP\/vIf\/vKf\/vMf\/vOf\/vWv\/vY\/\/va\/\/vjP\/3c\/\/3lP\/3nP\/\/tf\/\/vf\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/yH5BAEAAAEALAAAAAATABEAAAi+AAMIDDCgYMGBCBMSvMCQ4QCFCQcwDBGCA4cLDyEGECDxAoAQHjxwyKhQAMeGIUOSJJjRpIAGDS5wCDly4AALFlYOgHlBwwOSNydM0AmzwYGjBi8IHWoTgQYORg8QIGDAwAKhESI8HIDgwQaRDI1WXXAhK9MBBzZ8\/XDxQoUFZC9IiCBh6wEHGz6IbNuwQoSpWxEgyLCXL8O\/gAnylNlW6AUEBRIL7Og3KwQIiCXb9HsZQoIEUzUjNEiaNMKAAAA7",
+          "id": "pic1"
+        }
+      ]
+    },
+    {
+      "Organization": [
+        {
+          "name": "Good Health Clinic",
+          "id": "org3141",
+          "identifier": [
+            {
+              "value": "2.16.840.1.113883.19.5",
+              "system": "urn:ietf:rfc:3986"
+            }
+          ],
+          "text": {
+            "status": "generated",
+            "div": "<div xmlns='http:\/\/www.w3.org\/1999\/xhtml'>\n  <p>Good Health Clinic<\/p>\n<\/div>"
+          }
+        }
+      ]
     }
   ],
   "_extension": [
     {
       "url": "http:\/\/example.org\/fhir\/StructureDefinition\/complexExtensionExample",
       "extension": [
+        null
+      ],
+      "_extension": [
         {
-          "_valueCoding": {
-            "extension": [
-              {},
-              {
-                "url": "http:\/\/example.org\/fhir\/StructureDefinition\/extraforcodingWithValue",
-                "valueInteger": 45
-              }
-            ],
-            "_extension": [
-              {
-                "url": "http:\/\/example.org\/fhir\/StructureDefinition\/extraforcodingWithExt",
-                "extension": [
-                  {
-                    "url": "extra1",
-                    "valueString": "extra info"
-                  }
-                ]
-              }
-            ],
-            "code": "AB45",
-            "system": "http:\/\/demo.org\/id\/4"
-          },
-          "id": "q4",
           "url": "nestedB",
           "extension": [
             {
@@ -187,7 +196,7 @@
               "valueString": "hello"
             }
           ],
-          "valueCoding":           {}
+          "id": "q4"
         }
       ]
     }
