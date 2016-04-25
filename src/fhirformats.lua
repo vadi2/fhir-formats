@@ -342,10 +342,6 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
   local previouslevel = level - 1
   local need_shadow_element = need_shadow_element(level, node, output_stack)
 
-  if node.id == "q4" then
-    print()
-  end
-
   -- in JSON, resource type is embedded within the object.resourceType,
   -- unlike at root level in FHIR XML
   if level == 1 then
