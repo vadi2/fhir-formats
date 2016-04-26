@@ -110,10 +110,6 @@
         {
             "resourceType": "Organization",
             "id": "org3141",
-            "text": {
-                "status": "generated",
-                "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">\n      <p>Good Health Clinic<\/p>\n    <\/div>"
-            },
             "identifier": [{
                 "system": "urn:ietf:rfc:3986",
                 "value": "2.16.840.1.113883.19.5"
