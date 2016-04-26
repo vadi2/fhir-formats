@@ -96,11 +96,11 @@
 
     </extension>
     <modifierExtension url="http://example.org/fhir/StructureDefinition/pi">
-        <valueDecimal value="3.141592653589793"/>
+        <valueDecimal value="3.1415926535898"/>
 
     </modifierExtension>
     <modifierExtension url="http://example.org/fhir/StructureDefinition/avogadro">
-        <valueDecimal value="602214162464240000000000"/>
+        <valueDecimal value="6.0221416246424e+23"/>
 
     </modifierExtension>
     <identifier>
