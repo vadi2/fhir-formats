@@ -528,7 +528,7 @@ print_simple_datatype = function(element, simple_type, xml_output_levels, output
   -- only add weights for elements and not attributes (like url)
   local new_element = current_output_table[#current_output_table]
   if new_element then
-    new_element._weight = get_fhir_definition(output_stack, element)._weight
+    new_element._weight = get_xml_weight(output_stack, element)
     new_element._count = #current_output_table
   end
 
@@ -538,6 +538,16 @@ print_simple_datatype = function(element, simple_type, xml_output_levels, output
     handle_json_recursively(extra_data, xml_output_levels, output_stack)
     tremove(xml_output_levels)
     tremove(output_stack)
+  end
+end
+
+get_xml_weight = function(output_stack, element)
+  local fhir_definition = get_fhir_definition(output_stack, element)
+  if not fhir_definition then
+    print(string.format("Warning: %s.%s is not a known FHIR element; won't be able to sort it properly in the XML output.", table.concat(output_stack, "."), element))
+    return 0
+  else
+    return fhir_definition._weight
   end
 end
 
@@ -557,7 +567,7 @@ print_complex_datatype = function(element, complex_type, xml_output_levels, outp
   local new_element = current_output_table[#current_output_table]
 
   -- record the weight for later sorting
-  new_element._weight = get_fhir_definition(output_stack, element)._weight
+  new_element._weight = get_xml_weight(output_stack, element)
   new_element._count = #current_output_table
 
   -- update our pointer to point to the newly-created table that we'll now be writing data to

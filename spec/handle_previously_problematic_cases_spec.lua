@@ -3,7 +3,7 @@ local in_fhir_xml = require("fhirformats").to_xml
 local cjson = require("cjson")
 local xml = require("xml")
 
-describe("it should handle previously failing conversions", function()
+describe("previously failing conversions", function()
     pending("should convert a problematic ValueSet", function()
         local in_json = in_fhir_json([[
         <?xml version="1.0" encoding="UTF-8"?>
@@ -113,6 +113,9 @@ describe("it should handle previously failing conversions", function()
         </concept>
     </codeSystem>
 </ValueSet>]])
-
       end)
-  end)
+
+    it("should convert a previously failing Appointment", function()
+        in_fhir_xml([[{"resource":{"status":"proposed","resourceType":"Appointment","slot":[{"reference":"Slot\/example"}],"text":{"status":"generated","div":"<div xmlns='http:\/\/www.w3.org\/1999\/xhtml'>Discuss results of Peter James Chalmers recent MRI<\/div>"},"minutesDuration":15,"reason":{"text":"Clinical Review","coding":[{"code":"413095006","system":"http:\/\/snomed.info\/sct"}]},"identifier":[{"value":"205829917224247","system":"http:\/\/happyvalley.com\/appointment"}],"participant":[{"status":"needs-action","required":"required","actor":{"reference":"Patient\/example","display":"Peter James Chalmers"}},{"type":[{"coding":[{"display":"attender","code":"ATND","system":"http:\/\/hl7.org\/fhir\/v3\/ParticipationType"}]}],"required":"required","status":"needs-action"},{"status":"accepted","required":"required","actor":{"reference":"Location\/1","display":"South Wing, second floor"}}],"type":{"coding":{"display":"Preventive medicine","code":"409968004","system":"http:\/\/snomed.info\/sct"}},"comment":"Further expand on the results of the MRI and determine the next actions that may be appropriate.","priority":5,"description":"Discuss results of Peter James Chalmers recent MRI"}}]])
+    end)
+end)
