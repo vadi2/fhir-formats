@@ -341,17 +341,27 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
   assert(node.xml, "error from parsed xml: node.xml is missing")
   local previouslevel = level - 1
   local need_shadow_element = need_shadow_element(level, node, output_stack)
+  local current_level
+
+  if level ~= 1 then
+    current_level = output_levels[previouslevel][#output_levels[previouslevel]]
+  end
 
   -- in JSON, resource type is embedded within the object.resourceType,
   -- unlike at root level in FHIR XML
   if level == 1 then
     output.resourceType = node.xml
+  elseif output_stack[#output_stack] == "contained" then
+    current_level.resourceType = node.xml
+
+    output_levels[level] = output_levels[level] or {}
+    output_levels[level][#output_levels[level]+1] = current_level
+
+    return
   elseif node.value then
-    local current_level = output_levels[previouslevel][#output_levels[previouslevel]]
+
 
     print_xml_value(node, current_level, output_stack, need_shadow_element)
-    -- elseif node.xmlns then
-    -- no namespaces in JSON, for now just eat the value
   end
 
   -- embedded table - create a table in the output and add it to the right place
@@ -359,7 +369,6 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
   -- we know which table to add the value to
   if type(node[1]) == "table" and level ~= 1 then -- don't create another table for level 1
     -- since in FHIR JSON the resource name is 'inside' as a resourceType property
-    local current_level = output_levels[previouslevel][#output_levels[previouslevel]]
     local newtable, pointer_inside_table
 
 
