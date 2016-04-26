@@ -130,6 +130,15 @@ list_to_map = function(list, value)
   return map
 end
 
+slice = function(array, start, stop)
+  local t = {}
+  for i = (start and start or 1), (stop and stop or #array) do
+    t[i] = array[i]
+  end
+
+  return t
+end
+
 -- return a map with the path (as string) and an array or list for the JSON element to create
 map_fhir_data = function(raw_fhir_data)
   fhir_data = {}
@@ -503,6 +512,13 @@ print_simple_datatype = function(element, simple_type, xml_output_levels, output
     current_output_table[#current_output_table+1] = xml.load(simple_type)
   elseif element == "url" then -- some things are attributes: https://hl7-fhir.github.io/xml.html#1.17.1
     current_output_table.url = simple_type
+  elseif element == "id" then
+    local parent_type = get_fhir_definition(slice(output_stack, 1, #output_stack-1), output_stack[#output_stack])._type
+    if parent_type ~= "Resource" and parent_type ~= "DomainResource" then
+      current_output_table.id = simple_type
+    else
+      current_output_table[#current_output_table+1] = {xml = element, value = tostring(simple_type)}
+    end
   elseif simple_type == null_value then
     current_output_table[#current_output_table+1] = {xml = element}
   else
