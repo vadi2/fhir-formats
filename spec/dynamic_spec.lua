@@ -23,6 +23,7 @@ local cjson = require("cjson")
 local xml = require("xml")
 local inspect = require("inspect")
 local tablex = require("pl.tablex")
+local sformat = string.format
 
 local data = {
   {"json-edge-cases.json", "json-edge-cases.xml"},
@@ -72,7 +73,7 @@ for _, testcase in ipairs(data) do
 
 
 
-  pending(case_name.. " json to xml", function()
+  describe(case_name.. " json to xml", function()
       -- do the setup outside of setup(), as setup() can't handle creating it()'s within it
       local t = {}
       io.input("spec/"..xml_file)
@@ -87,9 +88,11 @@ for _, testcase in ipairs(data) do
       assert:set_parameter("TableFormatLevel", -1)
 
       for _, key in ipairs(t.keys_in_both_tables) do
-        it("should have the same objects at index "..key, function()
-            assert.same(t.json_example[key], t.xml_example[key])
-          end)
+        if not (t.json_example[key].xml == "text" or t.xml_example[key].xml == "text") then
+          it(sformat("should have the same objects at index %s (%s/%s)", key, tostring(t.json_example[key].xml), tostring(t.xml_example[key].xml)), function()
+              assert.same(t.json_example[key], t.xml_example[key])
+            end)
+        end
       end
 
       before_each(function()
