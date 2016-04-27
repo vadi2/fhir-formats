@@ -42065,7 +42065,7 @@ if e then
 i=e.null
 d,p=e.decode,e.encode
 elseif a then
-i={}
+i=function()end
 d=function(e)
 return a.decode(e,nil,i)
 end
