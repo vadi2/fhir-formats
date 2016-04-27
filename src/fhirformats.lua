@@ -162,6 +162,8 @@ map_fhir_data = function(raw_fhir_data)
     end
   end
 
+  -- pulls up nested derivations into the given element, mainly so
+  -- things deriving from DomainResource are available at Resource level
   flatten_derivations = function(root_element, nested_element)
     if not (root_element and root_element._derivations) then return end
 
@@ -171,9 +173,6 @@ map_fhir_data = function(raw_fhir_data)
         for nested_derivation, nested_data in pairs(data._derivations) do
           if root_element ~= nested_data then
             root_element._derivations[nested_derivation] = nested_data
-
--- TODO: fix me to be recursive and not just one level down
---            flatten_derivations(root_element, nested_data)
           end
         end
       end
@@ -187,6 +186,12 @@ map_fhir_data = function(raw_fhir_data)
   end
 
   -- parse again to ensure all resources are in
+  for i = 1, #raw_fhir_data do
+    local element = raw_fhir_data[i]
+    parse_element(element)
+  end
+
+  -- and lastly, to ensure all derivations are in (as the order of resources could affect it
   for i = 1, #raw_fhir_data do
     local element = raw_fhir_data[i]
     parse_element(element)
@@ -692,7 +697,7 @@ convert_to_xml = function(data, options)
 
   return xml.dump(output)
 end
-
+map_fhir_data(read_fhir_data())
 return {
   to_json = convert_to_json,
   to_xml = convert_to_xml

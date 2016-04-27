@@ -14,6 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+rm *.json
 
-wget http://hl7-fhir.github.io/profiles-resources.json
-wget http://hl7-fhir.github.io/profiles-types.json
+# May 2016 snapshot
+wget http://hl7.org/fhir/2016May/profiles-types.json
+wget http://hl7.org/fhir/2016May/profiles-resources.json
+
+# Latest Continuous Build
+# wget http://hl7-fhir.github.io/profiles-resources.json
+# wget http://hl7-fhir.github.io/profiles-types.json
