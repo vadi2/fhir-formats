@@ -114,8 +114,4 @@ describe("previously failing conversions", function()
     </codeSystem>
 </ValueSet>]])
       end)
-
-    it("should convert a previously failing Appointment", function()
-        in_fhir_xml([[{"resource":{"status":"proposed","resourceType":"Appointment","slot":[{"reference":"Slot\/example"}],"text":{"status":"generated","div":"<div xmlns='http:\/\/www.w3.org\/1999\/xhtml'>Discuss results of Peter James Chalmers recent MRI<\/div>"},"minutesDuration":15,"reason":{"text":"Clinical Review","coding":[{"code":"413095006","system":"http:\/\/snomed.info\/sct"}]},"identifier":[{"value":"205829917224247","system":"http:\/\/happyvalley.com\/appointment"}],"participant":[{"status":"needs-action","required":"required","actor":{"reference":"Patient\/example","display":"Peter James Chalmers"}},{"type":[{"coding":[{"display":"attender","code":"ATND","system":"http:\/\/hl7.org\/fhir\/v3\/ParticipationType"}]}],"required":"required","status":"needs-action"},{"status":"accepted","required":"required","actor":{"reference":"Location\/1","display":"South Wing, second floor"}}],"type":{"coding":{"display":"Preventive medicine","code":"409968004","system":"http:\/\/snomed.info\/sct"}},"comment":"Further expand on the results of the MRI and determine the next actions that may be appropriate.","priority":5,"description":"Discuss results of Peter James Chalmers recent MRI"}}]])
-    end)
 end)
