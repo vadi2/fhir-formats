@@ -1009,13 +1009,13 @@ return{_call=e or self._call,parse=w.parse}
 end
 function w:parse(s,y)
 if not y then y={stripWhitespace=false}end
-local h,q,p,l,z,g,b=string.find,string.sub,string.gsub,string.char,table.insert,table.remove,table.concat
+local r,q,p,l,z,g,b=string.find,string.sub,string.gsub,string.char,table.insert,table.remove,table.concat
 local t,a,o,i,e,w,m
 local v=unpack or table.unpack
 local e=1
 local f="text"
 local d=1
-local r={}
+local h={}
 local u={}
 local c
 local n={}
@@ -1051,7 +1051,7 @@ if e then self._call.text(b(e))end
 end
 end
 local function _()
-t,a,o,i=h(s,'^<%?([:%a_][:%w_.-]*) ?(.-)%?>',e)
+t,a,o,i=r(s,'^<%?([:%a_][:%w_.-]*) ?(.-)%?>',e)
 if t then
 l()
 if self._call.pi then self._call.pi(o,i)end
@@ -1061,7 +1061,7 @@ return true
 end
 end
 local function j()
-t,a,o=h(s,'^<!%-%-(.-)%-%->',e)
+t,a,o=r(s,'^<!%-%-(.-)%-%->',e)
 if t then
 l()
 if self._call.comment then self._call.comment(o)end
@@ -1077,21 +1077,21 @@ error(("Cannot find namespace for prefix %s"):format(e))
 end
 local function x()
 k=true
-t,a,o=h(s,'^<([%a_][%w_.-]*)',e)
+t,a,o=r(s,'^<([%a_][%w_.-]*)',e)
 if t then
-r[2]=nil
-r[3]=nil
+h[2]=nil
+h[3]=nil
 l()
 e=a+1
-t,a,i=h(s,'^:([%a_][%w_.-]*)',e)
+t,a,i=r(s,'^:([%a_][%w_.-]*)',e)
 if t then
-r[1]=i
-r[3]=o
+h[1]=i
+h[3]=o
 o=i
 e=a+1
 else
-r[1]=o
-for e=#n,1,-1 do if n[e]['!']then r[2]=n[e]['!'];break end end
+h[1]=o
+for e=#n,1,-1 do if n[e]['!']then h[2]=n[e]['!'];break end end
 end
 c=0
 z(n,{})
@@ -1099,15 +1099,15 @@ return true
 end
 end
 local function q()
-t,a,o=h(s,'^%s+([:%a_][:%w_.-]*)%s*=%s*',e)
+t,a,o=r(s,'^%s+([:%a_][:%w_.-]*)%s*=%s*',e)
 if t then
 w=a+1
-t,a,i=h(s,'^"([^<"]*)"',w)
+t,a,i=r(s,'^"([^<"]*)"',w)
 if t then
 e=a+1
 i=b(i)
 else
-t,a,i=h(s,"^'([^<']*)'",w)
+t,a,i=r(s,"^'([^<']*)'",w)
 if t then
 e=a+1
 i=b(i)
@@ -1127,7 +1127,7 @@ end
 else
 if o=='xmlns'then
 n[#n]['!']=i
-r[2]=i
+h[2]=i
 end
 end
 c=c+1
@@ -1136,7 +1136,7 @@ return true
 end
 end
 local function p()
-t,a,o=h(s,'^<!%[CDATA%[(.-)%]%]>',e)
+t,a,o=r(s,'^<!%[CDATA%[(.-)%]%]>',e)
 if t then
 l()
 if self._call.text then self._call.text(o)end
@@ -1146,13 +1146,13 @@ return true
 end
 end
 local function w()
-t,a,o=h(s,'^%s*(/?)>',e)
+t,a,o=r(s,'^%s*(/?)>',e)
 if t then
 f="text"
 e=a+1
 d=e
-if r[3]then r[2]=y(r[3])end
-if self._call.startElement then self._call.startElement(v(r))end
+if h[3]then h[2]=y(h[3])end
+if self._call.startElement then self._call.startElement(v(h))end
 if self._call.attribute then
 for e=1,c do
 if u[e][4]then u[e][3]=y(u[e][4])end
@@ -1161,18 +1161,18 @@ end
 end
 if o=="/"then
 g(n)
-if self._call.closeElement then self._call.closeElement(v(r))end
+if self._call.closeElement then self._call.closeElement(v(h))end
 end
 return true
 end
 end
-local function r()
-t,a,o,i=h(s,'^</([%a_][%w_.-]*)%s*>',e)
+local function h()
+t,a,o,i=r(s,'^</([%a_][%w_.-]*)%s*>',e)
 if t then
 m=nil
 for e=#n,1,-1 do if n[e]['!']then m=n[e]['!'];break end end
 else
-t,a,i,o=h(s,'^</([%a_][%w_.-]*):([%a_][%w_.-]*)%s*>',e)
+t,a,i,o=r(s,'^</([%a_][%w_.-]*):([%a_][%w_.-]*)%s*>',e)
 if t then m=y(i)end
 end
 if t then
@@ -1186,11 +1186,11 @@ end
 end
 while e<#s do
 if f=="text"then
-if not(_()or j()or p()or r())then
+if not(_()or j()or p()or h())then
 if x()then
 f="attributes"
 else
-t,a=h(s,'^[^<]+',e)
+t,a=r(s,'^[^<]+',e)
 e=(t and a or e)+1
 end
 end
@@ -42212,7 +42212,7 @@ e=n[t]
 elseif e[t]then
 e=e[t]
 elseif e[1]then
-e=e[1][t]or e[1]._derivations[t]
+e=e[1][t]or(e[1]._derivations and e[1]._derivations[t]or nil)
 else
 e=nil
 break

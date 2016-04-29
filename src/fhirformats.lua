@@ -255,7 +255,7 @@ get_fhir_definition = function (output_stack, element_to_check)
     elseif fhir_data_pointer[element] then
       fhir_data_pointer = fhir_data_pointer[element]
     elseif fhir_data_pointer[1] then
-      fhir_data_pointer = fhir_data_pointer[1][element] or fhir_data_pointer[1]._derivations[element]
+      fhir_data_pointer = fhir_data_pointer[1][element] or (fhir_data_pointer[1]._derivations and fhir_data_pointer[1]._derivations[element] or nil)
     else
       fhir_data_pointer = nil
       break -- bail out of the for loop if we didn't find the element we're looking for
