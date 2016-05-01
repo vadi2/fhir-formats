@@ -1,5 +1,7 @@
 # FHIR Formats
-FHIR XML to/from JSON converter in Lua.
+FHIR XML to/from JSON converter library in Lua.
+
+Online version available at [https://fhir-formats.github.io](https://fhir-formats.github.io).
 
 ## Installation
 To install FHIR-Formats, run:
