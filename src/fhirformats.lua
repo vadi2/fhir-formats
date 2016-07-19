@@ -515,7 +515,7 @@ print_simple_datatype = function(element, simple_type, xml_output_levels, output
   -- divs are a special case - load the XML from JSON and place it inline
   if element == "div" then
     current_output_table[#current_output_table+1] = xml.load(simple_type)
-  elseif element == "url" then -- some things are attributes: https://hl7-fhir.github.io/xml.html#1.17.1
+  elseif element == "url" and (output_stack[#output_stack] == "extension" or output_stack[#output_stack] == "modifierExtension") then -- some things are attributes: https://hl7-fhir.github.io/xml.html#1.17.1, "extension URLs in the url"
     current_output_table.url = simple_type
   elseif element == "id" then
     local parent_type = get_fhir_definition(slice(output_stack, 1, #output_stack-1), output_stack[#output_stack])._type

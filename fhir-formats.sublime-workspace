@@ -1,0 +1,814 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"fhir",
+				"fhir-drills"
+			],
+			[
+				"get",
+				"get_date_parts"
+			],
+			[
+				"csv",
+				"csvfile"
+			],
+			[
+				"clo",
+				"closefile"
+			],
+			[
+				"create",
+				"createfile"
+			],
+			[
+				"Vadim",
+				"VadimPeretokin"
+			],
+			[
+				"printcs",
+				"printcsvdata"
+			],
+			[
+				"DCM",
+				"DCMs"
+			],
+			[
+				"rea",
+				"readsvnoutput"
+			],
+			[
+				"con",
+				"contentdifferences"
+			],
+			[
+				"voc",
+				"vocxsd"
+			],
+			[
+				"compa",
+				"compareglobally"
+			],
+			[
+				"mi",
+				"missingfromuml"
+			],
+			[
+				"uml",
+				"umlfile"
+			],
+			[
+				"xsd",
+				"xsdfile"
+			],
+			[
+				"pack",
+				"packagedElement"
+			],
+			[
+				"pa",
+				"packagedElement"
+			],
+			[
+				"load",
+				"loadvocuml"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 132.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"wrap",
+				"Word Wrap: Toggle"
+			],
+			[
+				"xml",
+				"Set Syntax: XML"
+			],
+			[
+				"java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"lua",
+				"Set Syntax: Lua"
+			],
+			[
+				"jso",
+				"Set Syntax: JSON"
+			],
+			[
+				"json",
+				"Set Syntax: JSON"
+			],
+			[
+				"xm",
+				"Set Syntax: XML"
+			],
+			[
+				"aml",
+				"Set Syntax: YAML"
+			],
+			[
+				"mark",
+				"Set Syntax: Markdown"
+			],
+			[
+				"wra",
+				"Word Wrap: Toggle"
+			],
+			[
+				"html",
+				"Set Syntax: HTML"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"sync",
+				"SyncScroll: Toggle Current View Scroll Sync"
+			],
+			[
+				"convert ",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"repl lua",
+				"SublimeREPL: Lua"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"align",
+				"Preferences: Alignment File Settings – User"
+			],
+			[
+				"packag",
+				"Package Control: Install Package"
+			],
+			[
+				"packa",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 593.0
+	},
+	"console":
+	{
+		"height": 140.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/vadi/Programs/fhir-formats"
+	],
+	"file_history":
+	[
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/ConceptMap-resources/Codesystem.json",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/ConceptMap-resources/Codesystem.xml",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/ConceptMap-resources/ConceptMap.json",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/ConceptMap-resources/ConceptMap.xml",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/ConceptMap-resources/New-ValueSet.json",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/ConceptMap-resources/New-ValueSet.xml",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/ConceptMap-resources/Old-ValueSet.json",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/ConceptMap-resources/Old-ValueSet.xml",
+		"/home/vadi/Programs/fhir-drills.github.io/js/main.js",
+		"/home/vadi/Desktop/20160814 DRAFT IHI Status CodeSystems/Individual Healthcare Identifier Status (IHI Status).xml",
+		"/home/vadi/Desktop/20160814 DRAFT IHI Status CodeSystems/Individual Healthcare Identifier Record Status (IHI Record Status).xml",
+		"/home/vadi/Programs/fhir-drills.github.io/ValueSet-And-CodeSystem.html",
+		"/home/vadi/Programs/fhir-drills.github.io/conceptmap.html",
+		"/home/vadi/Programs/fhir-drills.github.io/index.html",
+		"/home/vadi/Programs/fhir-drills.github.io/operations.html",
+		"/home/vadi/Programs/fhir-drills.github.io/patient-with-references.html",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/DiagnosticOrder-f001.json",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/DiagnosticReport-f001.json",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/Encounter-f001.json",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/Observation-f001.json",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/Observation-f002.json",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/Patient-f001.json",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/post-resources.lua",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/post-resources.web.lua",
+		"/home/vadi/Programs/fhir-drills.github.io/simple-patient.html",
+		"/home/vadi/Programs/fhir-drills.github.io/simple-search.html",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/SimpleValueSet-resources/ValueSet_SimpleExample.json",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/SimpleValueSet-resources/ValueSet_SimpleExample.xml",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/SimpleValueSet-resources/ValueSet_PITUSPathologyOrdering.xml",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/SimpleValueSet-resources/ValueSet_ACMEPathologyHepatitisBOrdering.xml",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/SimpleValueSet-resources/CodeSystem_SimpleExample.xml",
+		"/home/vadi/Programs/fhir-drills.github.io/resource-examples/SimpleValueSet-resources/CodeSystem_ACMEPathologyHepatitisOrdering.xml",
+		"/home/vadi/Programs/nehta-au.github.io/resource-examples/ConceptMap-resources/ConceptMap.xml",
+		"/home/vadi/Programs/nehta-au.github.io/resource-examples/ConceptMap-resources/Codesystem.json",
+		"/home/vadi/Programs/nehta-au.github.io/resource-examples/ConceptMap-resources/Codesystem.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_General_Concept_Map-1.0.0.json",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Complete_Code_System-1.0.0.json",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Complete_Code_System-1.0.0.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Composed_Value_Set-1.0.0.json",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Composed_Value_Set-1.0.0.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_General_Concept_Map-1.0.0.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Expanded_Value_Set-1.0.0.json",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Expanded_Value_Set-1.0.0.uhn.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Expanded_Value_Set-1.0.0.mine.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Expanded_Value_Set-1.0.0.gg.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_General_Concept_Map-1.0.0.uhn.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_General_Concept_Map-1.0.0.gg.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_General_Concept_Map-1.0.0.mine.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Composed_Value_Set-1.0.0.uhn.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Composed_Value_Set-1.0.0.gg.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Composed_Value_Set-1.0.0.mine.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Complete_Code_System-1.0.0.fhir3.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Complete_Code_System-1.0.0.mine.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Complete_Code_System-1.0.0.uhn.xml",
+		"/home/vadi/Programs/ncts-repo/testing/fhir-api-tests/src/test/resources/NCTS_Complete_Code_System-1.0.0_20160627.json",
+		"/home/vadi/Desktop/Reubens papers/NCTS_General_Concept_Map-1.0.0.json",
+		"/home/vadi/Desktop/Reubens papers/NCTS_Composed_Value_Set-1.0.0_20160606-1.json",
+		"/home/vadi/Desktop/Reubens papers/NCTS_Complete_Code_System-1.0.0_20160627.json",
+		"/home/vadi/Programs/fhir-git/guides/argonaut/argonaut-provider.xml",
+		"/home/vadi/Programs/nehta-au.github.io/conceptmap.html",
+		"/home/vadi/Programs/nehta-au.github.io/resource-examples/ConceptMap-resources/New-ValueSet.json",
+		"/home/vadi/Programs/nehta-au.github.io/resource-examples/ConceptMap-resources/Old-ValueSet.json",
+		"/home/vadi/Programs/nehta-au.github.io/resource-examples/ConceptMap-resources/ConceptMap.json",
+		"/home/vadi/Programs/nehta-au.github.io/resource-examples/SimpleValueSet-resources/ValueSet_SimpleExample.xml",
+		"/home/vadi/Desktop/Reubens papers/Reubens notes for his papers",
+		"/home/vadi/Desktop/Reubens notes for his papers",
+		"/tmp/vmware-vadi/vmware-horizon-client-7497.log",
+		"/home/vadi/Programs/nehta-au.github.io/resource-examples/SimpleValueSet-resources/CodeSystem_SimpleExample.xml",
+		"/home/vadi/Programs/ncts-repo/dockify/ontoCtrl.sh",
+		"/home/vadi/Programs/ncts-repo/dockify/ncts",
+		"/home/vadi/Programs/ncts-repo/dockify/compose-ontoserver.yml",
+		"/home/vadi/Downloads/ncauser.cer",
+		"/home/vadi/.m2/settings.xml",
+		"/home/vadi/Downloads/artifacts.xml",
+		"/home/vadi/Downloads/content.xml",
+		"/home/vadi/Desktop/eclipse info",
+		"/home/vadi/Programs/fhir-git/source/patient/json-edge-cases.json",
+		"/home/vadi/Programs/nehta-au.github.io/resource-examples/DiagnosticReport-f001.json",
+		"/home/vadi/Documents/NEHTA FHIR team/Linked resources examples/Patient-f001.json",
+		"/home/vadi/Documents/NEHTA FHIR team/Tutorial/index.html",
+		"/home/vadi/Documents/NEHTA FHIR team/Linked resources examples/DiagnosticOrder-f001.json",
+		"/home/vadi/Documents/NEHTA FHIR team/Tutorial/js/lightbox-plus-jquery.min.map",
+		"/home/vadi/Documents/NEHTA FHIR team/Linked resources examples/DiagnosticReport-f001.json",
+		"/home/vadi/Documents/NEHTA FHIR team/Linked resources examples/Observation-f001.json",
+		"/home/vadi/Documents/NEHTA FHIR team/Linked resources examples/Observation-f002.json",
+		"/home/vadi/Programs/fhir-formats/src/fhirformats.web.lua",
+		"/home/vadi/Documents/NEHTA FHIR team/Linked resources examples/post-resources.lua",
+		"/home/vadi/Programs/fhir-git/source/conformance/conformance-example.xml",
+		"/home/vadi/Programs/fhir-git/source/conformance-rules.html",
+		"/home/vadi/Programs/fhir-git/source/template-conformance-pack.html",
+		"/home/vadi/Programs/fhir-git/source/conformance/conformance-spreadsheet.xml",
+		"/home/vadi/Programs/fhir-git/source/conformance/conformance-notes.xml",
+		"/home/vadi/Programs/fhir-git/guides/ehrsrle/conformance-ehrs-rle.xml",
+		"/home/vadi/Programs/fhir-git/source/conformance/conformance-phr-example.xml",
+		"/home/vadi/Programs/fhir-git/source/conformance/conformance-spreadsheet.sheet.txt",
+		"/home/vadi/Programs/fhir-git/vscache/validation.cache/restful-conformance-mode.json",
+		"/home/vadi/Programs/fhir-git/guides/sdcde/conformance-sdc-de-curator.xml",
+		"/home/vadi/Programs/fhir-git/guides/sdc/conformance-sdc-form-filler.xml",
+		"/home/vadi/Programs/fhir-git/guides/sdcde/conformance-sdc-de-registry.xml",
+		"/home/vadi/Programs/fhir-git/source/conformance/conformance-introduction.xml",
+		"/home/vadi/Programs/fhir-git/vscache/validation.cache/conformance-statement-kind.json",
+		"/home/vadi/Programs/fhir-git/guides/sdc/conformance-sdc-form-manager.xml",
+		"/home/vadi/Programs/fhir-git/vscache/validation.cache/conformance-resource-status.json",
+		"/home/vadi/Programs/fhir-git/guides/sdc/conformance-sdc-form-designer.xml",
+		"/home/vadi/Programs/fhir-git/guides/sdc/conformance-sdc-form-receiver.xml",
+		"/home/vadi/Programs/fhir-git/source/conformance/conformance-examples-header.xml",
+		"/home/vadi/Programs/fhir-git/source/conformance/conformance-terminology-server.xml",
+		"/home/vadi/Programs/fhir-git/guides/sdc/conformance-sdc-form-archiver.xml",
+		"/home/vadi/Programs/fhir-git/vscache/validation.cache/message-conformance-event-mode.json",
+		"/home/vadi/Programs/fhir-git/source/conformance/conformance-extensions-spreadsheet.xml",
+		"/home/vadi/Programs/fhir-git/source/conformance/conformance-extensions-spreadsheet.sheet.txt",
+		"/home/vadi/Programs/fhir-git/guides/uslab/conformance/conformance-uslaborder-orderer.xml",
+		"/home/vadi/Programs/fhir-git/guides/uslab/conformance/conformance-uslabreport-sender.xml",
+		"/home/vadi/Programs/fhir-git/guides/daf/conformance/conformance-daf-query-responder.xml",
+		"/home/vadi/Programs/fhir-git/guides/uslab/conformance/conformance-uslaborder-receiver.xml",
+		"/home/vadi/Programs/fhir-git/guides/uslab/conformance/conformance-uslabreport-receiver.xml",
+		"/home/vadi/Programs/fhir-git/guides/daf/conformance/conformance-daf-query-requestor.xml",
+		"/home/vadi/Programs/fhir-git/guides/daf/conformance/conformance-daf-query-responder-core.xml",
+		"/home/vadi/Documents/NEHTA FHIR team/Linked resources examples/Bundle.json",
+		"/home/vadi/Documents/NEHTA FHIR team/Linked resources examples/Encounter-f001.json",
+		"/home/vadi/Programs/fhirserver/reference-platform/dstu3/FHIRValidator.pas",
+		"/home/vadi/Documents/NEHTA FHIR team/Linked resources examples/curl",
+		"/home/vadi/Downloads/ZCITIE-MDHTJOERG14-JOB1-2.log",
+		"/home/vadi/Programs/citie-testing/au.net.electronichealth.ci.mdcit.testing.jubula/pom.xml",
+		"/home/vadi/Programs/citie-testing/au.net.electronichealth.ci.mdcit.testing.aggregator/pom.xml",
+		"/home/vadi/Programs/nehta-mdht-ext/pom.xml",
+		"/home/vadi/Programs/citie-testing/au.net.electronichealth.ci.mdcit.testing.aggregator/settings.xml",
+		"/home/vadi/Programs/citie-testing/au.net.electronichealth.ci.mdcit.testing.cda.model.structure.parser/src/main/java/au/net/electronichealth/ci/mdcit/testing/cda/model/structure/parser/UMLCompare.java"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 102.0,
+		"where_history":
+		[
+			"/home/vadi/Programs/fhir-drills.github.io",
+			"/home/vadi/Programs/fhir-git,*.xml",
+			"/home/vadi/Programs/fhir-git",
+			"",
+			"/home/vadi/Programs/",
+			"/home/vadi/Programs/nehta-au.github.io",
+			"/home/vadi/Programs/",
+			"/home/vadi/Programs/org.eclipse.mdht",
+			"",
+			"/home/vadi/Programs/fhir-git,*.json",
+			"/home/vadi/Programs/fhir-git,*.xml",
+			"/home/vadi/Programs/nehta-au.github.io/resource-examples",
+			"",
+			"/home/vadi/Documents/NEHTA FHIR team/Linked resources examples",
+			"/home/vadi/Programs/fhirserver",
+			"~/Programs/nehta-mdht-ext",
+			"",
+			"/home/vadi/Programs/fhir-git",
+			"/home/vadi/Programs/vadimnehta-mdht",
+			"/home/vadi/Programs/org.eclipse.mdht",
+			"/home/vadi/Programs/cda-irs/e-referrale2e/au.net.electronichealth.ci.cda.ir.er",
+			"/home/vadi/Downloads/genschematron/xpath",
+			"",
+			"/home/vadi/Downloads/EP_1747_2014_eReferral_v1.4.1 (2)",
+			"/home/vadi/Programs/CI_CDA_Mapping",
+			"/home/vadi/Downloads/EP_1747_2014_eReferral_v1.4.1 (2)",
+			"/home/vadi/Programs/sample_ccdas",
+			"/home/vadi/Programs/mdht-models/models/org.openhealthtools.mdht.uml.cda.consol2.model/model,*.sch",
+			"/home/vadi/Programs/mdht-models/models/org.openhealthtools.mdht.uml.cda.consol2.model/model",
+			"/home/vadi/Programs/mdht-models/models/org.openhealthtools.mdht.uml.cda.consol.model/src-java,*.java",
+			"/home/vadi/Programs/mdht-models/models/org.openhealthtools.mdht.uml.cda.consol.model/src-java",
+			"/home/vadi/Programs/mdht-models/models/org.openhealthtools.mdht.uml.cda.consol2.model/model/src-java",
+			"/home/vadi/Programs/vadimnehta-mdht",
+			"/home/vadi/Programs/cda-irs/e-referrale2e",
+			"/home/vadi/Programs/mdht-github,*.java",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Programs/nehta-mdht-ext",
+			"/home/vadi/Downloads/irehelper,-*.idea",
+			"/home/vadi/Downloads/irehelper",
+			"/home/vadi/Programs/common-dita",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Programs/nehta-mdht-ext,*.xml",
+			"/home/vadi/Programs/nehta-mdht-ext",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Programs/CISR_NDSM_Tooling,*.xsl",
+			"/home/vadi/Programs/CISR_NDSM_Tooling",
+			"/home/vadi/Programs",
+			"/home/vadi/Programs/mdht-github",
+			"",
+			"/home/vadi/Programs/mdht-github,*.java",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Programs/cda-irs/specialistlettertrial/au.net.electronichealth.ci.cda.ir.slt.doc",
+			"/home/vadi/Programs/mdht-github,*.java",
+			"/home/vadi/Programs/mdht-models",
+			"/home/vadi/Programs/mdht-github/cda/plugins/org.openhealthtools.mdht.uml.cda.transform",
+			"/home/vadi/Programs/mdht-github,*.java",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Programs/mdht-github/cda/plugins,*.xml",
+			"/home/vadi/Programs/mdht-github/cda/plugins,*.java",
+			"/home/vadi/Programs/mdht-github/cda/plugins",
+			"/home/vadi/Programs/mdht-github/core/plugins",
+			"/home/vadi/Programs/mdht-github,*.java",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Programs/nehta-cda-rim-model",
+			"/home/vadi/Programs/mdht-github,*.java",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Programs/svof",
+			"/home/vadi/Programs/mdht-github,*.java",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Programs/cda-irs/",
+			"/home/vadi/cda-irs/",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk",
+			"/home/vadi/Programs/common-dita",
+			"",
+			"/home/vadi/Programs/CISR_NDSM_Tooling/XML/DocBook",
+			"/home/vadi/Programs/dita-ot-plugins",
+			"/home/vadi/Programs/cda-irs",
+			"/home/vadi/Programs/mdht-models",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Documents",
+			"/home/vadi/Documents/IT",
+			"",
+			"/home/vadi/Programs/CISR_NDSM_Tooling/XML",
+			"/home/vadi/Programs/dita-ot-plugins",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Downloads/support-20150514-095720-1",
+			"/home/vadi/Programs/CISR_NDSM_Tooling",
+			"/home/vadi/Programs/CISR_NDSM_Tooling/XML",
+			"/home/vadi/Programs/eclipse-modeling-kepler/plugins/com.oxygenxml.editor_16.1.0.v2015040615/frameworks/dita/DITA-OT/plugins/au.gov.nehta.A4/",
+			"/home/vadi/Programs/dita-ot-plugins,-*.html",
+			"/home/vadi/Programs/dita-ot-plugins",
+			"/home/vadi/Programs/mdht-github,*.xml",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Programs/CISR_NDSM_Tooling,*.xsl",
+			"/home/vadi/Programs/CISR_NDSM_Tooling",
+			"/home/vadi/Programs/mdht",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Programs/CISR_NDSM_Tooling/XML/DITA/au.gov.nehta.A4",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk/mapping/DocBook/Template/CoC/EventSummary,-*.dbk",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk/mapping/DocBook/Template/CoC/EventSummary",
+			"/home/vadi/Programs/eclipse-modeling-kepler",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk/mapping/DocBook",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk/mapping/DocBook,*.xml",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk/mapping/DocBook",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk/mapping/DocBook,*.xml",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk/mapping/DocBook/,*.xml",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk/mapping/DocBook/Template/CoC/EventSummary,-*.dbk",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk/mapping/DocBook/Template/CoC/EventSummary",
+			"/home/vadi/Programs/mdht",
+			"/home/vadi/Programs/mdht,pom.xml",
+			"/home/vadi/Programs/mdht",
+			"/home/vadi/Downloads/support-20150414-105354-2",
+			"/home/vadi/Programs/CISR_NDSM_Tooling/XML/",
+			"/home/vadi/Programs/CISR_NDSM_Tooling/XML/DITA",
+			"/home/vadi/Programs/eclipse-modeling-kepler/plugins/com.oxygenxml.editor_16.1.0.v2015012213",
+			"/home/vadi/Programs/mdht",
+			"*.txt",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk/mapping/",
+			"/home/vadi/Programs/CI_CDA_Mapping/trunk/mapping/DocBook/Template/CoC/SharedHealthSummary",
+			"/home/vadi/Programs/CISR_NDSM_Tooling/XML/DITA",
+			"/home/vadi/Programs/CISR_NDSM_Tooling/XML/DITA/au.gov.nehta.A4",
+			"CDA",
+			"/home/vadi/Programs/mdht-github/cda/plugins/org.openhealthtools.mdht.uml.cda.ui/resources/dita",
+			"/home/vadi/Programs/common-dita",
+			"/home/vadi/Programs/CISR_NDSM_Tooling/XML/DocBook",
+			"/home/vadi/Programs/mdht-github",
+			"/home/vadi/Programs/common-dita",
+			"/home/vadi/Programs/mdht,*.java"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"nehta",
+			"<meta name=\"description\" content=\"A front-end template that helps you build fast, modern mobile web apps.\">",
+			"nehta",
+			"nehta-f00",
+			"nehta",
+			"NehtaAustralian Digital Health Agency",
+			"nehta{\n  \"url\": \"urn:uuid:a5f94e22-ddba-474e-80e3-b067d9c27a55\",\n  \"publisher\": \"NEHTA\",\n  \"status\": \"draft\",\n  \"compose\": {\n    \"include\": [\n      {\n        \"concept\": [\n          {\n            \"code\": \"present\"\n          },\n          {\n            \"code\": \"not-present\"\n          },\n          {\n            \"code\": \"sick\"\n          }\n        ],\n        \"system\": \"urn:uuid:bb6efb79-2b93-4569-a51e-6fcf103b6e9a\",\n		\"version\": \"20162726\"\n      }\n    ]\n  },\n  \"date\": \"2016-06-27\",\n  \"name\": \"Old valueset describing a persons work state\",\n  \"experimental\": true,\n  \"lockedDate\": \"2016-06-27\",\n  \"version\": \"2016-06-27\",\n  \"description\": \"Very simple valueset for recording a persons work state\",\n  \"contact\": [\n    {\n      \"name\": \"Vadim Peretokin\",\n      \"telecom\": [\n        {\n          \"value\": \"vadim.peretokin@nehta.gov.au\",\n          \"system\": \"email\"\n        }\n      ]\n    }\n  ],\n  \"resourceType\": \"ValueSet\"\n}\n",
+			"nehta",
+			"CodeSystem.identifier.period",
+			"ConceptMap.element.code",
+			"ConceptMap.name",
+			"StructureDefinition",
+			"FHIR",
+			"StructureDefinition",
+			"ConceptMap.contact.telecom",
+			"ValueSet.compose.include.concept.code",
+			"ValueSet.compose.import",
+			"ValueSet.lockedDate",
+			"ValueSet.url",
+			"ValueSet.identifier",
+			"CodeSystem.valueSet",
+			"Codesystem.compositional",
+			"caseSensitive",
+			"6fcf103b6e9a",
+			"not present",
+			"jury duty",
+			"personal leave",
+			"working from home",
+			"annual leave",
+			"working from home",
+			"away travelling",
+			"in office",
+			"http://snomed.info/sct/",
+			"Published for testing on 27",
+			"Published for testing on 28",
+			"Published for testing",
+			"I found the material easy",
+			"getElementById",
+			"restart",
+			"schematron",
+			"daily",
+			"5.1.2",
+			"uml.",
+			"distribution",
+			"nexus",
+			"nehta-built-mdht",
+			"orderer",
+			"pic1",
+			"contained",
+			"id",
+			"M",
+			"value",
+			"encounter",
+			"reference",
+			"linked",
+			"Blood test",
+			"features",
+			"Simple p",
+			"spark2653",
+			"nehta-",
+			"\"id\"",
+			"oerg",
+			"#",
+			"patient",
+			"#req",
+			"diagnosticorder",
+			"Encounter",
+			"<compartment",
+			"(.+)",
+			"f00",
+			"No profile found for contained resource of type",
+			"f00",
+			"fhir2",
+			"\"f00",
+			"http://fhir2.healthintersections.com.au/open",
+			"/f00",
+			"\"mapping\"",
+			"\"id\": \"Patient\"",
+			"3.0.0.201604132227",
+			"Uploaded.+\\.jar",
+			"tycho-version",
+			"tycho-maven",
+			"id=\"org.eclipse.jubula.client.api\"",
+			"\"org.eclipse.jubula.client.api\"",
+			"\"org.eclipse.jubula.client\"",
+			"org.eclipse.jubula.client",
+			"import org.eclipse.jubula.client",
+			"import org.eclipse.jubula.client.api",
+			"import org.slf4j.api",
+			"import org.eclipse.osgi",
+			"import javax.xml.stream",
+			"import javax.xml",
+			"import com.thoughtworks.xstream",
+			"import org.apache.commons.lang",
+			"import org.xmlpull",
+			"import org.eclipse.jdt.annotation",
+			"import org.apache.commons.codec",
+			"org.apache.commons.codec",
+			"loadingcache",
+			"com.google.common.cache",
+			"com.google.common",
+			"com.google.common.cache",
+			"id=\"org.eclipse.uml2.uml.resources\" version=\"",
+			"\"org.eclipse.uml2.uml.resources\"",
+			"org.eclipse.uml2.uml.resources",
+			"\"org.eclipse.uml2.uml.resources\" version=\"5.1.0",
+			"\"org.eclipse.uml2.uml.resources\" version=\"5.1",
+			"\"org.eclipse.uml2.uml.resources\"",
+			"org.eclipse.uml2.uml.resources",
+			"import org.eclipse.uml2.uml",
+			"import org.eclipse.uml2.uml.resources",
+			"import org.eclipse.uml2",
+			"import org.eclipse.uml2.uml.profile.standard",
+			"import org.eclipse.uml2.common",
+			"import org.eclipse.uml2.types",
+			"import org.eclipse.uml2.common",
+			"org.eclipse.uml2.common",
+			"import org.eclipse.uml2",
+			"id='org.eclipse.emf.compare'",
+			"org.eclipse.emf.compare",
+			"import org.eclipse.emf.compare",
+			"org.eclipse.uml2.uml",
+			"import org.eclipse.uml2.uml",
+			"rg.eclipse.uml2.uml",
+			"import org.eclipse.uml2.common",
+			"org.eclipse.emf.valid",
+			"import org.eclipse.emf.valid",
+			"import org.eclipse.emf.mapping.ecore2xml"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"<meta name=\"description\" content=\"FHIR Tutorials by the Australian Digital Health Agency to help you understand FHIR and its spec! No technical experience required.\">",
+			"digitalhealth-f00",
+			"not-present",
+			"jury-duty",
+			"personal-leave",
+			"working-from-home",
+			"annual-leave",
+			"working-from-home",
+			"away-travelling",
+			"in-office",
+			"\"\\1\",",
+			"nehta-f00",
+			"fhir3",
+			"\"nehta-f00",
+			"http://spark.furore.com/fhir",
+			"/nehta-f00",
+			"http://cidb.cti:8060/exist/rest/db/",
+			"http://confluence.nehta.net.au/display/NEH",
+			"cda:templateId[@root = '\\1' and @extension = '1.0']",
+			" ",
+			"\\[",
+			"<table frame=\"all\" id=\"table_ekc_yw5_v4\" outputclass=\"no-repeated-table-header\">",
+			"\\1",
+			"",
+			"<",
+			"",
+			"<row revisionflag=\"deleted\"",
+			"<row xmlns=\"http://docbook.org/ns/docbook\"",
+			" xmlns=\"http://docbook.org/ns/docbook\"",
+			"",
+			"</row>\\n<row",
+			"",
+			" ",
+			"http://jira.nehta.net.au/browse/CITIE",
+			"",
+			"http://jira.nehta.net.au/browse/CITIE-\\1",
+			" ",
+			"",
+			"|",
+			"",
+			"|\\1|",
+			"git rm --cached \"\\1\"",
+			"git rm --cached `\\1`",
+			"",
+			"ri:content-title=\"Installing CITIE software\"",
+			"",
+			"\\1",
+			"",
+			" ",
+			"HL7<tm tmtype=\"reg\"/>",
+			"CDA<tm tmtype=\"reg\"/>",
+			"HL7<tm tmtype=\"reg\"/>",
+			"DocumentMap",
+			"/",
+			"",
+			"        medicationModel = new MedicationModel();\n        medicationModel.setName(\"\\2\");\n        medicationModel.setSctid(\\1L);\n        medicationModel.setMedicationTimeToBeTaken(DateTimeDt.withCurrentTime());\n        medicationModelList.add(medicationModel);\n",
+			"        medicationModel = new MedicationModel();\n        medicationModel.setName(\"\\2\");\n        medicationModel.setSctid(\\1:);\n        medicationModel.setMedicationTimeToBeTaken(DateTimeDt.withCurrentTime());\n        medicationModelList.add(medicationModel);\n",
+			"        medicationModel = new MedicationModel();\n        medicationModel.setName(\"\\2\");\n        medicationModel.setSctid(\\1:);\n        medicationModel.setMedicationTimeToBeTaken(DateTimeDt.withCurrentTime());\n        medicationModelList.add(medicationModel);",
+			"href=\"\\1/&#x200B;\\2",
+			"href=\"\\1/&#x200B;",
+			"/&#x200B;",
+			"",
+			"<li>\\1</li>",
+			" ",
+			"./CIMDHT/release/cda/plugins/\\1",
+			"Update \\1 version",
+			"<entry>\\1</entry>",
+			"</p>",
+			"<p>",
+			"<topic id=\"\\1\" xml:lang=\"en-us\">",
+			"<keyword keyref=\"\\1\"/>",
+			"",
+			"<keyword keyref=\"DOC_NAME_ABBR\"/>",
+			"<keyword keyref=\"DOC_NAME\"/>",
+			"mac",
+			"/Users/andybond/git",
+			"widnows",
+			"",
+			"<current password>",
+			"<row xmlns=\"http://docbook.org/ns/docbook\"",
+			"",
+			" ",
+			"",
+			"_",
+			"folder",
+			"folders",
+			"svndata",
+			"parsexml",
+			"\\1",
+			"aggregation=\"composite\"",
+			"IndividualPathologyTestResultValueReferenceRangeMeaning",
+			" ",
+			"<li>\\1</li>",
+			" ",
+			"",
+			"dbk:",
+			"",
+			"ci-ir:",
+			"",
+			" = \"",
+			"",
+			"!!!\\1\\n\\2\\n",
+			"!!!\\1\\n\\2",
+			" ",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 124.0
+	},
+	"pinned_build_system": "",
+	"project": "/home/vadi/Programs/citie-testing/vadim's sublime workspace.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 545.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 414.0
+	},
+	"select_symbol":
+	{
+		"height": 54.0,
+		"last_filter": "UMLGeneralization",
+		"selected_items":
+		[
+			[
+				"UMLGeneralization",
+				"UMLGeneralization"
+			]
+		],
+		"width": 910.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 371.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

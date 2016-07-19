@@ -62,7 +62,7 @@
         <code value='AB45'/>
       </valueCoding>
     </extension>
-    <extension id='q4' url='nestedB'>
+    <extension url='nestedB' id='q4'>
       <extension url='nestedB1'>
         <valueString value='hello'/>
       </extension>
@@ -139,7 +139,7 @@
           <valueCode value='ASKU'/>
         </extension>
       </family>
-      <family value='du' id='a2'>
+      <family id='a2' value='du'>
         <extension url='http://example.org/fhir/StructureDefinition/qualifier'>
           <valueCode value='VV'/>
         </extension>
@@ -156,7 +156,7 @@
         </extension>
       </family>
       <given value='Bénédicte'/>
-      <given value='Denise' id='a3'>
+      <given id='a3' value='Denise'>
         <extension url='http://hl7.org/fhir/StructureDefinition/qualifier'>
           <valueCode value='MID'/>
         </extension>
