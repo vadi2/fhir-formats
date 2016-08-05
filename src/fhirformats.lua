@@ -72,6 +72,8 @@ file_exists = function(name)
   if f ~= nil then io.close(f) return true else return false end
 end
 
+local PATH = (...):match("(.+)%.[^%.]+$") or (...)
+
 read_fhir_data = function(filename)
   -- prefer the filename, but substitute the nil if not given
   local locations = {(filename or ""), "fhir-data/fhir-elements.json", "src/fhir-data/fhir-elements.json", "../src/fhir-data/fhir-elements.json", "fhir-data/fhir-elements.json"}
@@ -86,16 +88,18 @@ read_fhir_data = function(filename)
   end
 
   -- if installed as a LuaRock, try the data directory
+  local dataf, datafileerr
   if not data and datafile then
-    local file, err = datafile.open("src/fhir-data/fhir-elements.json", "r")
-    data = json_decode(file:read("*a"))
+    dataf, datafileerr = datafile.open("src/fhir-data/fhir-elements.json", "r")
+    if dataf then data = json_decode(dataf:read("*a")) end
   end
 
   if not data and require_resource then
     data = json_decode(require_resource("fhir-data/fhir-elements.json"))
   end
 
-  assert(data, string.format("read_fhir_data: FHIR Schema could not be found in these locations:\n  %s.\n%s%s", table.concat(locations, " "), datafile and "Datafile could not find LuaRocks installation as well." or '', require_resource and "Embedded JSON data could not be found as well." or ''))
+
+  assert(data, string.format("read_fhir_data: FHIR Schema could not be found in these locations starting from %s:  %s\n\n%s%s", PATH, table.concat(locations, "\n  "), datafile and ("Datafile could not find LuaRocks installation as well; error is: \n"..datafileerr) or '', require_resource and "Embedded JSON data could not be found as well." or ''))
   return data
 end
 
