@@ -16,9 +16,9 @@
 
 rm *.json
 
-# May 2016 snapshot
-wget http://hl7.org/fhir/2016May/profiles-types.json
-wget http://hl7.org/fhir/2016May/profiles-resources.json
+# September 2016 snapshot
+wget http://hl7.org/fhir/2016Sep/profiles-types.json
+wget http://hl7.org/fhir/2016Sep/profiles-resources.json
 
 # Latest Continuous Build
 # wget http://hl7-fhir.github.io/profiles-resources.json
