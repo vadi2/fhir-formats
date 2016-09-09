@@ -31,7 +31,7 @@ to_xml("/path/to/file", {file = true})
 
 ### Examples
 ```lua
-> to_json = require("fhir-formats").to_json
+> to_json = require("fhirformats").to_json
 > print(to_json([[
   <?xml version="1.0" encoding="UTF-8"?>
   <Patient xmlns="http://hl7.org/fhir">
