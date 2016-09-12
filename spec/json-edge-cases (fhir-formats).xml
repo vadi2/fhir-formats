@@ -168,7 +168,7 @@
       <value value='+33 (237) 998327'/>
     </telecom>
   </contact>
-  <careProvider>
+  <generalPractitioner>
     <reference value='#org3141'/>
-  </careProvider>
+  </generalPractitioner>
 </Patient>

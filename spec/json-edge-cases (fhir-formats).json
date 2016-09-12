@@ -177,7 +177,7 @@
     "status": "generated",
     "div": "<div xmlns='http:\/\/www.w3.org\/1999\/xhtml'>\n  <table>\n    <tbody>\n      <tr>\n        <td>Name<\/td>\n        <td>Peter James\n\n                            <b>Chalmers<\/b> (\"Jim\")\n\n                        <\/td>\n      <\/tr>\n      <tr>\n        <td>Address<\/td>\n        <td>534 Erewhon, Pleasantville, Vic, 3999<\/td>\n      <\/tr>\n      <tr>\n        <td>Contacts<\/td>\n        <td>Home: unknown. Work: (03) 5555 6473<\/td>\n      <\/tr>\n      <tr>\n        <td>Id<\/td>\n        <td>MRN: 12345 (Acme Healthcare)<\/td>\n      <\/tr>\n    <\/tbody>\n  <\/table>\n<\/div>"
   },
-  "careProvider": [
+  "generalPractitioner": [
     {
       "reference": "#org3141"
     }

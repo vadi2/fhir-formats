@@ -224,8 +224,8 @@
         </telecom>
 
     </contact>
-    <careProvider>
+    <generalPractitioner>
         <reference value="#org3141"/>
 
-    </careProvider>
+    </generalPractitioner>
 </Patient>
