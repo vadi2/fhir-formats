@@ -49,7 +49,7 @@ local function handle_choice(output, element, weight_counter)
 end
 
 -- handles a simple element
-local function handle_simple(output, element, weight_counter)
+local function handle_simple(output, element, weight_counter, resource_type)
   local path, type, type_json, type_xml, min, max
 
   -- in case there's no type - such as Element itself
@@ -67,6 +67,9 @@ local function handle_simple(output, element, weight_counter)
       end
     end
   end
+
+  -- since 1.6.0, resource types aren't shown in the first element anymore - so get those from the baseDefinition
+  type = type or resource_type
 
   min = tostring(element.min)
   max = element.max
@@ -89,12 +92,19 @@ local function parse_data(data, output, resources_map, weight_counter)
     if datatype_root.resource.resourceType == "StructureDefinition" then
       -- ignore derivations of a type that only add validation rules, like Money for Quantity
       if datatype_root.resource.id == datatype_root.resource.snapshot.element[1].path then
+
+        -- since 1.6.0, resource type is not shown in the first element anymore - so deduce it from the baseDefition URL
+        local resource_type
+        if datatype_root.resource.baseDefinition then -- Element itself doesn't have a baseDefinition
+          resource_type = datatype_root.resource.baseDefinition:match("http://hl7.org/fhir/StructureDefinition/(%w+)")
+        end
+
         for i, element in ipairs(datatype_root.resource.snapshot.element) do
           -- if this is a choice, expand all the possibilities in place
           if element.path:find("[x]", -3, true) then
             output = handle_choice(output, element, weight_counter)
           else
-            output = handle_simple(output, element, weight_counter)
+            output = handle_simple(output, element, weight_counter, (i == 1 and resource_type or nil))
           end
 
           if i == 1 then
