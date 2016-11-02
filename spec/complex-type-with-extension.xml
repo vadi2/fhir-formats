@@ -1,0 +1,15 @@
+<Practitioner xmlns='http://hl7.org/fhir'>
+  <role>
+
+    <specialty>
+      <extension url='http://hl7.org/fhir/StructureDefinition/practitioner-primaryInd'>
+        <valueBoolean value='true'/>
+      </extension>
+      <coding>
+        <system value='http://hl7.org/fhir/practitioner-specialty'/>
+        <code value='cardio'/>
+        <display value='Cardiologist'/>
+      </coding>
+    </specialty>
+  </role>
+</Practitioner>

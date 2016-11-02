@@ -160,6 +160,7 @@ map_fhir_data = function(raw_fhir_data)
     previouselement._type = element.type
     previouselement._type_json = element.type_json
     previouselement._weight = element.weight
+    previouselement._kind = element.kind
     previouselement._derivations = list_to_map(element.derivations, function(value) return fhir_data[value] end)
     flatten_derivations(previouselement)
 
@@ -306,6 +307,27 @@ get_json_datatype = function(output_stack, element_to_check)
   return "object"
 end
 
+get_xml_weight = function(output_stack, element_to_check)
+  local fhir_definition = get_fhir_definition(output_stack, element_to_check)
+  if not fhir_definition then
+    print(string.format("Warning: %s.%s is not a known FHIR element; won't be able to sort it properly in the XML output.", table.concat(output_stack, "."), element_to_check))
+    return 0
+  else
+    return fhir_definition._weight
+  end
+end
+
+get_datatype_kind = function(output_stack, element_to_check)
+  local fhir_definition = get_fhir_definition(output_stack, element_to_check)
+  if not fhir_definition then
+    print(string.format("Warning: %s.%s is not a known FHIR element; might not convert it to a proper JSON 'element' or '_element' representation.", table.concat(output_stack, "."), element_to_check))
+    return 0
+  else
+    local datatype_fhir_definition = get_fhir_definition({}, fhir_definition._type)
+    return datatype_fhir_definition._kind
+  end
+end
+
 print_xml_value = function(node, current_level, output_stack, need_shadow_element)
   -- if we're processing a primitive value, add it to the right place
   -- in output{}. Right place is given to us by looking at the last
@@ -347,6 +369,7 @@ end
 need_shadow_element = function(level, node, output_stack)
   if level ~= 1 and node[1]
   and output_stack[#output_stack] ~= "extension" and node.xml ~= "extension" -- don't create shadow tables if we're inside an extension though
+  and get_datatype_kind(output_stack, node.xml) ~= "complex-type" -- or if this is a complex type
   then
     if node.id then return true
     else
@@ -552,16 +575,6 @@ print_simple_datatype = function(element, simple_type, xml_output_levels, output
   end
 end
 
-get_xml_weight = function(output_stack, element)
-  local fhir_definition = get_fhir_definition(output_stack, element)
-  if not fhir_definition then
-    print(string.format("Warning: %s.%s is not a known FHIR element; won't be able to sort it properly in the XML output.", table.concat(output_stack, "."), element))
-    return 0
-  else
-    return fhir_definition._weight
-  end
-end
-
 -- prints a complex datatype to the right place in the output table,
 -- as indicated by the last pointer in the xml_output_level stack,
 -- and recurses down to handle more available values
@@ -615,7 +628,7 @@ handle_json_recursively = function(json_data, xml_output_levels, output_stack)
   -- use pairs since this is a JSON object with key-value pairs
   for element, data in pairs(json_data) do
     -- TODO: change type(data) to lua_data_type
-    if type(data) == "table" then -- handle arrays with in-place expansion (one array is many xml pbjects)
+    if type(data) == "table" then -- handle arrays with in-place expansion (one array is many xml objects)
       if type(data[1]) == "table" then -- array of resources/complex types
         for _, array_complex_element in ipairs(data) do
           if array_complex_element ~= null_value then
@@ -703,7 +716,9 @@ convert_to_xml = function(data, options)
 
   return xml.dump(output)
 end
+
 map_fhir_data(read_fhir_data())
+
 return {
   to_json = convert_to_json,
   to_xml = convert_to_xml

@@ -27,7 +27,8 @@ local sformat = string.format
 
 local data = {
   {"json-edge-cases.json", "json-edge-cases.xml"},
-  {"patient-example-good.json", "patient-example.xml"}
+  {"patient-example-good.json", "patient-example.xml"},
+  {"complex-type-with-extension.json", "complex-type-with-extension.xml"}
 }
 
 for _, testcase in ipairs(data) do
@@ -52,8 +53,8 @@ for _, testcase in ipairs(data) do
       for _, key in ipairs(t.keys_in_both_tables) do
         it("should have the same '"..key.."' objects", function()
             -- cut out the div's, since the whitespace doesn't matter as much in xml
-            t.json_example.text.div = nil
-            t.xml_example.text.div = nil
+            if t.json_example.text then t.json_example.text.div = nil end
+            if t.xml_example.text then t.xml_example.text.div = nil end
             assert.same(t.json_example[key], t.xml_example[key])
           end)
       end
