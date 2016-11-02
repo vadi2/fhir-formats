@@ -49,7 +49,7 @@ local function handle_choice(output, element, weight_counter)
 end
 
 -- handles a simple element
-local function handle_simple(output, element, weight_counter, resource_type)
+local function handle_simple(output, element, weight_counter, resource_type, resource_kind)
   local path, type, type_json, type_xml, min, max
 
   -- in case there's no type - such as Element itself
@@ -76,6 +76,7 @@ local function handle_simple(output, element, weight_counter, resource_type)
   output[#output+1] = {
     path = element.path,
     type = type,
+    kind = resource_kind,
     min = min,
     max = max,
     type_xml = type_xml,
@@ -99,12 +100,18 @@ local function parse_data(data, output, resources_map, weight_counter)
           resource_type = datatype_root.resource.baseDefinition:match("http://hl7.org/fhir/StructureDefinition/(%w+)")
         end
 
+        -- save the resource kind as well - ie 'resource', 'complex-type' (for datatypes), and so on
+        local resource_kind
+        if datatype_root.resource.kind then
+          resource_kind = datatype_root.resource.kind
+        end
+
         for i, element in ipairs(datatype_root.resource.snapshot.element) do
           -- if this is a choice, expand all the possibilities in place
           if element.path:find("[x]", -3, true) then
             output = handle_choice(output, element, weight_counter)
           else
-            output = handle_simple(output, element, weight_counter, (i == 1 and resource_type or nil))
+            output = handle_simple(output, element, weight_counter, (i == 1 and resource_type or nil), (i == 1 and resource_kind or nil))
           end
 
           if i == 1 then
