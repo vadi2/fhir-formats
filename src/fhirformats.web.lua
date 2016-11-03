@@ -43445,7 +43445,7 @@ t=o[n][#o[n]]
 end
 if a==1 then
 l.resourceType=e.xml
-elseif h[#h]=="contained"then
+elseif h[#h]=="contained"or h[#h]=="resource"then
 t.resourceType=e.xml
 o[a]=o[a]or{}
 o[a][#o[a]+1]=t
