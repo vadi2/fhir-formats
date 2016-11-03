@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bundle xmlns="http://hl7.org/fhir">
+    <id value="c76fbe4b-f11c-4ef8-8534-4161508799"/>
+    <meta>
+        <lastUpdated value="2016-11-03T19:55:07Z"/>
+    </meta>
+    <type value="searchset"/>
+    <total value="1"/>
+    <link>
+        <relation value="self"/>
+        <url value="http://fhir3.healthintersections.com.au/open/Task?search-id=f8e8792b-6efc-4143-b368-fd51fd67b6&amp;&amp;_sort=_id"/>
+    </link>
+    <entry>
+        <fullUrl value="http://fhir3.healthintersections.com.au/open/Task/task"/>
+        <resource>
+            <Task xmlns="http://hl7.org/fhir">
+                <id value="task"/>
+                <meta>
+                    <versionId value="1"/>
+                    <lastUpdated value="2016-11-02T22:51:28Z"/>
+                </meta>
+                <identifier>
+                    <use value="official"/>
+                    <system value="urn:ietf:rfc:3986"/>
+                    <value value="http://example.com/fhir/Task/163412"/>
+                </identifier>
+                <status value="completed"/>
+                <stage>
+                    <coding>
+                        <system value="http://hl7.org/fhir/ValueSet/task-stage"/>
+                        <code value="actionable"/>
+                        <display value="actionable"/>
+                    </coding>
+                </stage>
+                <priority value="normal"/>
+                <created value="2016-10-31T08:25:05+10:00"/>
+                <lastModified value="2016-10-31T09:45:05+10:00"/>
+                <requester>
+                    <reference value="Practitioner/practitioner"/>
+                </requester>
+                <input>
+                    <type>
+                        <coding>
+                            <system value="http://example.com/fhir/Task/progress-status-tracker"/>
+                            <code value="input"/>
+                            <display value="Input"/>
+                        </coding>
+                    </type>
+                    <valueReference>
+                        <reference value="DiagnosticRequest/diagnosticrequest"/>
+                    </valueReference>
+                </input>
+                <output>
+                    <type>
+                        <coding>
+                            <system value="http://example.com/fhir/Task/progress-status-tracker"/>
+                            <code value="output"/>
+                            <display value="Output"/>
+                        </coding>
+                    </type>
+                    <valueReference>
+                        <reference value="DiagnosticReport/diagnosticreport"/>
+                    </valueReference>
+                </output>
+            </Task>
+        </resource>
+        <search>
+            <mode value="match"/>
+        </search>
+    </entry>
+</Bundle>

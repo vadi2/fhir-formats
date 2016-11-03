@@ -28,7 +28,8 @@ local sformat = string.format
 local data = {
   {"json-edge-cases.json", "json-edge-cases.xml"},
   {"patient-example-good.json", "patient-example.xml"},
-  {"complex-type-with-extension.json", "complex-type-with-extension.xml"}
+  {"complex-type-with-extension.json", "complex-type-with-extension.xml"},
+  {"bundle-example.json", "bundle-example.xml"}
 }
 
 for _, testcase in ipairs(data) do
