@@ -394,7 +394,7 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
   -- unlike at root level in FHIR XML
   if level == 1 then
     output.resourceType = node.xml
-  elseif output_stack[#output_stack] == "contained" then
+  elseif output_stack[#output_stack] == "contained" or output_stack[#output_stack] == "resource" then
     current_level.resourceType = node.xml
 
     output_levels[level] = output_levels[level] or {}
