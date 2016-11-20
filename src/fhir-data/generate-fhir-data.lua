@@ -39,7 +39,7 @@ local function handle_choice(output, element, weight_counter)
     output[#output+1] = {
       path = element.path:gsub("%[x%]", type.code:title()),
       type = type.code,
-      min = tostring(element.min),
+      min = element.min,
       max = tostring(element.max),
       weight = weight_counter
     }
@@ -71,8 +71,8 @@ local function handle_simple(output, element, weight_counter, resource_type, res
   -- since 1.6.0, resource types aren't shown in the first element anymore - so get those from the baseDefinition
   type = type or resource_type
 
-  min = tostring(element.min)
-  max = element.max
+  min = element.min
+  max = tostring(element.max)
   output[#output+1] = {
     path = element.path,
     type = type,
