@@ -61,6 +61,7 @@ local function handle_simple(output, element, weight_counter, resource_type, res
       for _, extension in ipairs(element.type[1]._code.extension) do
         if extension.url == "http://hl7.org/fhir/StructureDefinition/structuredefinition-json-type" then
           type_json = extension.valueString
+          if type_json == "true | false" then type_json = "boolean" end
         elseif extension.url == "http://hl7.org/fhir/StructureDefinition/structuredefinition-xml-type" then
           type_xml = extension.valueString
         end

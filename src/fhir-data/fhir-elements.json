@@ -289,7 +289,7 @@
 		"type_xml": "xsd:boolean",
 		"weight": 37,
 		"max": "1",
-		"type_json": "true | false"
+		"type_json": "boolean"
 	},
 	{
 		"min": 0,
