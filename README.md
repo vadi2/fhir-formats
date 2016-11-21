@@ -27,6 +27,18 @@ to_json("/path/to/file", {file = true, pretty = true})
 to_xml("json content")
 -- convert an JSON file given as a location to XML
 to_xml("/path/to/file", {file = true})
+
+-- get the FHIR definition of an element
+get_fhir_definition('Patient', 'animal', 'species')
+-- returns a table with metadata about the element. Do not modify this table. Keys are:
+-- _min (int): minimum cardinality
+-- _max (string): maximum cardinality, either a number or *
+-- _type_json (string): JSON rendering type. Possible values are: number, string, boolean
+-- _weight (string): arbitrary number assigned to an element - higher the number, the lower in the XML structure it is
+-- _kind (string): FHIR element kind. Possible values are: complex-type, resource, primitive-type
+-- _type (string): FHIR element type. Possible values are: Address, Age, Annotation, Attachment, BackboneElement, CodeableConcept, Coding, ContactDetail, ContactPoint, Contributor, Count, DataRequirement, Distance, DomainResource, Duration, Element, ElementDefinition, Extension, HumanName, Identifier, Meta, Money, Narrative, ParameterDefinition, Period, Quantity, Range, Ratio, Reference, RelatedResource, Resource, SampledData, Signature, Timing, TriggerDefinition, UsageContext, base64Binary, boolean, code, date, dateTime, decimal, id, instant, integer, markdown, oid, positiveInt, string, time, unsignedInt, uri, xhtml
+-- [1]: if present, this is a link to the base type of the resource
+-- _derivations: if present, this is a map of resources that extend on this resource
 ```
 
 ### Examples
@@ -42,7 +54,7 @@ to_xml("/path/to/file", {file = true})
     </meta>
     <text>
       <status value="generated"/>
-      <div xmlns="http://www.w3.org/1999/xhtml"> 
+      <div xmlns="http://www.w3.org/1999/xhtml">
         <h1>Eve Everywoman</h1> </div>
     </text>
     <active value="true"/>
@@ -76,7 +88,7 @@ to_xml("/path/to/file", {file = true})
     </meta>
     <text>
       <status value="generated"/>
-      <div xmlns="http://www.w3.org/1999/xhtml"> 
+      <div xmlns="http://www.w3.org/1999/xhtml">
         <h1>Eve Everywoman</h1> </div>
     </text>
     <active value="true"/>
@@ -139,7 +151,7 @@ to_xml("/path/to/file", {file = true})
 		"lastUpdated": "2016-04-01T03:22:46Z"
 	}
 }
-> 
+>
 ```
 
 

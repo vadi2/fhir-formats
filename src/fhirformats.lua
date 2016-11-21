@@ -37,8 +37,8 @@ else
 end
 local prettyjson = require("resty.prettycjson")
 
-local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat, tsort
-= ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format, table.sort
+local ipairs, pairs, type, print, tonumber, gmatch, tremove, sformat, tsort, tconcat
+= ipairs, pairs, type, print, tonumber, string.gmatch, table.remove, string.format, table.sort, table.concat
 
 local get_fhir_definition, read_fhir_data, getindex, map_fhir_data, fhir_typed
 local get_json_datatype, print_data_for_node, convert_to_lua_from_xml, handle_div
@@ -101,7 +101,7 @@ read_fhir_data = function(filename)
   end
 
 
-  assert(data, string.format("read_fhir_data: FHIR Schema could not be found in these locations starting from %s:  %s\n\n%s%s", PATH, table.concat(locations, "\n  "), useddatafile and ("Datafile could not find LuaRocks installation as well; error is: \n"..datafileerr) or '', require_resource and "Embedded JSON data could not be found as well." or ''))
+  assert(data, string.format("read_fhir_data: FHIR Schema could not be found in these locations starting from %s:  %s\n\n%s%s", PATH, tconcat(locations, "\n  "), useddatafile and ("Datafile could not find LuaRocks installation as well; error is: \n"..datafileerr) or '', require_resource and "Embedded JSON data could not be found as well." or ''))
   return data
 end
 
@@ -156,6 +156,7 @@ map_fhir_data = function(raw_fhir_data)
       previouselement[word] = previouselement[word] or {}
       previouselement = previouselement[word]
     end
+    previouselement._min = element.min
     previouselement._max = element.max
     previouselement._type = element.type
     previouselement._type_json = element.type_json
@@ -228,7 +229,7 @@ fhir_typed = function(output_stack, node)
   local fhir_definition = get_fhir_definition(output_stack, node.xml)
 
   if not fhir_definition then
-    print(string.format("Warning: %s is not a known FHIR element; couldn't check its FHIR type to decide the JSON type.", table.concat(output_stack, ".")))
+    print(string.format("Warning: %s is not a known FHIR element; couldn't check its FHIR type to decide the JSON type.", tconcat(output_stack, ".")))
     return value
   end
 
@@ -238,7 +239,7 @@ fhir_typed = function(output_stack, node)
     if node.value == "true" then return true
     elseif node.value == "false" then return false
     else
-      print(string.format("Warning: %s.%s is of type %s in FHIR JSON - its XML value of %s is invalid.", table.concat(output_stack), node.xml, json_type, node.value))
+      print(string.format("Warning: %s.%s is of type %s in FHIR JSON - its XML value of %s is invalid.", tconcat(output_stack), node.xml, json_type, node.value))
     end
   elseif json_type == "integer" or
   json_type == "unsignedInt" or
@@ -248,8 +249,8 @@ fhir_typed = function(output_stack, node)
   else return value end
 end
 
--- given an element and a path to it, returns the FHIR definition from
--- the FHIR schema
+-- given a path to the element in the format of {indexed table} and the element name,
+-- returns the FHIR definition from the FHIR schema
 get_fhir_definition = function (output_stack, element_to_check)
   local fhir_data_pointer
 
@@ -272,13 +273,28 @@ get_fhir_definition = function (output_stack, element_to_check)
   return fhir_data_pointer
 end
 
+-- accepts the path as a set of strings instead of a table+string, and is exposed publicly
+-- returns a copy of the fhir element with underscores removed
+get_fhir_definition_public = function(...)
+  local output_stack = {...}
+  local element_to_check = output_stack[#output_stack]
+  output_stack[#output_stack] = nil
+
+  local fhir_element = get_fhir_definition(output_stack, element_to_check)
+  if not fhir_element then
+    return nil, string.format("No element %s found", tconcat({...}, '.'))
+  else
+    return fhir_element
+  end
+end
+
 make_json_datatype = function(output_stack, element_to_check)
   local newtable, pointer_inside_table
 
   local fhir_definition = get_fhir_definition(output_stack, element_to_check)
 
   if not fhir_definition then
-    print(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.", table.concat(output_stack, "."), element_to_check))
+    print(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.", tconcat(output_stack, "."), element_to_check))
   end
 
   if fhir_definition and fhir_definition._max == "*" then
@@ -297,7 +313,7 @@ get_json_datatype = function(output_stack, element_to_check)
   local fhir_data_pointer = get_fhir_definition(output_stack, element_to_check)
 
   if fhir_data_pointer == nil then
-    print(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.", table.concat(output_stack, "."), element_to_check))
+    print(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.", tconcat(output_stack, "."), element_to_check))
   end
 
   if fhir_data_pointer and fhir_data_pointer._max == "*" then
@@ -310,7 +326,7 @@ end
 get_xml_weight = function(output_stack, element_to_check)
   local fhir_definition = get_fhir_definition(output_stack, element_to_check)
   if not fhir_definition then
-    print(string.format("Warning: %s.%s is not a known FHIR element; won't be able to sort it properly in the XML output.", table.concat(output_stack, "."), element_to_check))
+    print(string.format("Warning: %s.%s is not a known FHIR element; won't be able to sort it properly in the XML output.", tconcat(output_stack, "."), element_to_check))
     return 0
   else
     return fhir_definition._weight
@@ -320,7 +336,7 @@ end
 get_datatype_kind = function(output_stack, element_to_check)
   local fhir_definition = get_fhir_definition(output_stack, element_to_check)
   if not fhir_definition then
-    print(string.format("Warning: %s.%s is not a known FHIR element; might not convert it to a proper JSON 'element' or '_element' representation.", table.concat(output_stack, "."), element_to_check))
+    print(string.format("Warning: %s.%s is not a known FHIR element; might not convert it to a proper JSON 'element' or '_element' representation.", tconcat(output_stack, "."), element_to_check))
     return 0
   else
     local datatype_fhir_definition = get_fhir_definition({}, fhir_definition._type)
@@ -509,10 +525,37 @@ convert_to_lua_from_xml = function(xml_data, level, output, output_levels, outpu
   return output
 end
 
+-- credit: http://stackoverflow.com/questions/28312409/how-can-i-implement-a-read-only-table-in-lua
+local proxies = setmetatable( {}, { __mode = "k" } )
+function read_only( t )
+  if type( t ) == "table" then
+    -- check whether we already have a readonly proxy for this table
+    local p = proxies[ t ]
+    if not p then
+      -- create new proxy table for t
+      p = setmetatable( {}, {
+        __index = function( _, k )
+          -- apply `readonly` recursively to field `t[k]`
+          return readOnly( t[ k ] )
+        end,
+        __newindex = function()
+          error( "table is readonly", 2 )
+        end,
+      } )
+      proxies[ t ] = p
+    end
+    return p
+  else
+    -- non-tables are returned as is
+    return t
+  end
+end
+
 convert_to_json = function(data, options)
   fhir_data = fhir_data or map_fhir_data(read_fhir_data())
 
   assert(next(fhir_data), "convert_to_json: FHIR Schema could not be parsed in.")
+--  read_only(fhir_data)
 
   local xml_data
   if options and options.file then
@@ -701,6 +744,7 @@ convert_to_xml = function(data, options)
   fhir_data = fhir_data or map_fhir_data(read_fhir_data())
 
   assert(next(fhir_data), "convert_to_xml: FHIR Schema could not be parsed in.")
+--  read_only(fhir_data)
 
   local json_data
   if options and options.file then
@@ -718,8 +762,10 @@ convert_to_xml = function(data, options)
 end
 
 map_fhir_data(read_fhir_data())
+--read_only(fhir_data)
 
 return {
   to_json = convert_to_json,
-  to_xml = convert_to_xml
+  to_xml = convert_to_xml,
+  get_fhir_definition = get_fhir_definition_public
 }
