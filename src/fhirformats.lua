@@ -555,7 +555,7 @@ convert_to_json = function(data, options)
   fhir_data = fhir_data or map_fhir_data(read_fhir_data())
 
   assert(next(fhir_data), "convert_to_json: FHIR Schema could not be parsed in.")
---  read_only(fhir_data)
+  read_only(fhir_data)
 
   local xml_data
   if options and options.file then
@@ -744,7 +744,7 @@ convert_to_xml = function(data, options)
   fhir_data = fhir_data or map_fhir_data(read_fhir_data())
 
   assert(next(fhir_data), "convert_to_xml: FHIR Schema could not be parsed in.")
---  read_only(fhir_data)
+  read_only(fhir_data)
 
   local json_data
   if options and options.file then
@@ -762,7 +762,7 @@ convert_to_xml = function(data, options)
 end
 
 map_fhir_data(read_fhir_data())
---read_only(fhir_data)
+read_only(fhir_data)
 
 return {
   to_json = convert_to_json,
