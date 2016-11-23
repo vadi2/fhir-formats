@@ -533,12 +533,12 @@ b=require'lunajson._str_lib'
 end
 local e=nil
 local function e()end
-local function x(h,n)
+local function x(s,n)
 local a,d
 local i,t,y=0,1,0
-local f,s
-if r(h)=='string'then
-a=h
+local f,h
+if r(s)=='string'then
+a=s
 i=#a
 d=function()
 a=''
@@ -550,7 +550,7 @@ d=function()
 y=y+i
 t=1
 repeat
-a=h()
+a=s()
 if not a then
 a=''
 i=0
@@ -585,9 +585,9 @@ end
 local function j()
 return p()or n("unexpected termination")
 end
-local function h()
+local function s()
 while true do
-s,t=l(a,'^[ \n\r\t]*',t)
+h,t=l(a,'^[ \n\r\t]*',t)
 if t~=i then
 t=t+1
 return
@@ -807,25 +807,25 @@ return E(e)
 end
 local function m()
 T()
-h()
+s()
 if o(a,t)~=93 then
 local e
 while true do
-s=f[o(a,t)]
+h=f[o(a,t)]
 t=t+1
-s()
-s,e=l(a,'^[ \n\r\t]*,[ \n\r\t]*',t)
+h()
+h,e=l(a,'^[ \n\r\t]*,[ \n\r\t]*',t)
 if not e then
-s,e=l(a,'^[ \n\r\t]*%]',t)
+h,e=l(a,'^[ \n\r\t]*%]',t)
 if e then
 t=e
 break
 end
-h()
+s()
 local a=o(a,t)
 if a==44 then
 t=t+1
-h()
+s()
 e=t-1
 elseif a==93 then
 break
@@ -835,7 +835,7 @@ end
 end
 t=e+1
 if t>i then
-h()
+s()
 end
 end
 end
@@ -844,7 +844,7 @@ return A()
 end
 local function v()
 N()
-h()
+s()
 if o(a,t)~=125 then
 local e
 while true do
@@ -853,35 +853,35 @@ n("not key")
 end
 t=t+1
 c(true)
-s,e=l(a,'^[ \n\r\t]*:[ \n\r\t]*',t)
+h,e=l(a,'^[ \n\r\t]*:[ \n\r\t]*',t)
 if not e then
-h()
+s()
 if o(a,t)~=58 then
 n("no colon after a key")
 end
 t=t+1
-h()
+s()
 e=t-1
 end
 t=e+1
 if t>i then
-h()
-end
-s=f[o(a,t)]
-t=t+1
 s()
-s,e=l(a,'^[ \n\r\t]*,[ \n\r\t]*',t)
+end
+h=f[o(a,t)]
+t=t+1
+h()
+h,e=l(a,'^[ \n\r\t]*,[ \n\r\t]*',t)
 if not e then
-s,e=l(a,'^[ \n\r\t]*}',t)
+h,e=l(a,'^[ \n\r\t]*}',t)
 if e then
 t=e
 break
 end
-h()
+s()
 local a=o(a,t)
 if a==44 then
 t=t+1
-h()
+s()
 e=t-1
 elseif a==125 then
 break
@@ -891,7 +891,7 @@ end
 end
 t=e+1
 if t>i then
-h()
+s()
 end
 end
 end
@@ -910,10 +910,10 @@ e,e,e,e,x,e,e,e,e,e,e,v,e,e,e,e,
 }
 f[0]=e
 local function n()
-h()
-s=f[o(a,t)]
-t=t+1
 s()
+h=f[o(a,t)]
+t=t+1
+h()
 end
 local function s(e)
 if e<0 then
@@ -43180,14 +43180,14 @@ e=require("cjson")
 x=require("datafile")
 end
 local U=require("resty.prettycjson")
-local f,z,s,o,R,L,d,u,D,a
+local f,z,n,s,R,L,d,u,D,a
 =ipairs,pairs,type,print,tonumber,string.gmatch,table.remove,string.format,table.sort,table.concat
 local r,w,H,m,c
 local S,N,b,O
 local T,A,g,q,k
 local v,j,_
 local E,y,I
-local n
+local o
 local i
 local l,p
 if e then
@@ -43240,7 +43240,7 @@ end
 I=function(e,t)
 if not e then return nil end
 local a={}
-if s(t)=="function"then
+if n(t)=="function"then
 for o=1,#e do
 local e=e[o]
 a[e]=t(e)
@@ -43260,10 +43260,10 @@ end
 return e
 end
 m=function(a)
-n={}
-local i,o
-o=function(t)
-local e=n
+o={}
+local s,i
+i=function(t)
+local e=o
 for t in L(t.path,"([^%.]+)")do
 e[t]=e[t]or{}
 e=e[t]
@@ -43274,13 +43274,13 @@ e._type=t.type
 e._type_json=t.type_json
 e._weight=t.weight
 e._kind=t.kind
-e._derivations=I(t.derivations,function(e)return n[e]end)
-i(e)
-if s(n[t.type])=="table"then
-e[1]=n[t.type]
+e._derivations=I(t.derivations,function(e)return o[e]end)
+s(e)
+if n(o[t.type])=="table"then
+e[1]=o[t.type]
 end
 end
-i=function(e,t)
+s=function(e,t)
 if not(e and e._derivations)then return end
 local t=t and t._derivations or e._derivations
 for a,t in z(t)do
@@ -43295,17 +43295,17 @@ end
 end
 for e=1,#a do
 local e=a[e]
-o(e)
+i(e)
 end
 for e=1,#a do
 local e=a[e]
-o(e)
+i(e)
 end
 for e=1,#a do
 local e=a[e]
-o(e)
+i(e)
 end
-return n
+return o
 end
 g=function(e,t)
 return t(e)
@@ -43316,33 +43316,33 @@ local e=io.read("*a")
 io.input():close()
 return t(e)
 end
-c=function(i,e)
-local n=e.value
-local t=r(i,e.xml)
+c=function(o,e)
+local i=e.value
+local t=r(o,e.xml)
 if not t then
-o(string.format("Warning: %s is not a known FHIR element; couldn't check its FHIR type to decide the JSON type.",a(i,".")))
-return n
+s(string.format("Warning: %s is not a known FHIR element; couldn't check its FHIR type to decide the JSON type.",a(o,".")))
+return i
 end
 local t=t._type or t._type_json
 if t=="boolean"then
 if e.value=="true"then return true
 elseif e.value=="false"then return false
 else
-o(string.format("Warning: %s.%s is of type %s in FHIR JSON - its XML value of %s is invalid.",a(i),e.xml,t,e.value))
+s(string.format("Warning: %s.%s is of type %s in FHIR JSON - its XML value of %s is invalid.",a(o),e.xml,t,e.value))
 end
 elseif t=="integer"or
 t=="unsignedInt"or
 t=="positiveInt"or
 t=="decimal"then
 return R(e.value)
-else return n end
+else return i end
 end
 r=function(t,a)
 local e
-for o=1,#t+1 do
-local t=(t[o]or a)
+for i=1,#t+1 do
+local t=(t[i]or a)
 if not e then
-e=n[t]
+e=o[t]
 elseif e[t]then
 e=e[t]
 elseif e[1]then
@@ -43365,13 +43365,13 @@ else
 return e
 end
 end
-k=function(n,s)
+k=function(i,n)
 local e,t
-local i=r(n,s)
-if not i then
-o(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.",a(n,"."),s))
+local o=r(i,n)
+if not o then
+s(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.",a(i,"."),n))
 end
-if i and i._max=="*"then
+if o and o._max=="*"then
 e={{}}
 t=e[1]
 else
@@ -43380,10 +43380,10 @@ t=e
 end
 return e,t
 end
-S=function(i,t)
-local e=r(i,t)
+S=function(o,t)
+local e=r(o,t)
 if e==nil then
-o(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.",a(i,"."),t))
+s(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.",a(o,"."),t))
 end
 if e and e._max=="*"then
 return"array"
@@ -43391,21 +43391,21 @@ end
 return"object"
 end
 get_xml_weight=function(t,e)
-local i=r(t,e)
-if not i then
-o(string.format("Warning: %s.%s is not a known FHIR element; won't be able to sort it properly in the XML output.",a(t,"."),e))
+local o=r(t,e)
+if not o then
+s(string.format("Warning: %s.%s is not a known FHIR element; won't be able to sort it properly in the XML output.",a(t,"."),e))
 return 0
 else
-return i._weight
+return o._weight
 end
 end
 get_datatype_kind=function(e,t)
-local i=r(e,t)
-if not i then
-o(string.format("Warning: %s.%s is not a known FHIR element; might not convert it to a proper JSON 'element' or '_element' representation.",a(e,"."),t))
+local o=r(e,t)
+if not o then
+s(string.format("Warning: %s.%s is not a known FHIR element; might not convert it to a proper JSON 'element' or '_element' representation.",a(e,"."),t))
 return 0
 else
-local e=r({},i._type)
+local e=r({},o._type)
 return e._kind
 end
 end
@@ -43449,11 +43449,11 @@ end
 end
 N=function(e,a,l,o,h)
 assert(e.xml,"error from parsed xml: node.xml is missing")
-local n=a-1
+local s=a-1
 local d=need_shadow_element(a,e,h)
 local t
 if a~=1 then
-t=o[n][#o[n]]
+t=o[s][#o[s]]
 end
 if a==1 then
 l.resourceType=e.xml
@@ -43465,37 +43465,37 @@ return
 elseif e.value then
 print_xml_value(e,t,h,d)
 end
-if s(e[1])=="table"and a~=1 then
-local n,r
-if s(t[e.xml])=="table"and not d then
+if n(e[1])=="table"and a~=1 then
+local s,r
+if n(t[e.xml])=="table"and not d then
 local e=t[e.xml]
 e[#e+1]={}
 r=e[#e]
 elseif not t[e.xml]and(e[1]or e.value)and not d then
-n,r=k(h,e.xml)
-t[e.xml]=n
+s,r=k(h,e.xml)
+t[e.xml]=s
 end
 if d then
-n,r=k(h,e.xml)
+s,r=k(h,e.xml)
 local a=u('_%s',e.xml)
 local o
 if not t[a]then
-t[a]=n
+t[a]=s
 o=true
 else
 t[a][#t[a]+1]=r
 end
 local a=H(t[e.xml],e.value)
 if o and a and a>1 then
-n[1]=nil
+s[1]=nil
 for e=1,a-1 do
-n[#n+1]=i
+s[#s+1]=i
 end
-n[#n+1]={}
-r=n[#n]
+s[#s+1]={}
+r=s[#s]
 end
 if not e.value and t[e.xml]then
-if s(t[e.xml][#t[e.xml]])=="table"then
+if n(t[e.xml][#t[e.xml]])=="table"then
 t[e.xml][#t[e.xml]]=nil
 end
 t[e.xml][#t[e.xml]+1]=i
@@ -43519,11 +43519,11 @@ b=function(e,t,o,i,a)
 t=(t and(t+1)or 1)
 o=N(e,t,o,i,a)
 a[#a+1]=e.xml
-for n,e in f(e)do
+for s,e in f(e)do
 if e.xml=="div"and e.xmlns=="http://www.w3.org/1999/xhtml"then
 O(i,e,t)
 else
-assert(s(e)=="table",u("unexpected type value encountered: %s (%s), expecting table",tostring(e),s(e)))
+assert(n(e)=="table",u("unexpected type value encountered: %s (%s), expecting table",tostring(e),n(e)))
 b(e,t,o,i,a)
 end
 end
@@ -43532,7 +43532,7 @@ return o
 end
 local a=setmetatable({},{__mode="k"})
 function read_only(e)
-if s(e)=="table"then
+if n(e)=="table"then
 local t=a[e]
 if not t then
 t=setmetatable({},{
@@ -43551,8 +43551,9 @@ return e
 end
 end
 T=function(a,e)
-n=n or m(w())
-assert(next(n),"convert_to_json: FHIR Schema could not be parsed in.")
+o=o or m(w())
+assert(next(o),"convert_to_json: FHIR Schema could not be parsed in.")
+read_only(o)
 local t
 if e and e.file then
 t=q(a,h.load)
@@ -43618,36 +43619,36 @@ t[#t+1]=e[#e]
 a[#a+1]=e[#e].xml
 o.resourceType=nil
 end
-v=function(n,a,o)
+v=function(s,a,o)
 local h
-if n.resourceType then
-print_contained_resource(n,a,o)
+if s.resourceType then
+print_contained_resource(s,a,o)
 h=true
 end
-for t,e in z(n)do
-if s(e)=="table"then
-if s(e[1])=="table"then
+for t,e in z(s)do
+if n(e)=="table"then
+if n(e[1])=="table"then
 for n,e in f(e)do
 if e~=i then
 y(t,e,a,o)
 end
 end
-elseif e[1]and s(e[1])~="table"then
-for s,h in f(e)do
-local n,e=n[u("_%s",t)]
+elseif e[1]and n(e[1])~="table"then
+for h,r in f(e)do
+local n,e=s[u("_%s",t)]
 if n then
-e=n[s]
+e=n[h]
 if e==i then e=nil end
 end
-j(t,h,a,o,e)
+j(t,r,a,o,e)
 end
 elseif e~=i then
 y(t,e,a,o)
 end
 elseif e~=i then
-j(t,e,a,o,n[u("_%s",t)])
+j(t,e,a,o,s[u("_%s",t)])
 end
-if t:sub(1,1)=='_'and not n[t:sub(2)]then
+if t:sub(1,1)=='_'and not s[t:sub(2)]then
 y(t:sub(2),e,a,o)
 end
 end
@@ -43675,8 +43676,9 @@ end
 return v(e,o,a)
 end
 E=function(a,e)
-n=n or m(w())
-assert(next(n),"convert_to_xml: FHIR Schema could not be parsed in.")
+o=o or m(w())
+assert(next(o),"convert_to_xml: FHIR Schema could not be parsed in.")
+read_only(o)
 local t
 if e and e.file then
 t=q(a,l)
@@ -43689,6 +43691,7 @@ _(t,e,a,o)
 return h.dump(e)
 end
 m(w())
+read_only(o)
 return{
 to_json=T,
 to_xml=E,
