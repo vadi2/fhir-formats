@@ -1,6 +1,6 @@
 # FHIR Formats
 
-# Copyright (C) 2016 Vadim Peretokin
+# Copyright (C) 2016-2017 Vadim Peretokin
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
 
 rm *.json
 
-# September 2016 snapshot
-wget http://hl7.org/fhir/2016Sep/profiles-types.json
-wget http://hl7.org/fhir/2016Sep/profiles-resources.json
+# STU 3.0.1 snapshot
+wget http://hl7.org/fhir/STU3/profiles-types.json
+wget http://hl7.org/fhir/STU3/profiles-resources.json
 
 # Latest Continuous Build
 # wget http://hl7-fhir.github.io/profiles-resources.json
