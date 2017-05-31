@@ -16,7 +16,7 @@
   limitations under the License.
 ]]
 
-local cjson, datafile, lunajson, xml
+local rapidjson, datafile, lunajson, xml
 
 -- when loading via Web, load the pure-Lua libraries
 if js and js.global then
@@ -31,7 +31,7 @@ if js and js.global then
 else
   -- otherwise load the libraries with native code for perf
   xml = require("xml")
-  cjson = require("cjson")
+  rapidjson = require("rapidjson")
   -- datafile is used by LuaRocks exclusively
   datafile = require("datafile")
 end
@@ -51,9 +51,9 @@ local fhir_data
 local null_value
 local json_decode, json_encode
 
-if cjson then
-  null_value = cjson.null
-  json_decode, json_encode = cjson.decode, cjson.encode
+if rapidjson then
+  null_value = rapidjson.null
+  json_decode, json_encode = rapidjson.decode, rapidjson.encode
 elseif lunajson then
   null_value = function() end -- a blank table didn't work since sometimes we check for the table type
   json_decode = function(data)
@@ -63,7 +63,7 @@ elseif lunajson then
     return lunajson.encode(data, null_value)
   end
 else
-  error("neither cjson nor luajson libraries found for JSON parsing")
+  error("neither rapidjson nor luajson libraries found to do JSON encoding/decoding with")
 end
 
 -- credit: http://stackoverflow.com/a/4991602/72944
