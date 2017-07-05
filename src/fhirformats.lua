@@ -662,7 +662,7 @@ end
 print_contained_resource = function(json_data, xml_output_levels, output_stack)
   -- same as above
   local current_output_table = xml_output_levels[#xml_output_levels]
-  current_output_table[#current_output_table+1] = {xml = json_data.resourceType, xmlns = "http://hl7.org/fhir"}
+  current_output_table[#current_output_table+1] = {xml = json_data.resourceType}
   xml_output_levels[#xml_output_levels+1] = current_output_table[#current_output_table]
   output_stack[#output_stack+1] = current_output_table[#current_output_table].xml
   json_data.resourceType = nil
