@@ -1,22 +1,20 @@
 {
-  "resourceType": "Practitioner",
-  "role": [
+  "resourceType" : "Encounter",
+  "id" : "f003",
+  "status" : "finished",
+  "reason" : [
     {
-      "specialty": [
+      "extension" : [
         {
-          "coding": [
-            {
-              "display": "Cardiologist",
-              "code": "cardio",
-              "system": "http://hl7.org/fhir/practitioner-specialty"
-            }
-          ],
-          "extension": [
-            {
-              "url": "http://hl7.org/fhir/StructureDefinition/practitioner-primaryInd",
-              "valueBoolean": true
-            }
-          ]
+          "url" : "http://hl7.org/fhir/StructureDefinition/encounter-primaryDiagnosis",
+          "valuePositiveInt" : 1
+        }
+      ],
+      "coding" : [
+        {
+          "system" : "http://snomed.info/sct",
+          "code" : "18099001",
+          "display" : "Retropharyngeal abscess"
         }
       ]
     }
