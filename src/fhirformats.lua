@@ -308,7 +308,7 @@ make_json_datatype = function(output_stack, element_to_check)
   return newtable, pointer_inside_table
 end
 
-
+-- returns whenever the given FHIR element should be an object or an array in JSON
 get_json_datatype = function(output_stack, element_to_check)
   local fhir_data_pointer = get_fhir_definition(output_stack, element_to_check)
 
@@ -333,6 +333,7 @@ get_xml_weight = function(output_stack, element_to_check)
   end
 end
 
+-- returns the FHIR value of 'kind' for the given element
 get_datatype_kind = function(output_stack, element_to_check)
   local fhir_definition = get_fhir_definition(output_stack, element_to_check)
   if not fhir_definition then
