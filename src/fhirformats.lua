@@ -273,6 +273,12 @@ get_fhir_definition = function (output_stack, element_to_check)
   return fhir_data_pointer
 end
 
+-- returns true/false if the given string is a valid FHIR resource
+is_fhir_resource = function (resourcename)
+  return (fhir_data[resourcename] and 
+    (fhir_data[resourcename]._kind == "resource" or fhir_data[resourcename]._type == "Resource")) and true or false
+end
+
 -- accepts the path as a set of strings instead of a table+string, and is exposed publicly
 -- returns a copy of the fhir element with underscores removed
 get_fhir_definition_public = function(...)
@@ -408,10 +414,11 @@ print_data_for_node = function(node, level, output, output_levels, output_stack)
   end
 
   -- in JSON, resource type is embedded within the object.resourceType,
-  -- unlike at root level in FHIR XML
+  -- unlike at root level in FHIR XML. Do this for the root level
   if level == 1 then
     output.resourceType = node.xml
-  elseif output_stack[#output_stack] == "contained" or output_stack[#output_stack] == "resource" then
+  -- do the same for embedded resources as well
+  elseif is_fhir_resource(node.xml) then
     current_level.resourceType = node.xml
 
     output_levels[level] = output_levels[level] or {}
