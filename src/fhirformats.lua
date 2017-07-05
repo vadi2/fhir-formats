@@ -254,7 +254,7 @@ end
 get_fhir_definition = function (output_stack, element_to_check)
   local fhir_data_pointer
 
-  -- +1 since element_to_checkk; isn't on the stack
+  -- +1 since element_to_check isn't on the stack
   for i = 1, #output_stack+1 do
     local element = (output_stack[i] or element_to_check)
 
