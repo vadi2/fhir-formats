@@ -70,7 +70,7 @@ describe("previously failing conversions", function()
     <description value="This is an example value set that includes all the ACME codes for serum/plasma cholesterol from v2.36."/>
 </ValueSet>]])
     end)
-  
+
     describe("should handle ValueSet.url correctly", function()
         local in_xml = in_fhir_xml([[{
   "resourceType": "ValueSet",
@@ -131,14 +131,8 @@ describe("previously failing conversions", function()
     }
   ],
   "date": "2015-06-22",
-  "lockedDate": "2012-06-13",
-  "_lockedDate": {
-    "fhir_comments": [
-      "    \n\t  if we didn't specify the version of LOINC on the include, then\n\t  we could specify it implicitly by specifying the locked date for the value set\n\t\t\n\t\tSo we show this example here, but it's not actually necessary since we also \n    have LOINC version. Note: if you do what this example does, and specify both,\n\t\tyou better get it right, and specify the current version of LOINC at the time\n     "
-    ]
-  },
   "description": "This is an example value set that includes all the LOINC codes for serum/plasma cholesterol from v2.36.",
-  "copyright": "This content from LOINCÂ® is copyright Â© 1995 Regenstrief Institute, Inc. and the LOINC Committee, and available at no cost under the license at http://loinc.org/terms-of-use."}]])  
+  "copyright": "This content from LOINCÂ® is copyright Â© 1995 Regenstrief Institute, Inc. and the LOINC Committee, and available at no cost under the license at http://loinc.org/terms-of-use."}]])
       end)
-    
+
 end)
