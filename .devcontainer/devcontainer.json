@@ -6,7 +6,7 @@
 	"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	"features": {
 		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-			"packages": "lua5.1,luarocks"
+			"packages": "build-essential,cmake,lua5.1,luarocks"
 		}
 	},
 
