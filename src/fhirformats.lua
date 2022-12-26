@@ -46,7 +46,7 @@ local convert_to_json, file_exists, read_filecontent, read_file, make_json_datat
 local handle_json_recursively, print_simple_datatype, convert_to_lua_from_json
 local convert_to_xml, print_complex_datatype, list_to_map
 
-local fhir_data
+local fhir_data, fhir_data_stu3, fhir_data_r4
 
 local null_value
 local json_decode, json_encode
@@ -63,7 +63,7 @@ elseif lunajson then
     return lunajson.encode(data, null_value)
   end
 else
-  error("neither rapidjson nor luajson libraries found to do JSON encoding/decoding with")
+  error("neither rapidjson nor lunajson libraries found to do JSON encoding/decoding with")
 end
 
 -- credit: http://stackoverflow.com/a/4991602/72944
@@ -114,8 +114,8 @@ getindex = function(list, value)
   end
 end
 
--- returns a list as a key-value map, value can be a value
--- to assign or a function to evaluate before assignment.
+-- returns a list as a key-value map, 'value' can be a static value
+-- to assign to all entries or a function to evaluate before assignment.
 -- Function will have the processed list value as first argument
 list_to_map = function(list, value)
   if not list then return nil end
@@ -199,7 +199,7 @@ map_fhir_data = function(raw_fhir_data)
     parse_element(element)
   end
 
-  -- and lastly, to ensure all derivations are in (as the order of resources could affect it
+  -- and lastly, to ensure all derivations are in (as the order of resources could affect it)
   for i = 1, #raw_fhir_data do
     local element = raw_fhir_data[i]
     parse_element(element)
