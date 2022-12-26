@@ -37,6 +37,12 @@ while getopts ":r:" opt; do
   esac
 done
 
+# Create folder for data
+mkdir $version
+
+# Change to folder
+cd $version
+
 # Remove existing JSON files
 rm *.json
 
