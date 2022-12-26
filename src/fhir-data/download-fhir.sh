@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # FHIR Formats
 
 # Copyright (C) 2016-2017, 2022 Vadim Peretokin
@@ -14,12 +16,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Set default FHIR version to STU3
+version="STU3"
+
+# Parse command line argument
+while getopts ":r:" opt; do
+  case $opt in
+    r)
+      # Set FHIR version
+      version=$OPTARG
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+
+# Remove existing JSON files
 rm *.json
 
-# STU 3.0.1 snapshot
-wget http://hl7.org/fhir/STU3/profiles-types.json
-wget http://hl7.org/fhir/STU3/profiles-resources.json
-
-# Latest Continuous Build
-# wget http://hl7-fhir.github.io/profiles-resources.json
-# wget http://hl7-fhir.github.io/profiles-types.json
+# Download FHIR profiles and types
+if [ "$version" = "STU3" ]; then
+  wget http://hl7.org/fhir/STU3/profiles-types.json
+  wget http://hl7.org/fhir/STU3/profiles-resources.json
+elif [ "$version" = "R4" ]; then
+  wget http://hl7.org/fhir/R4/profiles-types.json
+  wget http://hl7.org/fhir/R4/profiles-resources.json
+else
+  echo "Error: Invalid FHIR version specified"
+  exit 1
+fi
