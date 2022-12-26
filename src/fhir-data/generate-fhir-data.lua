@@ -26,8 +26,6 @@ local parser = argparse("generate-fhir-data.lua", "Generate condensed FHIR data 
 parser:option("-r --fhir-release", 'FHIR version to work with', "STU3"):choices({"STU3", "R4"}):count("1")
 local args = parser:parse()
 
--- if not args.fhir_release then args.fhir_release = "STU3" end
-
 local output_file = args.fhir_release.."/fhir-elements.json"
 
 local function read_json(filename)
