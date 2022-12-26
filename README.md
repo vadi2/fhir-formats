@@ -168,8 +168,6 @@ busted --lua=$(which lua5.1) spec/
 ## TODO
 
 * add command-line utility for Windows, OSX, and Linux
-* add a stand-alone Postman-like app
-* add FHIR graph visualisations
 
 Contibutions welcome!
 
