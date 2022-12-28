@@ -46,7 +46,12 @@ local convert_to_json, file_exists, read_filecontent, read_file, make_json_datat
 local handle_json_recursively, print_simple_datatype, convert_to_lua_from_json
 local convert_to_xml, print_complex_datatype, list_to_map
 
-local fhir_data, fhir_data_stu3, fhir_data_r4
+-- pointer to the current FHIR schema to operate on. This is the only such global
+-- pointer in the whole program, and the reduced complexity (not tracking the version
+-- everywhere within associated functions) is worth it
+local fhir_data
+-- individual FHIR schemas per FHIR version supported
+local fhir_data_stu3, fhir_data_r4
 
 local null_value
 local json_decode, json_encode
@@ -75,9 +80,16 @@ end
 -- find the location of the running instance of fhirformats.lua, so the error messages can be more informative
 local PATH = (... and (...):match("(.+)%.[^%.]+$") or (...)) or "(path of the script unknown)"
 
-read_fhir_data = function(filename)
+read_fhir_data = function(filename, fhirversion)
+  assert(fhirversion == "STU3" or fhirversion == "R4",
+    string.format("fhirversion must be STU3 or R4. '%s' is not supported at this level", tostring(fhirversion)))
+
   -- prefer the filename, but substitute the nil if not given
-  local locations = {(filename or ""), "fhir-data/fhir-elements.json", "src/fhir-data/fhir-elements.json", "../src/fhir-data/fhir-elements.json", "fhir-data/fhir-elements.json"}
+  local locations = {
+    (filename or ""), "fhir-data/"..fhirversion.."/fhir-elements.json",
+    "src/fhir-data/"..fhirversion.."/fhir-elements.json",
+     "../src/fhir-data/"..fhirversion.."/fhir-elements.json"
+  }
   local data
 
   for _, file in ipairs(locations) do
@@ -280,9 +292,20 @@ is_fhir_resource = function (resourcename)
 end
 
 -- accepts the path as a set of strings instead of a table+string, and is exposed publicly
+-- last argument can be "STU3" or "R4" to pick a FHIR version. Defaults to STU3, and will do so in the future.
 -- returns a copy of the fhir element with underscores removed
 get_fhir_definition_public = function(...)
   local output_stack = {...}
+  if output_stack[#output_stack] == "STU3" then
+    fhir_data = fhir_data_stu3
+    output_stack[#output_stack] = nil
+  elseif output_stack[#output_stack] == "R4" then
+    fhir_data = fhir_data_r4
+    output_stack[#output_stack] = nil
+  else
+    fhir_data = fhir_data_stu3
+  end
+
   local element_to_check = output_stack[#output_stack]
   output_stack[#output_stack] = nil
 
@@ -559,11 +582,31 @@ function read_only( t )
   end
 end
 
-convert_to_json = function(data, options)
-  fhir_data = fhir_data or map_fhir_data(read_fhir_data())
+function load_fhir_data(fhirversion)
+  if fhirversion == "auto" then
+    fhir_data_stu3 = fhir_data_stu3 or map_fhir_data(read_fhir_data(nil, "STU3"))
+    fhir_data_r4 = fhir_data_r4 or map_fhir_data(read_fhir_data(nil, "R4"))
+    fhir_data = fhir_data_r4
+    read_only(fhir_data_r4)
+    read_only(fhir_data_stu3)
+  elseif fhirversion == "STU3" then
+    fhir_data_stu3 = fhir_data_stu3 or map_fhir_data(read_fhir_data(nil, "STU3"))
+    fhir_data = fhir_data_stu3
+    read_only(fhir_data_stu3)
+  elseif fhirversion == "R4" then
+    fhir_data_r4 = fhir_data_r4 or map_fhir_data(read_fhir_data(nil, "R4"))
+    fhir_data = fhir_data_r4
+    read_only(fhir_data_r4)
+  end
+end
+
+convert_to_json = function(data, options, fhirversion)
+  local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
+  fhirversion = valid_versions[fhirversion] or "auto"
+
+  load_fhir_data(fhirversion)
 
   assert(next(fhir_data), "convert_to_json: FHIR Schema could not be parsed in.")
-  read_only(fhir_data)
 
   local xml_data
   if options and options.file then
@@ -748,8 +791,11 @@ convert_to_lua_from_json = function(json_data, output, xml_output_levels, output
   return handle_json_recursively(json_data, xml_output_levels, output_stack)
 end
 
-convert_to_xml = function(data, options)
-  fhir_data = fhir_data or map_fhir_data(read_fhir_data())
+convert_to_xml = function(data, options, fhirversion)
+  local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
+  fhirversion = valid_versions[fhirversion] or "auto"
+
+  load_fhir_data(fhirversion)
 
   assert(next(fhir_data), "convert_to_xml: FHIR Schema could not be parsed in.")
   read_only(fhir_data)
@@ -769,8 +815,7 @@ convert_to_xml = function(data, options)
   return xml.dump(output)
 end
 
-map_fhir_data(read_fhir_data())
-read_only(fhir_data)
+load_fhir_data("auto")
 
 return {
   to_json = convert_to_json,
