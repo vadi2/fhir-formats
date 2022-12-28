@@ -292,7 +292,8 @@ is_fhir_resource = function (resourcename)
 end
 
 -- accepts the path as a set of strings instead of a table+string, and is exposed publicly
--- last argument can be "STU3" or "R4" to pick a FHIR version. Defaults to STU3, and will do so in the future.
+-- last argument can be "STU3" or "R4" to pick a FHIR version. 
+-- Defaults to STU3 and will continue to as future FHIR versions are released.
 -- returns a copy of the fhir element with underscores removed
 get_fhir_definition_public = function(...)
   local output_stack = {...}
