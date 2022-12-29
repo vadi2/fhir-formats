@@ -292,8 +292,8 @@ is_fhir_resource = function (resourcename)
 end
 
 -- accepts the path as a set of strings instead of a table+string, and is exposed publicly
--- last argument can be "STU3" or "R4" to pick a FHIR version. 
--- Defaults to STU3 and will continue to as future FHIR versions are released.
+-- last argument can be "STU3" or "R4" to pick a FHIR version.
+-- Defaults to STU3 and will continue to as future FHIR versions are released to keep API compatibility.
 -- returns a copy of the fhir element with underscores removed
 get_fhir_definition_public = function(...)
   local output_stack = {...}
@@ -601,6 +601,8 @@ function load_fhir_data(fhirversion)
   end
 end
 
+-- fhirversion is optional, and defaults to "auto"  which is try all FHIR versions, starting from R4
+-- idea here is to make it as easy as possible to convert - it should just work
 convert_to_json = function(data, options, fhirversion)
   local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
   fhirversion = valid_versions[fhirversion] or "auto"
@@ -792,6 +794,8 @@ convert_to_lua_from_json = function(json_data, output, xml_output_levels, output
   return handle_json_recursively(json_data, xml_output_levels, output_stack)
 end
 
+-- fhirversion is optional, and defaults to "auto"  which is try all FHIR versions, starting from R4
+-- idea here is to make it as easy as possible to convert - it should just work
 convert_to_xml = function(data, options, fhirversion)
   local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
   fhirversion = valid_versions[fhirversion] or "auto"
