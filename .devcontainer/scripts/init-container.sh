@@ -11,5 +11,6 @@ sudo luarocks install datafile
 sudo luarocks install xml
 sudo luarocks install busted
 sudo luarocks install inspect
+sudo luarocks install jsmin
 
 exit
