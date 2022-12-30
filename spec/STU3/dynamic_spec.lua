@@ -40,9 +40,9 @@ for _, testcase in ipairs(data) do
   describe(case_name.." xml to json", function()
       -- do the setup outside of setup(), as setup() can't handle creating it()'s within it
       local t = {}
-      io.input("spec/"..json_file)
+      io.input("spec/STU3/"..json_file)
       t.json_data = io.read("*a")
-      t.xml_data = in_fhir_json("spec/"..xml_file, {file = true})
+      t.xml_data = in_fhir_json("spec/STU3/"..xml_file, {file = true, fhirversion = "STU3"})
 
       t.json_example = cjson.decode(t.json_data)
       t.xml_example = cjson.decode(t.xml_data)
@@ -78,9 +78,9 @@ for _, testcase in ipairs(data) do
   describe(case_name.. " json to xml", function()
       -- do the setup outside of setup(), as setup() can't handle creating it()'s within it
       local t = {}
-      io.input("spec/"..xml_file)
+      io.input("spec/STU3/"..xml_file)
       t.xml_data = io.read("*a")
-      t.json_data = in_fhir_xml("spec/"..json_file, {file = true})
+      t.json_data = in_fhir_xml("spec/STU3/"..json_file, {file = true, fhirversion = "STU3"})
 
       t.json_example = xml.load(t.json_data)
       t.xml_example = xml.load(t.xml_data)

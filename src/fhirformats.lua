@@ -46,7 +46,13 @@ local convert_to_json, file_exists, read_filecontent, read_file, make_json_datat
 local handle_json_recursively, print_simple_datatype, convert_to_lua_from_json
 local convert_to_xml, print_complex_datatype, list_to_map
 
-local fhir_data
+-- global pointers to the FHIR schema to operate on, and any errors that happened during conversion.
+-- These are the only such global pointers in the whole program, and the reduced complexity of the code
+-- is worth it.
+local fhir_data, conversion_errors
+
+-- individual FHIR schemas per FHIR version supported
+local fhir_data_stu3, fhir_data_r4
 
 local null_value
 local json_decode, json_encode
@@ -63,7 +69,7 @@ elseif lunajson then
     return lunajson.encode(data, null_value)
   end
 else
-  error("neither rapidjson nor luajson libraries found to do JSON encoding/decoding with")
+  error("neither rapidjson nor lunajson libraries found to do JSON encoding/decoding with")
 end
 
 -- credit: http://stackoverflow.com/a/4991602/72944
@@ -75,9 +81,27 @@ end
 -- find the location of the running instance of fhirformats.lua, so the error messages can be more informative
 local PATH = (... and (...):match("(.+)%.[^%.]+$") or (...)) or "(path of the script unknown)"
 
-read_fhir_data = function(filename)
+function table.size(t)
+  if not t then
+    return 0
+  end
+  local i = 0
+  for k, v in pairs(t) do
+    i = i + 1
+  end
+  return i
+end
+
+read_fhir_data = function(filename, fhirversion)
+  assert(fhirversion == "STU3" or fhirversion == "R4",
+    string.format("fhirversion must be STU3 or R4. '%s' is not supported at this level", tostring(fhirversion)))
+
   -- prefer the filename, but substitute the nil if not given
-  local locations = {(filename or ""), "fhir-data/fhir-elements.json", "src/fhir-data/fhir-elements.json", "../src/fhir-data/fhir-elements.json", "fhir-data/fhir-elements.json"}
+  local locations = {
+    (filename or ""), "fhir-data/"..fhirversion.."/fhir-elements.json",
+    "src/fhir-data/"..fhirversion.."/fhir-elements.json",
+     "../src/fhir-data/"..fhirversion.."/fhir-elements.json"
+  }
   local data
 
   for _, file in ipairs(locations) do
@@ -114,8 +138,8 @@ getindex = function(list, value)
   end
 end
 
--- returns a list as a key-value map, value can be a value
--- to assign or a function to evaluate before assignment.
+-- returns a list as a key-value map, 'value' can be a static value
+-- to assign to all entries or a function to evaluate before assignment.
 -- Function will have the processed list value as first argument
 list_to_map = function(list, value)
   if not list then return nil end
@@ -199,7 +223,7 @@ map_fhir_data = function(raw_fhir_data)
     parse_element(element)
   end
 
-  -- and lastly, to ensure all derivations are in (as the order of resources could affect it
+  -- and lastly, to ensure all derivations are in (as the order of resources could affect it)
   for i = 1, #raw_fhir_data do
     local element = raw_fhir_data[i]
     parse_element(element)
@@ -229,7 +253,7 @@ fhir_typed = function(output_stack, node)
   local fhir_definition = get_fhir_definition(output_stack, node.xml)
 
   if not fhir_definition then
-    print(string.format("Warning: %s is not a known FHIR element; couldn't check its FHIR type to decide the JSON type.", tconcat(output_stack, ".")))
+    conversion_errors[#conversion_errors+1] = string.format("Warning: %s is not a known FHIR element; couldn't check its FHIR type to decide the JSON type.", tconcat(output_stack, "."))
     return value
   end
 
@@ -280,9 +304,21 @@ is_fhir_resource = function (resourcename)
 end
 
 -- accepts the path as a set of strings instead of a table+string, and is exposed publicly
+-- last argument can be "STU3" or "R4" to pick a FHIR version.
+-- Defaults to STU3 and will continue to as future FHIR versions are released to keep API compatibility.
 -- returns a copy of the fhir element with underscores removed
 get_fhir_definition_public = function(...)
   local output_stack = {...}
+  if output_stack[#output_stack] == "STU3" then
+    fhir_data = fhir_data_stu3
+    output_stack[#output_stack] = nil
+  elseif output_stack[#output_stack] == "R4" then
+    fhir_data = fhir_data_r4
+    output_stack[#output_stack] = nil
+  else
+    fhir_data = fhir_data_stu3
+  end
+
   local element_to_check = output_stack[#output_stack]
   output_stack[#output_stack] = nil
 
@@ -300,7 +336,7 @@ make_json_datatype = function(output_stack, element_to_check)
   local fhir_definition = get_fhir_definition(output_stack, element_to_check)
 
   if not fhir_definition then
-    print(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.", tconcat(output_stack, "."), element_to_check))
+    conversion_errors[#conversion_errors+1] = string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.", tconcat(output_stack, "."), element_to_check)
   end
 
   if fhir_definition and fhir_definition._max == "*" then
@@ -319,7 +355,7 @@ get_json_datatype = function(output_stack, element_to_check)
   local fhir_data_pointer = get_fhir_definition(output_stack, element_to_check)
 
   if fhir_data_pointer == nil then
-    print(string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.", tconcat(output_stack, "."), element_to_check))
+    conversion_errors[#conversion_errors+1] = string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.", tconcat(output_stack, "."), element_to_check)
   end
 
   if fhir_data_pointer and fhir_data_pointer._max == "*" then
@@ -332,7 +368,7 @@ end
 get_xml_weight = function(output_stack, element_to_check)
   local fhir_definition = get_fhir_definition(output_stack, element_to_check)
   if not fhir_definition then
-    print(string.format("Warning: %s.%s is not a known FHIR element; won't be able to sort it properly in the XML output.", tconcat(output_stack, "."), element_to_check))
+    conversion_errors[#conversion_errors+1] = string.format("Warning: %s.%s is not a known FHIR element; won't be able to sort it properly in the XML output.", tconcat(output_stack, "."), element_to_check)
     return 0
   else
     return fhir_definition._weight
@@ -343,7 +379,7 @@ end
 get_datatype_kind = function(output_stack, element_to_check)
   local fhir_definition = get_fhir_definition(output_stack, element_to_check)
   if not fhir_definition then
-    print(string.format("Warning: %s.%s is not a known FHIR element; might not convert it to a proper JSON 'element' or '_element' representation.", tconcat(output_stack, "."), element_to_check))
+    conversion_errors[#conversion_errors+1] = string.format("Warning: %s.%s is not a known FHIR element; might not convert it to a proper JSON 'element' or '_element' representation.", tconcat(output_stack, "."), element_to_check)
     return 0
   else
     local datatype_fhir_definition = get_fhir_definition({}, fhir_definition._type)
@@ -559,11 +595,33 @@ function read_only( t )
   end
 end
 
+function load_fhir_data(fhirversion)
+  if fhirversion == "auto" then
+    fhir_data_stu3 = fhir_data_stu3 or map_fhir_data(read_fhir_data(nil, "STU3"))
+    fhir_data_r4 = fhir_data_r4 or map_fhir_data(read_fhir_data(nil, "R4"))
+    fhir_data = fhir_data_r4
+    read_only(fhir_data_r4)
+    read_only(fhir_data_stu3)
+  elseif fhirversion == "STU3" then
+    fhir_data_stu3 = fhir_data_stu3 or map_fhir_data(read_fhir_data(nil, "STU3"))
+    fhir_data = fhir_data_stu3
+    read_only(fhir_data_stu3)
+  elseif fhirversion == "R4" then
+    fhir_data_r4 = fhir_data_r4 or map_fhir_data(read_fhir_data(nil, "R4"))
+    fhir_data = fhir_data_r4
+    read_only(fhir_data_r4)
+  end
+end
+
+-- options.fhirversion is optional, and defaults to "auto"  which is try all FHIR versions, starting from R4
+-- idea here is to make it as easy as possible to convert - it should just work
 convert_to_json = function(data, options)
-  fhir_data = fhir_data or map_fhir_data(read_fhir_data())
+  local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
+  options.fhirversion = valid_versions[options.fhirversion] or "auto"
+
+  load_fhir_data(options.fhirversion)
 
   assert(next(fhir_data), "convert_to_json: FHIR Schema could not be parsed in.")
-  read_only(fhir_data)
 
   local xml_data
   if options and options.file then
@@ -576,7 +634,29 @@ convert_to_json = function(data, options)
   local output_levels = {[1] = {output}}
   local output_stack = {}
 
+  conversion_errors = {}
   local data_in_lua = convert_to_lua_from_xml(xml_data, nil, output, output_levels, output_stack)
+  -- if R4 on auto didn't work, try STU3
+  if options.fhirversion == "auto" and #conversion_errors > 0 then
+    local amount_of_errors = #conversion_errors
+
+    load_fhir_data("STU3")
+    output = {}
+    output_levels = {[1] = {output}}
+    output_stack = {}
+
+    data_in_lua = convert_to_lua_from_xml(xml_data, nil, output, output_levels, output_stack)
+    if #conversion_errors > amount_of_errors then
+      print("Neither R4 nor STU3 conversion worked, have ".. #conversion_errors.. " errors.")
+      for _, error in ipairs(conversion_errors) do
+        print(error)
+      end
+    end
+  else
+    for _, error in ipairs(conversion_errors) do
+      print(error)
+    end
+  end
 
   return (options and options.pretty) and prettyjson(data_in_lua, nil, '  ', nil, json_encode)
   or json_encode(data_in_lua)
@@ -748,11 +828,15 @@ convert_to_lua_from_json = function(json_data, output, xml_output_levels, output
   return handle_json_recursively(json_data, xml_output_levels, output_stack)
 end
 
+-- options.fhirversion is optional, and defaults to "auto"  which is try all FHIR versions, starting from R4
+-- idea here is to make it as easy as possible to convert - it should just work
 convert_to_xml = function(data, options)
-  fhir_data = fhir_data or map_fhir_data(read_fhir_data())
+  local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
+  options.fhirversion = valid_versions[options.fhirversion] or "auto"
+
+  load_fhir_data(options.fhirversion)
 
   assert(next(fhir_data), "convert_to_xml: FHIR Schema could not be parsed in.")
-  read_only(fhir_data)
 
   local json_data
   if options and options.file then
@@ -761,16 +845,37 @@ convert_to_xml = function(data, options)
     json_data = read_filecontent(data, json_decode)
   end
 
-  local output, output_stack = {}, {}
+  local resourceType, output, output_stack = json_data.resourceType, {}, {}
   local xml_output_levels = {output}
 
+  conversion_errors = {}
   convert_to_lua_from_json(json_data, output, xml_output_levels, output_stack)
+  -- if R4 on auto didn't work, try STU3
+  if options.fhirversion == "auto" and #conversion_errors > 0 then
+    local amount_of_errors = #conversion_errors
+    load_fhir_data("STU3")
+
+    -- convert_to_lua_from_json strips the resourcetype, so add it back in
+    json_data.resourceType = resourceType
+    output, output_stack = {}, {}
+    xml_output_levels = {output}
+    convert_to_lua_from_json(json_data, output, xml_output_levels, output_stack)
+    if amount_of_errors ~= #conversion_errors then
+      print("Neither R4 nor STU3 conversion worked, have ".. #conversion_errors.. " errors.")
+      for _, error in ipairs(conversion_errors) do
+        print(error)
+      end
+    end
+  else
+    for _, error in ipairs(conversion_errors) do
+      print(error)
+    end
+  end
 
   return xml.dump(output)
 end
 
-map_fhir_data(read_fhir_data())
-read_only(fhir_data)
+load_fhir_data("auto")
 
 return {
   to_json = convert_to_json,

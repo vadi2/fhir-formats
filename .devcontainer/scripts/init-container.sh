@@ -2,6 +2,7 @@
 
 set -e
 
+sudo luarocks install argparse
 sudo luarocks install lua-cjson
 sudo luarocks install rapidjson
 sudo luarocks install lunajson

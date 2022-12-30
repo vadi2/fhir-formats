@@ -18,8 +18,15 @@
 
 local from_json = require("cjson").decode
 local pretty = require "resty.prettycjson"
+local argparse = require "argparse"
 
-local default_file = "fhir-elements.json"
+
+local parser = argparse("generate-fhir-data.lua", "Generate condensed FHIR data from the FHIR specification, just elements necessary for version conversion.")
+-- see https://argparse.readthedocs.io/en/stable/index.html
+parser:option("-r --fhir-release", 'FHIR version to work with', "STU3"):choices({"STU3", "R4"}):count("1")
+local args = parser:parse()
+
+local output_file = args.fhir_release.."/fhir-elements.json"
 
 local function read_json(filename)
   io.input(filename)
@@ -130,7 +137,7 @@ local function parse_data(data, output, resources_map, weight_counter)
 end
 
 local function save(output)
-  io.output(default_file)
+  io.output(output_file)
   io.write(pretty(output))
   io.close()
 end
@@ -153,8 +160,8 @@ end
 -- resources_map is used to compute derivations (who extends Resource and then DomainResource)
 -- weight_counter is for sorting elements for the XML format
 local output, resources_map, weight_counter = {}, {}, 1
-output, resources_map, weight_counter = parse_data(read_json("profiles-types.json"), output, resources_map, weight_counter)
-output, resources_map, weight_counter = parse_data(read_json("profiles-resources.json"), output, resources_map, weight_counter)
+output, resources_map, weight_counter = parse_data(read_json(args.fhir_release.."/profiles-types.json"), output, resources_map, weight_counter)
+output, resources_map, weight_counter = parse_data(read_json(args.fhir_release.."/profiles-resources.json"), output, resources_map, weight_counter)
 
 update_backlinks(resources_map)
 

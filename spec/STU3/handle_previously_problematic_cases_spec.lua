@@ -68,7 +68,7 @@ describe("previously failing conversions", function()
     </contact>
     <date value="2015-06-22"/>
     <description value="This is an example value set that includes all the ACME codes for serum/plasma cholesterol from v2.36."/>
-</ValueSet>]])
+</ValueSet>]], {fhirversion = "STU3"})
     end)
 
     describe("should handle ValueSet.url correctly", function()
@@ -132,7 +132,8 @@ describe("previously failing conversions", function()
   ],
   "date": "2015-06-22",
   "description": "This is an example value set that includes all the LOINC codes for serum/plasma cholesterol from v2.36.",
-  "copyright": "This content from LOINCÂ® is copyright Â© 1995 Regenstrief Institute, Inc. and the LOINC Committee, and available at no cost under the license at http://loinc.org/terms-of-use."}]])
+  "copyright": "This content from LOINCÂ® is copyright Â© 1995 Regenstrief Institute, Inc. and the LOINC Committee, and available at no cost under the license at http://loinc.org/terms-of-use."}]],
+  {fhirversion = "STU3"})
       end)
 
 end)

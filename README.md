@@ -22,13 +22,27 @@ to_json("/path/to/file", {file = true})
 to_json("xml content", {pretty = true})
 -- convert an XML file given as a location to JSON and prettyprint it
 to_json("/path/to/file", {file = true, pretty = true})
+-- supported versions are 'R4', 'STU3', and 'auto' (default)
+-- 'auto' will try all FHIR versions starting from R4 and going down
+to_json("xml content", {fhirversion = "R4"})
+to_json("xml content", {fhirversion = "STU3"})
+to_json("xml content", {fhirversion = "auto"})
 
 -- convert given JSON content as a string to XML
 to_xml("json content")
 -- convert an JSON file given as a location to XML
 to_xml("/path/to/file", {file = true})
+-- convert JSON content as a string to XML and prettyprint it
+to_xml("json content", {pretty = true})
+-- convert an JSON file given as a location to XML and prettyprint it
+to_xml("/path/to/file", {file = true, pretty = true})
+-- supported versions are 'R4', 'STU3', and 'auto' (default)
+-- 'auto' will try all FHIR versions starting from R4 and going down
+to_xml("json content", {fhirversion = "R4"})
+to_xml("json content", {fhirversion = "STU3"})
+to_xml("json content", {fhirversion = "auto"})
 
--- get the FHIR definition of an element
+-- get the FHIR definition of an element. Defaults to STU3
 get_fhir_definition('Patient', 'animal', 'species')
 -- returns a table with metadata about the element. Do not modify this table. Keys are:
 -- _min (int): minimum cardinality
@@ -39,6 +53,10 @@ get_fhir_definition('Patient', 'animal', 'species')
 -- _type (string): FHIR element type. Possible values are: Address, Age, Annotation, Attachment, BackboneElement, CodeableConcept, Coding, ContactDetail, ContactPoint, Contributor, Count, DataRequirement, Distance, DomainResource, Duration, Element, ElementDefinition, Extension, HumanName, Identifier, Meta, Money, Narrative, ParameterDefinition, Period, Quantity, Range, Ratio, Reference, RelatedResource, Resource, SampledData, Signature, Timing, TriggerDefinition, UsageContext, base64Binary, boolean, code, date, dateTime, decimal, id, instant, integer, markdown, oid, positiveInt, string, time, unsignedInt, uri, xhtml
 -- [1]: if present, this is a link to the base type of the resource
 -- _derivations: if present, this is a map of resources that extend on this resource
+
+-- last argument can be either 'R4' or 'STU3' to specify version. Defaults to STU3
+get_fhir_definition('Patient', 'contact', 'relationship', 'R4')
+get_fhir_definition('Patient', 'animal', 'species', 'STU3')
 ```
 
 ### Examples

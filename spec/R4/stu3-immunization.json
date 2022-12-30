@@ -1,0 +1,153 @@
+{
+  "resourceType": "Immunization",
+  "id": "example",
+  "identifier": [
+    {
+      "system": "urn:ietf:rfc:3986",
+      "value": "urn:oid:1.3.6.1.4.1.21367.2005.3.7.1234"
+    }
+  ],
+  "status": "completed",
+  "notGiven": false,
+  "vaccineCode": {
+    "coding": [
+      {
+        "system": "urn:oid:1.2.36.1.2001.1005.17",
+        "code": "FLUVAX"
+      }
+    ],
+    "text": "Fluvax (Influenza)"
+  },
+  "patient": {
+    "reference": "Patient/example"
+  },
+  "encounter": {
+    "reference": "Encounter/example"
+  },
+  "date": "2013-01-10",
+  "primarySource": true,
+  "location": {
+    "reference": "Location/1"
+  },
+  "manufacturer": {
+    "reference": "Organization/hl7"
+  },
+  "lotNumber": "AAJN11K",
+  "expirationDate": "2015-02-15",
+  "site": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v3/ActSite",
+        "code": "LA",
+        "display": "left arm"
+      }
+    ]
+  },
+  "route": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/v3/RouteOfAdministration",
+        "code": "IM",
+        "display": "Injection, intramuscular"
+      }
+    ]
+  },
+  "doseQuantity": {
+    "value": 5,
+    "system": "http://unitsofmeasure.org",
+    "code": "mg"
+  },
+  "practitioner": [
+    {
+      "role": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0443",
+            "code": "OP"
+          }
+        ]
+      },
+      "actor": {
+        "reference": "Practitioner/example"
+      }
+    },
+    {
+      "role": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/v2/0443",
+            "code": "AP"
+          }
+        ]
+      },
+      "actor": {
+        "reference": "Practitioner/example"
+      }
+    }
+  ],
+  "note": [
+    {
+      "text": "Notes on adminstration of vaccine"
+    }
+  ],
+  "explanation": {
+    "reason": [
+      {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "429060002"
+          }
+        ]
+      }
+    ]
+  },
+  "reaction": [
+    {
+      "date": "2013-01-10",
+      "detail": {
+        "reference": "Observation/example"
+      },
+      "reported": true
+    }
+  ],
+  "vaccinationProtocol": [
+    {
+      "doseSequence": 1,
+      "description": "Vaccination Protocol Sequence 1",
+      "authority": {
+        "reference": "Organization/hl7"
+      },
+      "series": "Vaccination Series 1",
+      "seriesDoses": 2,
+      "targetDisease": [
+        {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "1857005"
+            }
+          ]
+        }
+      ],
+      "doseStatus": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/vaccination-protocol-dose-status",
+            "code": "count",
+            "display": "Counts"
+          }
+        ]
+      },
+      "doseStatusReason": {
+        "coding": [
+          {
+            "system": "http://hl7.org/fhir/vaccination-protocol-dose-status-reason",
+            "code": "coldchbrk",
+            "display": "Cold chain break"
+          }
+        ]
+      }
+    }
+  ]
+}
