@@ -22,7 +22,7 @@
 local cjson = require("cjson")
 local inspect = require("inspect")
 local tablex = require("pl.tablex")
-local fhir_elements_location = "src/fhir-data/fhir-elements.json"
+local fhir_elements_location = "src/fhir-data/STU3/fhir-elements.json"
 local unique_types, unique_types_json, unique_kinds = {}, {}, {}
 
 -- credit: http://stackoverflow.com/a/4991602/72944

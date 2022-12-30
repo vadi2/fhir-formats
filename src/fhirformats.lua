@@ -118,12 +118,12 @@ read_fhir_data = function(filename, fhirversion)
   local dataf, datafileerr, useddatafile
   if not data and datafile then
     useddatafile = true
-    dataf, datafileerr = datafile.open("src/fhir-data/fhir-elements.json", "r")
+    dataf, datafileerr = datafile.open("src/fhir-data/"..fhirversion.."/fhir-elements.json", "r")
     if dataf then data = json_decode(dataf:read("*a")) end
   end
 
   if not data and require_resource then
-    data = json_decode(require_resource("fhir-data/fhir-elements.json"))
+    data = json_decode(require_resource("fhir-data/"..fhirversion.."/fhir-elements.json"))
   end
 
 
