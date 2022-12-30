@@ -30,7 +30,7 @@ describe("xml to json", function()
     setup(function()
         io.input("spec/STU3/patient-example-good.json")
         positive_example_data = io.read("*a")
-        patient_example_data = in_fhir_json("spec/STU3/patient-example.xml", {file = true}, "STU3")
+        patient_example_data = in_fhir_json("spec/STU3/patient-example.xml", {file = true, fhirversion = "STU3"})
 
         -- for same div data test
         assert:set_parameter("TableFormatLevel", -1)
@@ -64,7 +64,7 @@ describe("json to xml", function()
     setup(function()
         io.input("spec/STU3/patient-example.xml")
         positive_example_data = io.read("*a")
-        patient_example_data = in_fhir_xml("spec/STU3/patient-example-good.json", {file = true}, "STU3")
+        patient_example_data = in_fhir_xml("spec/STU3/patient-example-good.json", {file = true, fhirversion = "STU3"})
 
         -- for same div data test
         assert:set_parameter("TableFormatLevel", -1)
@@ -72,6 +72,6 @@ describe("json to xml", function()
 
     it("should have the same data", function()
         -- convert it down to JSON since order of elements doesn't matter in JSON, while it does in XML
-        assert.same(cjson.decode(in_fhir_json(positive_example_data, nil, "STU3")), cjson.decode(in_fhir_json(patient_example_data, nil, "STU3")))
+        assert.same(cjson.decode(in_fhir_json(positive_example_data, {fhirversion = "STU3"})), cjson.decode(in_fhir_json(patient_example_data, {fhirversion = "STU3"})))
       end)
   end)

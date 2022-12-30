@@ -42,7 +42,7 @@ for _, testcase in ipairs(data) do
       local t = {}
       io.input("spec/STU3/"..json_file)
       t.json_data = io.read("*a")
-      t.xml_data = in_fhir_json("spec/STU3/"..xml_file, {file = true}, "STU3")
+      t.xml_data = in_fhir_json("spec/STU3/"..xml_file, {file = true, fhirversion = "STU3"})
 
       t.json_example = cjson.decode(t.json_data)
       t.xml_example = cjson.decode(t.xml_data)
@@ -80,7 +80,7 @@ for _, testcase in ipairs(data) do
       local t = {}
       io.input("spec/STU3/"..xml_file)
       t.xml_data = io.read("*a")
-      t.json_data = in_fhir_xml("spec/STU3/"..json_file, {file = true}, "STU3")
+      t.json_data = in_fhir_xml("spec/STU3/"..json_file, {file = true, fhirversion = "STU3"})
 
       t.json_example = xml.load(t.json_data)
       t.xml_example = xml.load(t.xml_data)

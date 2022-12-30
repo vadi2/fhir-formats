@@ -30,7 +30,7 @@ describe("auto-version xml to json", function()
     setup(function()
         io.input("spec/R4/stu3-immunization.json")
         positive_example_data = io.read("*a")
-        immunization_example_data = in_fhir_json("spec/R4/stu3-immunization.xml", {file = true}, "auto")
+        immunization_example_data = in_fhir_json("spec/R4/stu3-immunization.xml", {file = true, fhirversion = "auto"})
 
         -- for same div data test
         assert:set_parameter("TableFormatLevel", -1)
@@ -53,7 +53,7 @@ describe("auto-version json to xml", function()
     setup(function()
         io.input("spec/R4/stu3-immunization.xml")
         positive_example_data = io.read("*a")
-        immunization_example_data = in_fhir_xml("spec/R4/stu3-immunization.json", {file = true}, "auto")
+        immunization_example_data = in_fhir_xml("spec/R4/stu3-immunization.json", {file = true, fhirversion = "auto"})
 
         -- for same div data test
         assert:set_parameter("TableFormatLevel", -1)

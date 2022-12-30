@@ -613,13 +613,13 @@ function load_fhir_data(fhirversion)
   end
 end
 
--- fhirversion is optional, and defaults to "auto"  which is try all FHIR versions, starting from R4
+-- options.fhirversion is optional, and defaults to "auto"  which is try all FHIR versions, starting from R4
 -- idea here is to make it as easy as possible to convert - it should just work
-convert_to_json = function(data, options, fhirversion)
+convert_to_json = function(data, options)
   local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
-  fhirversion = valid_versions[fhirversion] or "auto"
+  options.fhirversion = valid_versions[options.fhirversion] or "auto"
 
-  load_fhir_data(fhirversion)
+  load_fhir_data(options.fhirversion)
 
   assert(next(fhir_data), "convert_to_json: FHIR Schema could not be parsed in.")
 
@@ -637,7 +637,7 @@ convert_to_json = function(data, options, fhirversion)
   conversion_errors = {}
   local data_in_lua = convert_to_lua_from_xml(xml_data, nil, output, output_levels, output_stack)
   -- if R4 on auto didn't work, try STU3
-  if fhirversion == "auto" and #conversion_errors > 0 then
+  if options.fhirversion == "auto" and #conversion_errors > 0 then
     local amount_of_errors = #conversion_errors
 
     load_fhir_data("STU3")
@@ -828,13 +828,13 @@ convert_to_lua_from_json = function(json_data, output, xml_output_levels, output
   return handle_json_recursively(json_data, xml_output_levels, output_stack)
 end
 
--- fhirversion is optional, and defaults to "auto"  which is try all FHIR versions, starting from R4
+-- options.fhirversion is optional, and defaults to "auto"  which is try all FHIR versions, starting from R4
 -- idea here is to make it as easy as possible to convert - it should just work
-convert_to_xml = function(data, options, fhirversion)
+convert_to_xml = function(data, options)
   local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
-  fhirversion = valid_versions[fhirversion] or "auto"
+  options.fhirversion = valid_versions[options.fhirversion] or "auto"
 
-  load_fhir_data(fhirversion)
+  load_fhir_data(options.fhirversion)
 
   assert(next(fhir_data), "convert_to_xml: FHIR Schema could not be parsed in.")
 
@@ -851,7 +851,7 @@ convert_to_xml = function(data, options, fhirversion)
   conversion_errors = {}
   convert_to_lua_from_json(json_data, output, xml_output_levels, output_stack)
   -- if R4 on auto didn't work, try STU3
-  if fhirversion == "auto" and #conversion_errors > 0 then
+  if options.fhirversion == "auto" and #conversion_errors > 0 then
     local amount_of_errors = #conversion_errors
     load_fhir_data("STU3")
 

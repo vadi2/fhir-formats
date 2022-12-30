@@ -22,11 +22,25 @@ to_json("/path/to/file", {file = true})
 to_json("xml content", {pretty = true})
 -- convert an XML file given as a location to JSON and prettyprint it
 to_json("/path/to/file", {file = true, pretty = true})
+-- supported versions are 'R4', 'STU3', and 'auto' (default)
+-- 'auto' will try all FHIR versions starting from R4 and going down
+to_json("xml content", {fhirversion = "R4"})
+to_json("xml content", {fhirversion = "STU3"})
+to_json("xml content", {fhirversion = "auto"})
 
 -- convert given JSON content as a string to XML
 to_xml("json content")
 -- convert an JSON file given as a location to XML
 to_xml("/path/to/file", {file = true})
+-- convert JSON content as a string to XML and prettyprint it
+to_xml("json content", {pretty = true})
+-- convert an JSON file given as a location to XML and prettyprint it
+to_xml("/path/to/file", {file = true, pretty = true})
+-- supported versions are 'R4', 'STU3', and 'auto' (default)
+-- 'auto' will try all FHIR versions starting from R4 and going down
+to_xml("json content", {fhirversion = "R4"})
+to_xml("json content", {fhirversion = "STU3"})
+to_xml("json content", {fhirversion = "auto"})
 
 -- get the FHIR definition of an element
 get_fhir_definition('Patient', 'animal', 'species')
