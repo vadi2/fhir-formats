@@ -1,11 +1,11 @@
 package.preload['lunajson.decoder']=(function(...)
-local p,l,f=
+local p,l,m=
 setmetatable,tonumber,tostring
 local w,a=
 math.floor,math.huge
 local b,e=
 math.mininteger or nil,math.tointeger or nil
-local n,c,m,x,s,y=
+local n,c,f,x,s,y=
 string.byte,string.char,string.find,string.gsub,string.match,string.sub
 local function d(t,e)
 error("parse error at "..t..": "..e,2)
@@ -18,8 +18,8 @@ v='[\0-\31]'
 end
 local e=nil
 local function z()
-local o,t,j,q,r
-local u,h
+local o,t,j,q,h
+local u,r
 local function i(e)
 return d(t,e)
 end
@@ -47,17 +47,17 @@ return true
 end
 i('invalid value')
 end
-local d=s(f(.5),'[^0-9]')
-local f=l
+local d=s(m(.5),'[^0-9]')
+local m=l
 if d~='.'then
-if m(d,'%W')then
+if f(d,'%W')then
 d='%'..d
 end
-f=function(e)
+m=function(e)
 return l(x(e,'.',d))
 end
 end
-local function d()
+local function l()
 return i('invalid number')
 end
 local function k(i)
@@ -79,46 +79,46 @@ end
 return 0
 end
 end
-d()
+l()
 end
 if n(a)~=46 or n(a,-1)==46 then
-d()
+l()
 end
 if e~=''then
 if e=='e'or e=='E'then
 a,e=s(o,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',t)
 end
 if e~=''then
-d()
+l()
 end
 end
 t=t+#a
-e=f(a)
+e=m(a)
 if i then
 e=-e
 end
 return e
 end
-local function l(i)
+local function d(i)
 t=t-1
 local a,e=s(o,'^([0-9]+%.?[0-9]*)([-+.A-Za-z]?)',t)
 if n(a,-1)==46 then
-d()
+l()
 end
 if e~=''then
 if e~='e'and e~='E'then
-d()
+l()
 end
 a,e=s(o,'^([^eE]*[eE][-+]?[0-9]+)([-+.A-Za-z]?)',t)
 if not a or e~=''then
-d()
+l()
 end
 end
 t=t+#a
-e=f(a)
+e=m(a)
 if i then
 e=-e
-if e==b and not m(a,'[^0-9]')then
+if e==b and not f(a,'[^0-9]')then
 e=b
 end
 end
@@ -130,7 +130,7 @@ if e then
 t=t+1
 if e>48 then
 if e<58 then
-return l(true)
+return d(true)
 end
 else
 if e>47 then
@@ -140,7 +140,7 @@ end
 end
 i('invalid number')
 end
-local f={
+local m={
 0,1,2,3,4,5,6,7,
 8,9,a,a,a,a,a,a,
 a,10,11,12,13,14,15,a,
@@ -152,7 +152,7 @@ __index=function()
 return a
 end
 }
-p(f,f)
+p(m,m)
 local b={
 ['"']='"',
 ['\\']='\\',
@@ -170,14 +170,14 @@ p(b,b)
 local function g()
 return i("1st surrogate pair byte not continued by 2nd")
 end
-local d=0
+local l=0
 local function T(r,e)
 if r=='u'then
 local t,o,n,h,s=n(e,1,5)
-e=f[t-47]*4096+
-f[o-47]*256+
-f[n-47]*16+
-f[h-47]
+e=m[t-47]*4096+
+m[o-47]*256+
+m[n-47]*16+
+m[h-47]
 if e~=a then
 if e<128 then
 if s then
@@ -206,21 +206,21 @@ return c(t,o,n,s)
 end
 return c(t,o,n)
 elseif 55296<=e and e<56320 then
-if d==0 then
-d=e
+if l==0 then
+l=e
 if not s then
 return''
 end
 g()
 end
-d=0
+l=0
 g()
 else
-if d~=0 then
+if l~=0 then
 e=65536+
-(d-55296)*1024+
+(l-55296)*1024+
 (e-56320)
-d=0
+l=0
 t=w(e/262144)
 e=e-t*262144
 o=w(e/4096)
@@ -241,18 +241,18 @@ end
 end
 i("invalid unicode codepoint literal")
 end
-if d~=0 then
-d=0
+if l~=0 then
+l=0
 g()
 end
 return b[r]..e
 end
-local f=p({},{__mode="v"})
+local m=p({},{__mode="v"})
 local function c(r)
 local a=t
 local e,h,s
 repeat
-a=m(o,'"',a,true)
+a=f(o,'"',a,true)
 if not a then
 i("unterminated string")
 end
@@ -270,30 +270,30 @@ until s~=92
 local o=y(o,t,e)
 t=a
 if r then
-e=f[o]
+e=m[o]
 if e then
 return e
 end
 e=o
 end
-if m(o,v)then
+if f(o,v)then
 i("unescaped control string")
 end
-if m(o,'\\',1,true)then
+if f(o,'\\',1,true)then
 o=x(o,'\\(.)([^\\]?[^\\]?[^\\]?[^\\]?[^\\]?)',T)
-if d~=0 then
-d=0
+if l~=0 then
+l=0
 i("1st surrogate pair byte not continued by 2nd")
 end
 end
 if r then
-f[e]=o
+m[e]=o
 end
 return o
 end
-local function w()
-r=r+1
-if r>1e3 then
+local function m()
+h=h+1
+if h>1e3 then
 i('too deeply nested json (> 1000)')
 end
 local d={}
@@ -305,9 +305,9 @@ else
 local e=t
 repeat
 a=a+1
-h=u[n(o,e)]
+r=u[n(o,e)]
 t=e+1
-d[a]=h()
+d[a]=r()
 e=s(o,'^[ \n\r\t]*,[ \n\r\t]*()',t)
 until not e
 e=s(o,'^[ \n\r\t]*%]()',t)
@@ -319,12 +319,12 @@ end
 if q then
 d[0]=a
 end
-r=r-1
+h=h-1
 return d
 end
-local function f()
-r=r+1
-if r>1e3 then
+local function l()
+h=h+1
+if h>1e3 then
 i('too deeply nested json (> 1000)')
 end
 local d={}
@@ -339,27 +339,27 @@ i("not key")
 end
 t=a+1
 local l=c(true)
-h=e
-local c,r,m=n(o,t,t+3)
+r=e
+local c,h,m=n(o,t,t+3)
 if c==58 then
-if r~=32 then
-h=u[r]
+if h~=32 then
+r=u[h]
 a=t+2
 else
-h=u[m]
+r=u[m]
 a=t+3
 end
 end
-if h==e then
+if r==e then
 a=s(o,'^[ \n\r\t]*:[ \n\r\t]*()',t)
 if not a then
 i("no colon after a key")
 end
-h=u[n(o,a)]
+r=u[n(o,a)]
 a=a+1
 end
 t=a
-d[l]=h()
+d[l]=r()
 a=s(o,'^[ \n\r\t]*,[ \n\r\t]*()',t)
 until not a
 a=s(o,'^[ \n\r\t]*}()',t)
@@ -368,7 +368,7 @@ i("no closing bracket of an object")
 end
 t=a
 end
-r=r-1
+h=h-1
 return d
 end
 u={[0]=
@@ -378,16 +378,16 @@ e,e,e,e,e,e,e,e,
 e,e,e,e,e,e,e,e,
 e,e,c,e,e,e,e,e,
 e,e,e,e,e,A,e,e,
-k,l,l,l,l,l,l,l,
-l,l,e,e,e,e,e,e,
+k,d,d,d,d,d,d,d,
+d,d,e,e,e,e,e,e,
 e,e,e,e,e,e,e,e,
 e,e,e,e,e,e,e,e,
 e,e,e,e,e,e,e,e,
-e,e,e,w,e,e,e,e,
+e,e,e,m,e,e,e,e,
 e,e,e,e,e,e,E,e,
 e,e,e,e,e,e,_,e,
 e,e,e,e,z,e,e,e,
-e,e,e,f,e,e,e,e,
+e,e,e,l,e,e,e,e,
 __index=function()
 i("unexpected termination")
 end
@@ -395,15 +395,15 @@ end
 p(u,u)
 local function l(l,a,e,d)
 o,t,j,q=l,a,e,d
-r=0
+h=0
 t=s(o,'^[ \n\r\t]*()',t)
-h=u[n(o,t)]
+r=u[n(o,t)]
 t=t+1
-local e=h()
+local e=r()
 if a then
 return e,t
 else
-h,t=m(o,'^[ \n\r\t]*',t)
+r,t=f(o,'^[ \n\r\t]*',t)
 if t~=#o then
 i('json ended')
 end
@@ -1205,7 +1205,7 @@ newfileparser=e.newfileparser,
 }
 end)
 package.preload['slaxml']=(function(...)
-local f={
+local w={
 VERSION="0.8",
 _call={
 pi=function(t,e)
@@ -1238,20 +1238,20 @@ print(t..">")
 end,
 }
 }
-function f:parser(e)
-return{_call=e or self._call,parse=f.parse}
+function w:parser(e)
+return{_call=e or self._call,parse=w.parse}
 end
-function f:parse(s,b)
+function w:parse(s,b)
 if not b then b={stripWhitespace=false}end
 local r,j,w,c,z,g,x=string.find,string.sub,string.gsub,string.char,table.insert,table.remove,table.concat
-local e,a,o,i,t,v,m
+local e,a,o,i,t,v,f
 local y=unpack or table.unpack
 local t=1
-local f="text"
+local m="text"
 local d=1
 local h={}
-local u={}
-local l
+local l={}
+local u
 local n={}
 local k=false
 local p={{2047,192},{65535,224},{2097151,240}}
@@ -1327,7 +1327,7 @@ else
 h[1]=o
 for e=#n,1,-1 do if n[e]['!']then h[2]=n[e]['!'];break end end
 end
-l=0
+u=0
 z(n,{})
 return true
 end
@@ -1364,8 +1364,8 @@ n[#n]['!']=i
 h[2]=i
 end
 end
-l=l+1
-u[l]=e
+u=u+1
+l[u]=e
 return true
 end
 end
@@ -1382,15 +1382,15 @@ end
 local function p()
 e,a,o=r(s,'^%s*(/?)>',t)
 if e then
-f="text"
+m="text"
 t=a+1
 d=t
 if h[3]then h[2]=w(h[3])end
 if self._call.startElement then self._call.startElement(y(h))end
 if self._call.attribute then
-for e=1,l do
-if u[e][4]then u[e][3]=w(u[e][4])end
-self._call.attribute(y(u[e]))
+for e=1,u do
+if l[e][4]then l[e][3]=w(l[e][4])end
+self._call.attribute(y(l[e]))
 end
 end
 if o=="/"then
@@ -1403,15 +1403,15 @@ end
 local function h()
 e,a,o,i=r(s,'^</([%a_][%w_.-]*)%s*>',t)
 if e then
-m=nil
-for e=#n,1,-1 do if n[e]['!']then m=n[e]['!'];break end end
+f=nil
+for e=#n,1,-1 do if n[e]['!']then f=n[e]['!'];break end end
 else
 e,a,i,o=r(s,'^</([%a_][%w_.-]*):([%a_][%w_.-]*)%s*>',t)
-if e then m=w(i)end
+if e then f=w(i)end
 end
 if e then
 c()
-if self._call.closeElement then self._call.closeElement(o,m)end
+if self._call.closeElement then self._call.closeElement(o,f)end
 t=a+1
 d=t
 g(n)
@@ -1419,16 +1419,16 @@ return true
 end
 end
 while t<#s do
-if f=="text"then
+if m=="text"then
 if not(x()or j()or v()or h())then
 if q()then
-f="attributes"
+m="attributes"
 else
 e,a=r(s,'^[^<]+',t)
 t=(e and a or t)+1
 end
 end
-elseif f=="attributes"then
+elseif m=="attributes"then
 if not b()then
 if not p()then
 error("Was in an element and couldn't find attributes or the close.")
@@ -1439,7 +1439,7 @@ end
 if not k then error("Parsing did not discover any elements")end
 if#n>0 then error("Parsing ended with unclosed elements")end
 end
-return f
+return w
 end)
 package.preload['pure-xml-dump']=(function(...)
 local u,a,o,n,
@@ -1453,14 +1453,14 @@ else
 return e:gsub('&','&amp;'):gsub('>','&gt;'):gsub('<','&lt;'):gsub("'",'&apos;')
 end
 end
-local function h(e)
-local t=e.xml or'table'
-for e,a in a(e)do
-if e~='xml'and n(e)=='string'then
-t=t..' '..e.."='"..d(a).."'"
+local function h(t)
+local e=t.xml or'table'
+for t,a in a(t)do
+if t~='xml'and n(t)=='string'then
+e=e..' '..t.."='"..d(a).."'"
 end
 end
-return t
+return e
 end
 local function r(a,i,t,e,l,s)
 if l>s then
@@ -1503,15 +1503,15 @@ local n=require'slaxml'
 local a={}
 local e={a}
 local t={}
-local o=function(i,o,a)
-local a=e[#e]
-if o~=t[#t]then
-t[#t+1]=o
+local o=function(i,a,o)
+local o=e[#e]
+if a~=t[#t]then
+t[#t+1]=a
 else
-o=nil
+a=nil
 end
-a[#a+1]={xml=i,xmlns=o}
-e[#e+1]=a[#a]
+o[#o+1]={xml=i,xmlns=a}
+e[#e+1]=o[#o]
 end
 local i=function(t,a)
 local e=e[#e]
@@ -1548,27 +1548,27 @@ local e=t and e.encode or function()return nil,"Lua cJSON encoder not found"end
 local i=table.concat
 local c=string.sub
 local d=string.rep
-return function(t,s,n,l,a)
+return function(t,h,n,l,a)
 local t,e=(a or e)(t)
 if not t then return t,e end
-s,n,l=s or"\n",n or"\t",l or" "
-local e,a,u,m,o,h,r=1,0,0,#t,{},nil,nil
+h,n,l=h or"\n",n or"\t",l or" "
+local e,a,u,m,o,s,r=1,0,0,#t,{},nil,nil
 local f=c(l,-1)=="\n"
 for m=1,m do
 local t=c(t,m,m)
 if not r and(t=="{"or t=="[")then
-o[e]=h==":"and i{t,s}or i{d(n,a),t,s}
+o[e]=s==":"and i{t,h}or i{d(n,a),t,h}
 a=a+1
 elseif not r and(t=="}"or t=="]")then
 a=a-1
-if h=="{"or h=="["then
+if s=="{"or s=="["then
 e=e-1
-o[e]=i{d(n,a),h,t}
+o[e]=i{d(n,a),s,t}
 else
-o[e]=i{s,d(n,a),t}
+o[e]=i{h,d(n,a),t}
 end
 elseif not r and t==","then
-o[e]=i{t,s}
+o[e]=i{t,h}
 u=-1
 elseif not r and t==":"then
 o[e]=i{t,l}
@@ -1577,7 +1577,7 @@ e=e+1
 o[e]=d(n,a)
 end
 else
-if t=='"'and h~="\\"then
+if t=='"'and s~="\\"then
 r=not r and true or nil
 end
 if a~=u then
@@ -1586,7 +1586,7 @@ e,u=e+1,a
 end
 o[e]=t
 end
-h,e=t,e+1
+s,e=t,e+1
 end
 return i(o)
 end
@@ -106274,9 +106274,9 @@ e=require("rapidjson")
 I=require("datafile")
 end
 local P=require("resty.prettycjson")
-local d,q,s,f,G,B,c,v,V,o
+local d,q,s,f,G,B,m,v,V,o
 =ipairs,pairs,type,print,tonumber,string.gmatch,table.remove,string.format,table.sort,table.concat
-local r,p,S,y,n
+local r,y,S,p,n
 local N,H,k,D
 local R,C,O,A,T
 local j,_,z
@@ -106284,7 +106284,7 @@ local L,g,U,M
 local E,W,F,Y
 local w
 local a,t
-local m,u
+local c,u
 local i
 local l,b
 if e then
@@ -106316,7 +106316,7 @@ e=e+1
 end
 return e
 end
-p=function(t,e)
+y=function(t,e)
 assert(e=="STU3"or e=="R4",
 string.format("fhirversion must be STU3 or R4. '%s' is not supported at this level",tostring(e)))
 local s={
@@ -106376,7 +106376,7 @@ a[e]=t[e]
 end
 return a
 end
-y=function(o)
+p=function(o)
 a={}
 local n,i
 i=function(t)
@@ -106478,13 +106478,13 @@ end
 get_fhir_definition_public=function(...)
 local e={...}
 if e[#e]=="STU3"then
-a=m
+a=c
 e[#e]=nil
 elseif e[#e]=="R4"then
 a=u
 e[#e]=nil
 else
-a=m
+a=c
 end
 local t=e[#e]
 e[#e]=nil
@@ -106496,19 +106496,19 @@ return e
 end
 end
 T=function(n,s)
-local e,a
-local i=r(n,s)
-if not i then
+local e,i
+local a=r(n,s)
+if not a then
 t[#t+1]=string.format("Warning: %s.%s is not a known FHIR element; couldn't check max cardinality for it to decide on a JSON object or array.",o(n,"."),s)
 end
-if i and i._max=="*"then
+if a and a._max=="*"then
 e={{}}
-a=e[1]
+i=e[1]
 else
 e={}
-a=e
+i=e
 end
-return e,a
+return e,i
 end
 N=function(a,i)
 local e=r(a,i)
@@ -106657,24 +106657,25 @@ assert(s(e)=="table",v("unexpected type value encountered: %s (%s), expecting ta
 k(e,t,o,i,a)
 end
 end
-c(a)
+m(a)
 return o
 end
 w=function(e)
 if e=="auto"then
-m=m or y(p(nil,"STU3"))
-u=u or y(p(nil,"R4"))
+c=c or p(y(nil,"STU3"))
+u=u or p(y(nil,"R4"))
 a=u
 elseif e=="STU3"then
-m=m or y(p(nil,"STU3"))
-a=m
+c=c or p(y(nil,"STU3"))
+a=c
 elseif e=="R4"then
-u=u or y(p(nil,"R4"))
+u=u or p(y(nil,"R4"))
 a=u
 end
 end
 R=function(i,e)
 local o={["STU3"]="STU3",["R4"]="R4"}
+e=e or{}
 e.fhirversion=o[e.fhirversion]or"auto"
 w(e.fhirversion)
 assert(next(a),"convert_to_json: FHIR Schema could not be parsed in.")
@@ -106738,8 +106739,8 @@ if s then
 n[#n+1]=e[#e]
 t[#t+1]=e[#e].xml
 j(s,n,t)
-c(n)
-c(t)
+m(n)
+m(t)
 end
 end
 g=function(i,n,e,a)
@@ -106752,8 +106753,8 @@ o._count=#t
 e[#e+1]=o
 a[#a+1]=o.xml
 j(n,e,a)
-c(e)
-c(a)
+m(e)
+m(a)
 end
 print_contained_resource=function(a,t,o)
 local e=t[#t]
@@ -106805,8 +106806,8 @@ e._weight=nil
 e._count=nil
 end
 if h then
-c(t)
-c(o)
+m(t)
+m(o)
 end
 end
 z=function(e,t,o,a)
@@ -106818,28 +106819,29 @@ a[#a+1]=t.xml
 end
 return j(e,o,a)
 end
-L=function(o,e)
-local i={["STU3"]="STU3",["R4"]="R4"}
-e.fhirversion=i[e.fhirversion]or"auto"
+L=function(i,e)
+local o={["STU3"]="STU3",["R4"]="R4"}
+e=e or{}
+e.fhirversion=o[e.fhirversion]or"auto"
 w(e.fhirversion)
 assert(next(a),"convert_to_xml: FHIR Schema could not be parsed in.")
-local a
+local o
 if e and e.file then
-a=A(o,l)
+o=A(i,l)
 else
-a=O(o,l)
+o=O(i,l)
 end
-local s,o,n=a.resourceType,{},{}
-local i={o}
+local s,a,n=o.resourceType,{},{}
+local i={a}
 t={}
-z(a,o,i,n)
+z(o,a,i,n)
 if e.fhirversion=="auto"and#t>0 then
 local e=#t
 w("STU3")
-a.resourceType=s
-o,n={},{}
-i={o}
-z(a,o,i,n)
+o.resourceType=s
+a,n={},{}
+i={a}
+z(o,a,i,n)
 if e~=#t then
 f("Neither R4 nor STU3 conversion worked, have "..#t.." errors.")
 for t,e in d(t)do
@@ -106851,7 +106853,7 @@ for t,e in d(t)do
 f(e)
 end
 end
-return h.dump(o)
+return h.dump(a)
 end
 w("auto")
 return{

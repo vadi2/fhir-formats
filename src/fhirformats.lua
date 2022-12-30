@@ -593,6 +593,7 @@ end
 -- idea here is to make it as easy as possible to convert - it should just work
 convert_to_json = function(data, options)
   local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
+  options = options or {}
   options.fhirversion = valid_versions[options.fhirversion] or "auto"
 
   load_fhir_data(options.fhirversion)
@@ -808,6 +809,7 @@ end
 -- idea here is to make it as easy as possible to convert - it should just work
 convert_to_xml = function(data, options)
   local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
+  options = options or {}
   options.fhirversion = valid_versions[options.fhirversion] or "auto"
 
   load_fhir_data(options.fhirversion)
