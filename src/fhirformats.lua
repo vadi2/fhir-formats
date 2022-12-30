@@ -830,6 +830,7 @@ convert_to_xml = function(data, options)
   convert_to_lua_from_json(json_data, output, xml_output_levels, output_stack)
   -- if R4 on auto didn't work, try STU3
   if options.fhirversion == "auto" and #conversion_errors > 0 then
+    table.insert(conversion_errors, 1, "R4 conversion errors:")
     local amount_of_errors = #conversion_errors
     load_fhir_data("STU3")
 
@@ -839,6 +840,7 @@ convert_to_xml = function(data, options)
     xml_output_levels = {output}
     convert_to_lua_from_json(json_data, output, xml_output_levels, output_stack)
     if amount_of_errors ~= #conversion_errors then
+      table.insert(conversion_errors, amount_of_errors, "STU3 conversion errors:")
       print("Neither R4 nor STU3 conversion worked, have ".. #conversion_errors.. " errors.")
       for _, error in ipairs(conversion_errors) do
         print(error)
