@@ -19,6 +19,7 @@
 local from_json = require("cjson").decode
 local pretty = require "resty.prettycjson"
 local argparse = require "argparse"
+local jsmin = require "jsmin"
 
 
 local parser = argparse("generate-fhir-data.lua", "Generate condensed FHIR data from the FHIR specification, just elements necessary for version conversion.")
@@ -27,6 +28,7 @@ parser:option("-r --fhir-release", 'FHIR version to work with', "STU3"):choices(
 local args = parser:parse()
 
 local output_file = args.fhir_release.."/fhir-elements.json"
+local output_file_min = args.fhir_release.."/fhir-elements.min.json"
 
 local function read_json(filename)
   io.input(filename)
@@ -139,6 +141,10 @@ end
 local function save(output)
   io.output(output_file)
   io.write(pretty(output))
+  io.close()
+
+  io.output(output_file_min)
+  io.write(jsmin(pretty(output)))
   io.close()
 end
 
