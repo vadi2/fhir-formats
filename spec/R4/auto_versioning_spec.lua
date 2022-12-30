@@ -42,16 +42,7 @@ describe("auto-version xml to json", function()
       end)
 
     it("should have the same non-div data", function()
-        -- cut out the div's, since the whitespace doesn't matter as much in xml
-        positive_example.text.div = nil
-        immunization_example.text.div = nil
         assert.same(positive_example, immunization_example)
-      end)
-
-    it("should have xml-comparable div data", function()
-        local positive_example_div = xml.load(positive_example.text.div)
-        local immunization_example_div = xml.load(immunization_example.text.div)
-        assert.same(positive_example_div, immunization_example_div)
       end)
   end)
 
