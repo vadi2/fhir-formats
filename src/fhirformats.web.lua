@@ -106836,6 +106836,7 @@ local i={a}
 t={}
 z(o,a,i,n)
 if e.fhirversion=="auto"and#t>0 then
+table.insert(t,1,"R4 conversion errors:")
 local e=#t
 w("STU3")
 o.resourceType=s
@@ -106843,6 +106844,7 @@ a,n={},{}
 i={a}
 z(o,a,i,n)
 if e~=#t then
+table.insert(t,e,"STU3 conversion errors:")
 f("Neither R4 nor STU3 conversion worked, have "..#t.." errors.")
 for t,e in d(t)do
 f(e)
