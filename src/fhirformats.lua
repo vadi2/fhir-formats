@@ -44,7 +44,9 @@ local get_fhir_definition, read_fhir_data, getindex, map_fhir_data, fhir_typed
 local get_json_datatype, print_data_for_node, convert_to_lua_from_xml, handle_div
 local convert_to_json, file_exists, read_filecontent, read_file, make_json_datatype
 local handle_json_recursively, print_simple_datatype, convert_to_lua_from_json
-local convert_to_xml, print_complex_datatype, list_to_map
+local convert_to_xml, print_complex_datatype, list_to_map, is_fhir_resource
+local get_xml_weight, get_datatype_kind, print_xml_value, need_shadow_element
+local load_fhir_data
 
 -- global pointers to the FHIR schema to operate on, and any errors that happened during conversion.
 -- These are the only such global pointers in the whole program, and the reduced complexity of the code
@@ -86,7 +88,7 @@ function table.size(t)
     return 0
   end
   local i = 0
-  for k, v in pairs(t) do
+  for _, _ in pairs(t) do
     i = i + 1
   end
   return i
@@ -125,7 +127,11 @@ read_fhir_data = function(filename, fhirversion)
   end
 
 
-  assert(data, string.format("read_fhir_data: FHIR Schema could not be found in these locations starting from %s:  %s\n\n%s%s", PATH, tconcat(locations, "\n  "), useddatafile and ("Datafile could not find LuaRocks installation as well; error is: \n"..datafileerr) or '', require_resource and "Embedded JSON data could not be found as well." or ''))
+  assert(data, string.format(
+    "read_fhir_data: FHIR Schema could not be found in these locations starting from %s:  %s\n\n%s%s",
+    PATH, tconcat(locations, "\n  "),
+    useddatafile and ("Datafile could not find LuaRocks installation as well; error is: \n"..datafileerr) or '',
+    require_resource and "Embedded JSON data could not be found as well." or ''))
   return data
 end
 
@@ -569,47 +575,17 @@ convert_to_lua_from_xml = function(xml_data, level, output, output_levels, outpu
   return output
 end
 
--- credit: http://stackoverflow.com/questions/28312409/how-can-i-implement-a-read-only-table-in-lua
-local proxies = setmetatable( {}, { __mode = "k" } )
-function read_only( t )
-  if type( t ) == "table" then
-    -- check whether we already have a readonly proxy for this table
-    local p = proxies[ t ]
-    if not p then
-      -- create new proxy table for t
-      p = setmetatable( {}, {
-        __index = function( _, k )
-          -- apply `readonly` recursively to field `t[k]`
-          return readOnly( t[ k ] )
-        end,
-        __newindex = function()
-          error( "table is readonly", 2 )
-        end,
-      } )
-      proxies[ t ] = p
-    end
-    return p
-  else
-    -- non-tables are returned as is
-    return t
-  end
-end
-
-function load_fhir_data(fhirversion)
+load_fhir_data = function(fhirversion)
   if fhirversion == "auto" then
     fhir_data_stu3 = fhir_data_stu3 or map_fhir_data(read_fhir_data(nil, "STU3"))
     fhir_data_r4 = fhir_data_r4 or map_fhir_data(read_fhir_data(nil, "R4"))
     fhir_data = fhir_data_r4
-    read_only(fhir_data_r4)
-    read_only(fhir_data_stu3)
   elseif fhirversion == "STU3" then
     fhir_data_stu3 = fhir_data_stu3 or map_fhir_data(read_fhir_data(nil, "STU3"))
     fhir_data = fhir_data_stu3
-    read_only(fhir_data_stu3)
   elseif fhirversion == "R4" then
     fhir_data_r4 = fhir_data_r4 or map_fhir_data(read_fhir_data(nil, "R4"))
     fhir_data = fhir_data_r4
-    read_only(fhir_data_r4)
   end
 end
 
