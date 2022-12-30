@@ -124,7 +124,7 @@ read_fhir_data = function(filename, fhirversion)
 
   -- web version - use require_resource
   if not data and require_resource then
-    data = json_decode(require_resource("fhir-data/"..fhirversion.."/fhir-elements.min.json"))
+    data = json_decode(require_resource("fhir-data/"..fhirversion.."/fhir-elements.json"))
   end
 
 
