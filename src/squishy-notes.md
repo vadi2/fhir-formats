@@ -1,5 +1,5 @@
 Run [Squish](https://github.com/LuaDist/squish) with:
 
 ```
-squish . --minify-level=full
+squish . --minify-level=default
 ```
