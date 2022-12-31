@@ -7,8 +7,8 @@ Module "pure-xml-dump"
 Module "pure-xml-load"
 Module "resty.prettycjson"
 
-Resource "fhir-data/STU3/fhir-elements.json" "fhir-data/STU3/fhir-elements.json"
-Resource "fhir-data/R4/fhir-elements.json" "fhir-data/R4/fhir-elements.json"
+Resource "fhir-data/STU3/fhir-elements.min.json" "fhir-data/STU3/fhir-elements.min.json"
+Resource "fhir-data/R4/fhir-elements.min.json" "fhir-data/R4/fhir-elements.min.json"
 
 Output "fhirformats.web.lua"
 
