@@ -183,6 +183,10 @@ Decimal precision is up to 14 significant digits.
 busted --lua=$(which lua5.1) spec/
 ```
 
+## Used in
+* [fhir-formats.github.io](https://fhir-formats.github.io/)
+* [Experimental repository as part of Dutch Corona effort](https://github.com/minvws/nl-eHealth-experimental)
+
 ## TODO
 
 * add command-line utility for Windows, OSX, and Linux
