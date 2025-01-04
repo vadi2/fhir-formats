@@ -187,10 +187,6 @@ busted --lua=$(which lua5.1) spec/
 * [fhir-formats.github.io](https://fhir-formats.github.io/)
 * [Experimental repository as part of Dutch Corona effort](https://github.com/minvws/nl-eHealth-experimental)
 
-## TODO
-
-* add command-line utility for Windows, OSX, and Linux
-
 Contibutions welcome!
 
 
