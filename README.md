@@ -186,6 +186,40 @@ Decimal precision is up to 14 significant digits.
 busted --lua=$(which lua5.1) spec/
 ```
 
+## Development
+
+### Regenerating fhirformats.web.lua
+
+To regenerate the web bundle after making changes:
+
+1. Install dependencies:
+```sh
+luarocks install --local lunajson
+luarocks install --local slaxml
+```
+
+Note: If `slaxml` fails to install via luarocks, install from source:
+```sh
+cd ~/Programs
+git clone https://github.com/Phrogz/SLAXML.git
+cd SLAXML
+luarocks make --local slaxml-0.8-1.rockspec
+```
+
+2. Install squish:
+```sh
+cd ~/Programs
+git clone https://github.com/LuaDist/squish.git
+```
+
+3. Run squish from the `src` directory:
+```sh
+cd src
+lua5.1 ~/Programs/squish/squish.lua . --minify-level=full
+```
+
+This will regenerate `src/fhirformats.web.lua` with all dependencies bundled.
+
 ## Used in
 * [fhir-formats.github.io](https://fhir-formats.github.io/)
 * [Experimental repository as part of Dutch Corona effort](https://github.com/minvws/nl-eHealth-experimental)
