@@ -70,4 +70,4 @@ jobs:
         run: |
           export LUA_PATH="$HOME/.luarocks/share/lua/5.1/?.lua;$HOME/.luarocks/share/lua/5.1/?/init.lua;./src/?.lua;;"
           export LUA_CPATH="$HOME/.luarocks/lib/lua/5.1/?.so;;"
-          busted --lua=$(which lua5.1) spec/
+          busted spec/
