@@ -86,6 +86,19 @@ describe("StructureMap with nested rules - xml to json", function()
         end
         assert.is_true(found_nested, "Should have found at least one nested rule")
     end)
+
+    it("should match HAPI server output for step7a", function()
+        io.input("spec/R4/step7a.json")
+        local hapi_json = io.read("*a")
+        local hapi_data = cjson.decode(hapi_json)
+        local our_data = cjson.decode(step7a_json)
+
+        -- Remove id field for comparison (HAPI adds server-generated IDs)
+        our_data.id = nil
+
+        -- Compare structure
+        assert.same(hapi_data, our_data)
+    end)
 end)
 
 describe("StructureMap with nested rules - json to xml", function()
