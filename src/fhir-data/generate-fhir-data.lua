@@ -24,7 +24,7 @@ local jsmin = require "jsmin"
 
 local parser = argparse("generate-fhir-data.lua", "Generate condensed FHIR data from the FHIR specification, just elements necessary for version conversion.")
 -- see https://argparse.readthedocs.io/en/stable/index.html
-parser:option("-r --fhir-release", 'FHIR version to work with', "STU3"):choices({"STU3", "R4"}):count("1")
+parser:option("-r --fhir-release", 'FHIR version to work with', "STU3"):choices({"STU3", "R4", "R5"}):count("1")
 local args = parser:parse()
 
 local output_file = args.fhir_release.."/fhir-elements.json"
