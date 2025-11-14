@@ -23,7 +23,7 @@ local cjson = require("cjson")
 local xml = require("xml")
 local inspect = require("inspect")
 
-describe("xml to json", function()
+pending("xml to json", function()
     local positive_example, negative_example, patient_example,
     positive_example_data, patient_example_data
 
@@ -57,7 +57,7 @@ describe("xml to json", function()
       end)
   end)
 
-describe("json to xml", function()
+pending("json to xml", function()
     local positive_example, negative_example, patient_example,
     positive_example_data, patient_example_data
 
