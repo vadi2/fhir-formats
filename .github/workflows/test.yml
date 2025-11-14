@@ -66,6 +66,4 @@ jobs:
           luarocks install --local inspect
 
       - name: Run tests
-        run: |
-          eval "$(luarocks path --local)"
-          busted --lua=$(which lua5.1) spec/
+        run: busted --lua=$(which lua5.1) spec/
