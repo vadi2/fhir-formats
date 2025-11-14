@@ -54,7 +54,7 @@ local load_fhir_data
 local fhir_data, conversion_errors
 
 -- individual FHIR schemas per FHIR version supported
-local fhir_data_stu3, fhir_data_r4
+local fhir_data_stu3, fhir_data_r4, fhir_data_r5
 
 local null_value
 local json_decode, json_encode
@@ -95,8 +95,8 @@ function table.size(t)
 end
 
 read_fhir_data = function(filename, fhirversion)
-  assert(fhirversion == "STU3" or fhirversion == "R4",
-    string.format("fhirversion must be STU3 or R4. '%s' is not supported at this level", tostring(fhirversion)))
+  assert(fhirversion == "STU3" or fhirversion == "R4" or fhirversion == "R5",
+    string.format("fhirversion must be STU3, R4, or R5. '%s' is not supported at this level", tostring(fhirversion)))
 
   -- prefer the filename, but substitute the nil if not given
   local locations = {
@@ -311,7 +311,7 @@ is_fhir_resource = function (resourcename)
 end
 
 -- accepts the path as a set of strings instead of a table+string, and is exposed publicly
--- last argument can be "STU3" or "R4" to pick a FHIR version.
+-- last argument can be "STU3", "R4", or "R5" to pick a FHIR version.
 -- Defaults to STU3 and will continue to as future FHIR versions are released to keep API compatibility.
 -- returns a copy of the fhir element with underscores removed
 get_fhir_definition_public = function(...)
@@ -321,6 +321,9 @@ get_fhir_definition_public = function(...)
     output_stack[#output_stack] = nil
   elseif output_stack[#output_stack] == "R4" then
     fhir_data = fhir_data_r4
+    output_stack[#output_stack] = nil
+  elseif output_stack[#output_stack] == "R5" then
+    fhir_data = fhir_data_r5
     output_stack[#output_stack] = nil
   else
     fhir_data = fhir_data_stu3
@@ -580,6 +583,7 @@ load_fhir_data = function(fhirversion)
   if fhirversion == "auto" then
     fhir_data_stu3 = fhir_data_stu3 or map_fhir_data(read_fhir_data(nil, "STU3"))
     fhir_data_r4 = fhir_data_r4 or map_fhir_data(read_fhir_data(nil, "R4"))
+    fhir_data_r5 = fhir_data_r5 or map_fhir_data(read_fhir_data(nil, "R5"))
     fhir_data = fhir_data_r4
   elseif fhirversion == "STU3" then
     fhir_data_stu3 = fhir_data_stu3 or map_fhir_data(read_fhir_data(nil, "STU3"))
@@ -587,13 +591,16 @@ load_fhir_data = function(fhirversion)
   elseif fhirversion == "R4" then
     fhir_data_r4 = fhir_data_r4 or map_fhir_data(read_fhir_data(nil, "R4"))
     fhir_data = fhir_data_r4
+  elseif fhirversion == "R5" then
+    fhir_data_r5 = fhir_data_r5 or map_fhir_data(read_fhir_data(nil, "R5"))
+    fhir_data = fhir_data_r5
   end
 end
 
 -- options.fhirversion is optional, and defaults to "auto"  which is try all FHIR versions, starting from R4
 -- idea here is to make it as easy as possible to convert - it should just work
 convert_to_json = function(data, options)
-  local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
+  local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4", ["R5"] = "R5"}
   options = options or {}
   options.fhirversion = valid_versions[options.fhirversion] or "auto"
 
@@ -614,20 +621,33 @@ convert_to_json = function(data, options)
 
   conversion_errors = {}
   local data_in_lua = convert_to_lua_from_xml(xml_data, nil, output, output_levels, output_stack)
-  -- if R4 on auto didn't work, try STU3
+  -- if R4 on auto didn't work, try R5
   if options.fhirversion == "auto" and #conversion_errors > 0 then
     local amount_of_errors = #conversion_errors
 
-    load_fhir_data("STU3")
+    load_fhir_data("R5")
     output = {}
     output_levels = {[1] = {output}}
     output_stack = {}
+    conversion_errors = {}
 
     data_in_lua = convert_to_lua_from_xml(xml_data, nil, output, output_levels, output_stack)
-    if #conversion_errors > amount_of_errors then
-      print("Neither R4 nor STU3 conversion worked, have ".. #conversion_errors.. " errors.")
-      for _, error in ipairs(conversion_errors) do
-        print(error)
+    -- if R5 didn't work either, try STU3
+    if #conversion_errors > 0 then
+      amount_of_errors = #conversion_errors
+
+      load_fhir_data("STU3")
+      output = {}
+      output_levels = {[1] = {output}}
+      output_stack = {}
+      conversion_errors = {}
+
+      data_in_lua = convert_to_lua_from_xml(xml_data, nil, output, output_levels, output_stack)
+      if #conversion_errors > 0 then
+        print("Neither R4, R5, nor STU3 conversion worked, have ".. #conversion_errors.. " errors.")
+        for _, error in ipairs(conversion_errors) do
+          print(error)
+        end
       end
     end
   else
@@ -809,7 +829,7 @@ end
 -- options.fhirversion is optional, and defaults to "auto"  which is try all FHIR versions, starting from R4
 -- idea here is to make it as easy as possible to convert - it should just work
 convert_to_xml = function(data, options)
-  local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4"}
+  local valid_versions = {["STU3"] = "STU3", ["R4"] = "R4", ["R5"] = "R5"}
   options = options or {}
   options.fhirversion = valid_versions[options.fhirversion] or "auto"
 
@@ -829,22 +849,36 @@ convert_to_xml = function(data, options)
 
   conversion_errors = {}
   convert_to_lua_from_json(json_data, output, xml_output_levels, output_stack)
-  -- if R4 on auto didn't work, try STU3
+  -- if R4 on auto didn't work, try R5
   if options.fhirversion == "auto" and #conversion_errors > 0 then
     table.insert(conversion_errors, 1, "R4 conversion errors:")
     local amount_of_errors = #conversion_errors
-    load_fhir_data("STU3")
+    load_fhir_data("R5")
 
     -- convert_to_lua_from_json strips the resourcetype, so add it back in
     json_data.resourceType = resourceType
     output, output_stack = {}, {}
     xml_output_levels = {output}
+    conversion_errors = {}
     convert_to_lua_from_json(json_data, output, xml_output_levels, output_stack)
-    if amount_of_errors ~= #conversion_errors then
-      table.insert(conversion_errors, amount_of_errors, "STU3 conversion errors:")
-      print("Neither R4 nor STU3 conversion worked, have ".. #conversion_errors.. " errors.")
-      for _, error in ipairs(conversion_errors) do
-        print(error)
+    -- if R5 didn't work either, try STU3
+    if #conversion_errors > 0 then
+      table.insert(conversion_errors, 1, "R5 conversion errors:")
+      amount_of_errors = #conversion_errors
+      load_fhir_data("STU3")
+
+      -- convert_to_lua_from_json strips the resourcetype, so add it back in
+      json_data.resourceType = resourceType
+      output, output_stack = {}, {}
+      xml_output_levels = {output}
+      conversion_errors = {}
+      convert_to_lua_from_json(json_data, output, xml_output_levels, output_stack)
+      if #conversion_errors > 0 then
+        table.insert(conversion_errors, 1, "STU3 conversion errors:")
+        print("Neither R4, R5, nor STU3 conversion worked, have ".. #conversion_errors.. " errors.")
+        for _, error in ipairs(conversion_errors) do
+          print(error)
+        end
       end
     end
   else

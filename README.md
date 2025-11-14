@@ -22,8 +22,9 @@ to_json("/path/to/file", {file = true})
 to_json("xml content", {pretty = true})
 -- convert an XML file given as a location to JSON and prettyprint it
 to_json("/path/to/file", {file = true, pretty = true})
--- supported versions are 'R4', 'STU3', and 'auto' (default)
--- 'auto' will try all FHIR versions starting from R4 and going down
+-- supported versions are 'R5', 'R4', 'STU3', and 'auto' (default)
+-- 'auto' will try all FHIR versions starting from R4, then R5, then STU3
+to_json("xml content", {fhirversion = "R5"})
 to_json("xml content", {fhirversion = "R4"})
 to_json("xml content", {fhirversion = "STU3"})
 to_json("xml content", {fhirversion = "auto"})
@@ -36,8 +37,9 @@ to_xml("/path/to/file", {file = true})
 to_xml("json content", {pretty = true})
 -- convert an JSON file given as a location to XML and prettyprint it
 to_xml("/path/to/file", {file = true, pretty = true})
--- supported versions are 'R4', 'STU3', and 'auto' (default)
--- 'auto' will try all FHIR versions starting from R4 and going down
+-- supported versions are 'R5', 'R4', 'STU3', and 'auto' (default)
+-- 'auto' will try all FHIR versions starting from R4, then R5, then STU3
+to_xml("json content", {fhirversion = "R5"})
 to_xml("json content", {fhirversion = "R4"})
 to_xml("json content", {fhirversion = "STU3"})
 to_xml("json content", {fhirversion = "auto"})
@@ -54,7 +56,8 @@ get_fhir_definition('Patient', 'animal', 'species')
 -- [1]: if present, this is a link to the base type of the resource
 -- _derivations: if present, this is a map of resources that extend on this resource
 
--- last argument can be either 'R4' or 'STU3' to specify version. Defaults to STU3
+-- last argument can be 'R5', 'R4', or 'STU3' to specify version. Defaults to STU3
+get_fhir_definition('Patient', 'contact', 'relationship', 'R5')
 get_fhir_definition('Patient', 'contact', 'relationship', 'R4')
 get_fhir_definition('Patient', 'animal', 'species', 'STU3')
 ```

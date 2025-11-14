@@ -9,6 +9,7 @@ Module "resty.prettycjson"
 
 Resource "fhir-data/STU3/fhir-elements.min.json" "fhir-data/STU3/fhir-elements.min.json"
 Resource "fhir-data/R4/fhir-elements.min.json" "fhir-data/R4/fhir-elements.min.json"
+Resource "fhir-data/R5/fhir-elements.min.json" "fhir-data/R5/fhir-elements.min.json"
 
 Output "fhirformats.web.lua"
 

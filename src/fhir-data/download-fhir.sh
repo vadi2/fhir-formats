@@ -53,6 +53,9 @@ if [ "$version" = "STU3" ]; then
 elif [ "$version" = "R4" ]; then
   wget http://hl7.org/fhir/R4/profiles-types.json
   wget http://hl7.org/fhir/R4/profiles-resources.json
+elif [ "$version" = "R5" ]; then
+  wget http://hl7.org/fhir/R5/profiles-types.json
+  wget http://hl7.org/fhir/R5/profiles-resources.json
 else
   echo "Error: Invalid FHIR version specified"
   exit 1
