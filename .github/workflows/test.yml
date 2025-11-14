@@ -1,0 +1,71 @@
+name: Test
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Lua
+        uses: leafo/gh-actions-lua@v10
+        with:
+          luaVersion: "5.1"
+
+      - name: Setup LuaRocks
+        uses: leafo/gh-actions-luarocks@v4
+
+      - name: Cache LuaRocks packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.luarocks
+          key: ${{ runner.os }}-luarocks-${{ hashFiles('*.rockspec') }}
+          restore-keys: |
+            ${{ runner.os }}-luarocks-
+
+      - name: Cache xml module
+        id: cache-xml
+        uses: actions/cache@v3
+        with:
+          path: /tmp/xml
+          key: ${{ runner.os }}-xml-v1
+
+      - name: Build xml module from source (C++14 fix)
+        if: steps.cache-xml.outputs.cache-hit != 'true'
+        run: |
+          cd /tmp
+          git clone https://github.com/lubyk/xml.git
+          cd xml
+          luarocks make --local xml-1.1.3-1.rockspec
+
+      - name: Install xml module from cache
+        if: steps.cache-xml.outputs.cache-hit == 'true'
+        run: |
+          cd /tmp/xml
+          luarocks make --local xml-1.1.3-1.rockspec
+
+      - name: Install Lua dependencies
+        run: |
+          luarocks install --local rapidjson
+          luarocks install --local lua-resty-prettycjson
+          luarocks install --local datafile
+
+      - name: Install test dependencies
+        run: |
+          luarocks install --local busted
+          luarocks install --local lua-cjson
+          luarocks install --local lunajson
+          luarocks install --local inspect
+
+      - name: Run tests
+        run: |
+          eval $(luarocks path --local)
+          busted --lua=$(which lua5.1) spec/
