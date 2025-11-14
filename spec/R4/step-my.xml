@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<StructureMap xmlns="http://hl7.org/fhir">
+  <id value="4b0034ad-6365-442d-b841-23988463cfa2"/>
+  <url value="http://termx.health/fhir/StructureMap/tobacco-use-to-fhir"/>
+  <status value="draft"/>
+  <structure>
+    <url value="http://example.org/StructureDefinition/TobaccoUseModel"/>
+    <mode value="source"/>
+    <alias value="TobaccoUseModel"/>
+  </structure>
+  <structure>
+    <url value="http://hl7.org/fhir/StructureDefinition/Observation"/>
+    <mode value="target"/>
+    <alias value="Observation"/>
+  </structure>
+  <group>
+    <name value="tutorial"/>
+    <input>
+      <name value="src"/>
+      <type value="TobaccoUseModel"/>
+      <mode value="source"/>
+    </input>
+    <input>
+      <name value="obs"/>
+      <type value="Observation"/>
+      <mode value="target"/>
+    </input>
+    <rule>
+      <name value="rule_id"/>
+      <source>
+        <context value="src"/>
+      </source>
+      <target>
+        <context value="obs"/>
+        <element value="id"/>
+        <transform value="uuid"/>
+      </target>
+    </rule>
+    <rule>
+      <name value="rule_status"/>
+      <source>
+        <context value="src"/>
+      </source>
+      <target>
+        <context value="obs"/>
+        <element value="status"/>
+        <transform value="copy"/>
+        <parameter>
+          <valueString value="final"/>
+        </parameter>
+      </target>
+    </rule>
+    <rule>
+      <name value="rule_category"/>
+      <source>
+        <context value="src"/>
+      </source>
+      <target>
+        <context value="obs"/>
+        <element value="category"/>
+        <transform value="cc"/>
+        <parameter>
+          <valueString value="http://terminology.hl7.org/CodeSystem/observation-category"/>
+        </parameter>
+        <parameter>
+          <valueString value="vital-signs"/>
+        </parameter>
+        <parameter>
+          <valueString value="Vital Signs"/>
+        </parameter>
+      </target>
+    </rule>
+    <rule>
+      <name value="rule_code"/>
+      <source>
+        <context value="src"/>
+      </source>
+      <target>
+        <context value="obs"/>
+        <element value="code"/>
+        <transform value="cc"/>
+        <parameter>
+          <valueString value="http://snomed.info/sct"/>
+        </parameter>
+        <parameter>
+          <valueString value="229819007"/>
+        </parameter>
+        <parameter>
+          <valueString value="Tobacco use and exposure"/>
+        </parameter>
+      </target>
+    </rule>
+    <rule>
+      <name value="rule-value"/>
+      <source>
+        <context value="src"/>
+      </source>
+      <target>
+        <context value="obs"/>
+        <element value="value"/>
+        <variable value="newCC"/>
+        <transform value="create"/>
+        <parameter>
+          <valueString value="CodeableConcept"/>
+        </parameter>
+      </target>
+      <rule>
+        <name value="rule-value-coding"/>
+        <source>
+          <context value="src"/>
+        </source>
+        <target>
+          <context value="newCC"/>
+          <element value="coding"/>
+          <variable value="newCoding"/>
+          <transform value="create"/>
+          <parameter>
+            <valueString value="Coding"/>
+          </parameter>
+        </target>
+        <rule>
+          <name value="rule-value-coding-system"/>
+          <source>
+            <context value="src"/>
+          </source>
+          <target>
+            <context value="newCoding"/>
+            <element value="system"/>
+            <transform value="copy"/>
+            <parameter>
+              <valueString value="http://snomed.info/sct"/>
+            </parameter>
+          </target>
+        </rule>
+        <rule>
+          <name value="rule-value-coding-code"/>
+          <source>
+            <context value="src"/>
+            <element value="tulemus"/>
+            <variable value="val"/>
+          </source>
+          <target>
+            <context value="newCoding"/>
+            <element value="code"/>
+            <transform value="copy"/>
+            <parameter>
+              <valueId value="val"/>
+            </parameter>
+          </target>
+        </rule>
+      </rule>
+    </rule>
+    <rule>
+      <name value="rule_effectiveTime"/>
+      <source>
+        <context value="src"/>
+        <element value="aeg"/>
+        <variable value="aeg"/>
+      </source>
+      <target>
+        <context value="obs"/>
+        <element value="effective"/>
+        <transform value="copy"/>
+        <parameter>
+          <valueId value="aeg"/>
+        </parameter>
+      </target>
+    </rule>
+    <rule>
+      <name value="rule_note"/>
+      <source>
+        <context value="src"/>
+        <element value="kommentaar"/>
+        <variable value="kom"/>
+      </source>
+      <target>
+        <context value="obs"/>
+        <element value="note"/>
+        <variable value="note"/>
+        <transform value="create"/>
+        <parameter>
+          <valueString value="Annotation"/>
+        </parameter>
+      </target>
+      <rule>
+        <name value="rule_note_text"/>
+        <source>
+          <context value="kom"/>
+        </source>
+        <target>
+          <context value="note"/>
+          <element value="text"/>
+          <transform value="copy"/>
+          <parameter>
+            <valueId value="kom"/>
+          </parameter>
+        </target>
+      </rule>
+    </rule>
+    <rule>
+      <name value="rule-subject"/>
+      <source>
+        <context value="src"/>
+        <element value="patsient"/>
+        <variable value="pat"/>
+      </source>
+      <target>
+        <context value="obs"/>
+        <element value="subject"/>
+        <variable value="subjectRef"/>
+        <transform value="create"/>
+        <parameter>
+          <valueString value="Reference"/>
+        </parameter>
+      </target>
+      <rule>
+        <name value="rule-subref-1"/>
+        <source>
+          <context value="pat"/>
+        </source>
+        <target>
+          <context value="subjectRef"/>
+          <element value="type"/>
+          <transform value="copy"/>
+          <parameter>
+            <valueString value="Patient"/>
+          </parameter>
+        </target>
+        <target>
+          <context value="subjectRef"/>
+          <element value="reference"/>
+          <transform value="append"/>
+          <parameter>
+            <valueString value="Patient?identifier="/>
+          </parameter>
+          <parameter>
+            <valueId value="pat"/>
+          </parameter>
+        </target>
+      </rule>
+    </rule>
+    <rule>
+      <name value="rule-performer"/>
+      <source>
+        <context value="src"/>
+        <element value="labiviija"/>
+        <variable value="doc"/>
+      </source>
+      <target>
+        <context value="obs"/>
+        <element value="performer"/>
+        <variable value="docRef"/>
+        <transform value="create"/>
+        <parameter>
+          <valueString value="Reference"/>
+        </parameter>
+      </target>
+      <rule>
+        <name value="rule-docref-1"/>
+        <source>
+          <context value="doc"/>
+        </source>
+        <target>
+          <context value="docRef"/>
+          <element value="type"/>
+          <transform value="copy"/>
+          <parameter>
+            <valueString value="Practitioner"/>
+          </parameter>
+        </target>
+        <target>
+          <context value="docRef"/>
+          <element value="reference"/>
+          <transform value="append"/>
+          <parameter>
+            <valueString value="Practitioner?identifier="/>
+          </parameter>
+          <parameter>
+            <valueId value="doc"/>
+          </parameter>
+        </target>
+      </rule>
+    </rule>
+  </group>
+</StructureMap>

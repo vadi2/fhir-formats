@@ -59,7 +59,7 @@ end
 
 -- handles a simple element
 local function handle_simple(output, element, weight_counter, resource_type, resource_kind)
-  local path, type, type_json, type_xml, min, max
+  local path, type, type_json, type_xml, min, max, contentReference
 
   -- in case there's no type - such as Element itself
   if element.type then
@@ -78,6 +78,11 @@ local function handle_simple(output, element, weight_counter, resource_type, res
     end
   end
 
+  -- capture contentReference for recursive structures like StructureMap.group.rule.rule
+  if element.contentReference then
+    contentReference = element.contentReference
+  end
+
   -- since 1.6.0, resource types aren't shown in the first element anymore - so get those from the baseDefinition
   type = type or resource_type
 
@@ -91,6 +96,7 @@ local function handle_simple(output, element, weight_counter, resource_type, res
     max = max,
     type_xml = type_xml,
     type_json = type_json,
+    contentReference = contentReference,
     weight = weight_counter
   }
 

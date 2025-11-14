@@ -193,6 +193,7 @@ map_fhir_data = function(raw_fhir_data)
     previouselement._type_json = element.type_json
     previouselement._weight = element.weight
     previouselement._kind = element.kind
+    previouselement._contentReference = element.contentReference
     previouselement._derivations = list_to_map(element.derivations, function(value) return fhir_data[value] end)
     flatten_derivations(previouselement)
 
@@ -299,6 +300,28 @@ get_fhir_definition = function (output_stack, element_to_check)
       fhir_data_pointer = nil
       break -- bail out of the for loop if we didn't find the element we're looking for
     end
+
+    -- Handle contentReference during navigation - resolve recursive/self-referential structures
+    -- e.g., StructureMap.group.rule.rule has contentReference "#StructureMap.group.rule"
+    if fhir_data_pointer and fhir_data_pointer._contentReference then
+      local ref_path = fhir_data_pointer._contentReference:gsub("^#", "") -- remove leading #
+      local ref_pointer
+      for word in gmatch(ref_path, "([^%.]+)") do
+        if not ref_pointer then
+          ref_pointer = fhir_data[word]
+        elseif ref_pointer[word] then
+          ref_pointer = ref_pointer[word]
+        elseif ref_pointer[1] then
+          ref_pointer = ref_pointer[1][word] or (ref_pointer[1]._derivations and ref_pointer[1]._derivations[word] or nil)
+        else
+          ref_pointer = nil
+          break
+        end
+      end
+      if ref_pointer then
+        fhir_data_pointer = ref_pointer
+      end
+    end
   end
 
   return fhir_data_pointer
@@ -393,6 +416,10 @@ get_datatype_kind = function(output_stack, element_to_check)
     return 0
   else
     local datatype_fhir_definition = get_fhir_definition({}, fhir_definition._type)
+    if not datatype_fhir_definition then
+      conversion_errors[#conversion_errors+1] = string.format("Warning: %s.%s has type %s which is not found in FHIR schema; couldn't determine kind.", tconcat(output_stack, "."), element_to_check, tostring(fhir_definition._type))
+      return 0
+    end
     return datatype_fhir_definition._kind
   end
 end
